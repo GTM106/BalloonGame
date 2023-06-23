@@ -1,4 +1,9 @@
 # マニュアル一覧
+## 環境設定
+Unityのバージョンや、その他必要な設定を列挙しています。
+
+[表示](/Manual/ConfigurationManual.md)
+
 ## SoundManager
 音楽系の再生・停止などの一元管理のやり方です。
 
