@@ -6,14 +6,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(GroundCheck), typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
-    enum BalloonState
-    {
-        Normal,
-        Expands
-    }
-
     [SerializeField] float scaleAmountDeflatingPerSecond = 0.2f;
-    [SerializeField] GameObject balloon;
+    [SerializeField] GameObject balloonObject;
     [SerializeField] float speed = 5f;
     [SerializeField] InputActionReference move;
     [SerializeField] InputActionReference jump;
@@ -25,12 +19,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     [SerializeField] float jumpPower = 10f;
     [SerializeField] float powerJumpPower = 50f;
-    [SerializeField] float multiplier = 3f;
     [SerializeField] float dashSpeed = 10f;
+    [SerializeField] Balloon balloon;
 
     Vector2 movementVector;
-
-    BalloonState balloonState = BalloonState.Normal;
 
     Vector3 _offset = Vector3.one / 2f;
 
@@ -39,7 +31,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        balloon = GameObject.Find("Balloon");
+        balloonObject = GameObject.Find("Balloon");
         rb = GetComponent<Rigidbody>();
         move.action.performed += Action_performed;
         move.action.canceled += Action_canceled;
@@ -67,30 +59,14 @@ public class PlayerController : MonoBehaviour
     {
         Move();
 
-        //重力の調整
-        AdjustingGravity();
-
         if (isPowerJumping)
         {
             if (groundCheck.IsGround(out _))
             {
                 isPowerJumped = false;
                 isPowerJumping = false;
-                //freeLook.gameObject.SetActive(true);
             }
         }
-    }
-
-    private void AdjustingGravity()
-    {
-        float multiplierValue = balloonState switch
-        {
-            BalloonState.Normal => multiplier,
-            BalloonState.Expands => 0.5f,
-            _ => throw new System.NotImplementedException(),
-        };
-
-        rb.AddForce((multiplierValue - 1f) * Physics.gravity, ForceMode.Acceleration);
     }
 
     void Move()
@@ -108,7 +84,7 @@ public class PlayerController : MonoBehaviour
         //カメラの向きを元にベクトルの作成
         Vector3 moveVec = (axis.y * cameraForward + axis.x * Camera.main.transform.right) * speed;
         transform.forward = moveVec;
-        float balloonSpeed = balloonState switch
+        float balloonSpeed = balloon.state switch
         {
             //Normal is defalutValue
             BalloonState.Normal => 1f,
@@ -124,21 +100,48 @@ public class PlayerController : MonoBehaviour
 
     async void Update()
     {
-        if (Gamepad.current != null && Gamepad.current.rightShoulder.wasPressedThisFrame)
+        //if (Gamepad.current != null && Gamepad.current.rightShoulder.wasPressedThisFrame)
+        //{
+        //    if (isPowerJumped) { return; }
+
+        //    //print("push!!");
+        //    balloon.state = BalloonState.Expands;
+        //    ScaleAnimation(0.1f, _offset).Forget();
+        //    return;
+        //}
+        //if (Gamepad.current != null && Gamepad.current.rightTrigger.wasPressedThisFrame)
+        //{
+        //    if (isPowerJumped) { return; }
+
+        //    //print("push!!");
+        //    balloon.state = BalloonState.Expands;
+        //    ScaleAnimation(0.1f, _offset).Forget();
+        //    return;
+        //}       
+        if (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame)
         {
             if (isPowerJumped) { return; }
 
             //print("push!!");
-            balloonState = BalloonState.Expands;
+            balloon.state = BalloonState.Expands;
+            ScaleAnimation(0.1f, _offset).Forget();
+            return;
+        }
+        if (Gamepad.current != null && Gamepad.current.leftTrigger.wasPressedThisFrame)
+        {
+            if (isPowerJumped) { return; }
+
+            //print("push!!");
+            balloon.state = BalloonState.Expands;
             ScaleAnimation(0.1f, _offset).Forget();
             return;
         }
         if (!isPowerJumped)
         {
-            if (Mathf.Approximately(balloon.transform.localScale.x, 0.5f)) { return; }
-            if (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame)
+            if (Mathf.Approximately(balloonObject.transform.localScale.x, 0.5f)) { return; }
+            if (Gamepad.current != null && Gamepad.current.rightTrigger.wasPressedThisFrame)
             {
-                balloon.transform.localScale = Vector3.one * 0.5f;
+                balloonObject.transform.localScale = Vector3.one * 0.5f;
 
                 Vector3 force = (Vector3.Scale(Camera.main.transform.forward, new Vector3(1f, 0f, 1f)) + Vector3.up) * 50f;
 
@@ -148,23 +151,46 @@ public class PlayerController : MonoBehaviour
 
                 //カメラ調整
                 //freeLook.gameObject.SetActive(false);
-                
+
                 await UniTask.Delay(2000);
                 isPowerJumping = true;
                 return;
             }
         }
+        //if (!isPowerJumped)
+        //{
+        //    if (Mathf.Approximately(balloonObject.transform.localScale.x, 0.5f)) { return; }
+        //    if (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame)
+        //    {
+        //        balloonObject.transform.localScale = Vector3.one * 0.5f;
 
-        if (balloon.transform.localScale.x > 0.5f)
+        //        Vector3 force = (Vector3.Scale(Camera.main.transform.forward, new Vector3(1f, 0f, 1f)) + Vector3.up) * 50f;
+
+        //        rb.velocity = Vector3.zero;
+        //        rb.AddForce(force * powerJumpPower, ForceMode.Acceleration);
+        //        isPowerJumped = true;
+
+        //        //カメラ調整
+        //        //freeLook.gameObject.SetActive(false);
+
+        //        await UniTask.Delay(2000);
+        //        isPowerJumping = true;
+        //        return;
+        //    }
+        //}
+
+        if (balloon.state == BalloonState.Expands)
         {
+            if (isAnimation) return;
             float scaleDecrease = scaleAmountDeflatingPerSecond * Time.deltaTime;
-            var scale = balloon.transform.localScale;
-            scale.Set(balloon.transform.localScale.x - scaleDecrease, balloon.transform.localScale.y - scaleDecrease, balloon.transform.localScale.z - scaleDecrease);
-            balloon.transform.localScale = scale;
-        }
-        else
-        {
-            balloonState = BalloonState.Normal;
+            var scale = balloonObject.transform.localScale;
+            scale.Set(Mathf.Max(balloonObject.transform.localScale.x - scaleDecrease, 0.5f), Mathf.Max(balloonObject.transform.localScale.y - scaleDecrease, 0.5f), Mathf.Max(balloonObject.transform.localScale.z - scaleDecrease, 0.5f));
+            balloonObject.transform.localScale = scale;
+
+            if (Mathf.Approximately(balloonObject.transform.localScale.x, 0.5f))
+            {
+                balloon.state = BalloonState.Normal;
+            }
         }
     }
 
@@ -173,18 +199,19 @@ public class PlayerController : MonoBehaviour
         if (isAnimation) { return; }
         float time = 0f;
 
-        var startVec = balloon.transform.localScale;
+        var startVec = balloonObject.transform.localScale;
 
         while (time < duration)
         {
             isAnimation = true;
-            await UniTask.Yield();
             time += Time.deltaTime;
             float progress = Mathf.Clamp01(time / duration);
 
             var scale = startVec;
             scale += offset * progress;
-            balloon.transform.localScale = scale;
+            balloonObject.transform.localScale = scale;
+
+            await UniTask.Yield();
         }
 
         isAnimation = false;
