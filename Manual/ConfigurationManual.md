@@ -17,11 +17,11 @@
 
 1. リンク先に飛ぶ
 
-![インストール場所](ViGEmBusInstallManualImage/intsall_001.png)
+![インストール場所](ViGEmBusInstallManualImage/install_001.png)
 
 2. ダウンロードしたインストーラーからインストール
 
-![インストーラ1](ViGEmBusInstallManualImage/intsall_002.png)
+![インストーラ1](ViGEmBusInstallManualImage/install_002.png)
 
 </details>
 
