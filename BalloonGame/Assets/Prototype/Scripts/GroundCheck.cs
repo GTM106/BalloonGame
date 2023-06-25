@@ -15,7 +15,6 @@ public class GroundCheck : MonoBehaviour
 
     internal bool IsGround(out RaycastHit hit)
     {
-        Debug.DrawRay(transform.position + groundCheckOffsetY * Vector3.up, Vector3.down);
         return Physics.SphereCast(transform.position + groundCheckOffsetY * Vector3.up, groundCheckRadius, Vector3.down, out hit, groundCheckDistance, groundLayers, QueryTriggerInteraction.Ignore);
     }
 }
