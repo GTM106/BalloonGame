@@ -3,8 +3,15 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum Location
+{
+    Ground,
+    Sky,
+    Water
+}
+
 [RequireComponent(typeof(GroundCheck), typeof(Rigidbody))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IWater
 {
     [SerializeField] float scaleAmountDeflatingPerSecond = 0.2f;
     [SerializeField] GameObject balloonObject;
@@ -14,6 +21,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GroundCheck groundCheck;
     [SerializeField] CinemachineFreeLook freeLook;
     [SerializeField] CinemachineFreeLook freeLook2;
+    [SerializeField] AudioSource windAudioSource;
+    [SerializeField] AudioSource dashAudioSource;
 
     bool isAnimation = false;
     private Rigidbody rb;
@@ -29,6 +38,8 @@ public class PlayerController : MonoBehaviour
     bool isPowerJumped = false;
     private bool isPowerJumping;
 
+    Location _location = Location.Ground;
+
     private void Awake()
     {
         balloonObject = GameObject.Find("Balloon");
@@ -40,7 +51,10 @@ public class PlayerController : MonoBehaviour
 
     private void Jump_performed(InputAction.CallbackContext obj)
     {
-        if (!groundCheck.IsGround(out _)) return;
+        if (_location is Location.Ground or Location.Sky)
+        {
+            if (!groundCheck.IsGround(out _)) return;
+        }
         rb.AddForce(new(0f, jumpPower, 0f), ForceMode.Impulse);
     }
 
@@ -65,6 +79,7 @@ public class PlayerController : MonoBehaviour
             {
                 isPowerJumped = false;
                 isPowerJumping = false;
+                windAudioSource.Stop();
             }
         }
     }
@@ -76,7 +91,12 @@ public class PlayerController : MonoBehaviour
         //“ü—Í’l‚ð‘ã“ü
         Vector2 axis = movementVector;
 
-        if (axis.magnitude < 0.05f) { return; }
+        if (axis.magnitude < 0.05f)
+        {
+            dashAudioSource.Stop();
+
+            return;
+        }
 
         //Y‚ð–³Ž‹
         Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1f, 0f, 1f)).normalized;
@@ -92,6 +112,18 @@ public class PlayerController : MonoBehaviour
             _ => throw new System.NotImplementedException(),
         };
 
+        if (balloon.state == BalloonState.Expands)
+        {
+            if (!dashAudioSource.isPlaying)
+            {
+                dashAudioSource.Play();
+            }
+        }
+        else
+        {
+            dashAudioSource.Stop();
+
+        }
         Vector3 velocity = moveVec * balloonSpeed;
         velocity.y = rb.velocity.y;
 
@@ -144,7 +176,8 @@ public class PlayerController : MonoBehaviour
                 balloonObject.transform.localScale = Vector3.one * 0.5f;
 
                 Vector3 force = (Vector3.Scale(Camera.main.transform.forward, new Vector3(1f, 0f, 1f)) + Vector3.up) * 50f;
-
+                dashAudioSource.Stop();
+                windAudioSource.Play();
                 rb.velocity = Vector3.zero;
                 rb.AddForce(force * powerJumpPower, ForceMode.Acceleration);
                 isPowerJumped = true;
@@ -215,5 +248,15 @@ public class PlayerController : MonoBehaviour
         }
 
         isAnimation = false;
+    }
+
+    public void Enter()
+    {
+        _location = Location.Water;
+    }
+
+    public void Exit()
+    {
+        _location = groundCheck.IsGround(out _) ? Location.Ground : Location.Sky;
     }
 }
