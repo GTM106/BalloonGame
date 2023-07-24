@@ -84,8 +84,4 @@ _joyconHandler.OnHomeButtonHeld -= OnHomeButtonHeld
 もしイベントをAwake以後でイベントを登録・解除をしたいときは知らせてください。仕様を変更します。
 
 ## Joycon登録方法
-概要を示します。のちほど正式なManualへのリンクに変更します
-
-Bluetoothで接続します。  
-今は接続順がとても大切です。そのうち変える予定です。  
-`左 → 右 → リングコン用`の順に登録してください
+登録方法は[こちら](/Manual/JoyconConnectionManual.md)！！
