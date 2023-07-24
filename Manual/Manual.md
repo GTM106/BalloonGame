@@ -15,3 +15,8 @@ Unityのバージョンや、その他必要な設定を列挙しています。
 各Joyconの読み取り方法と、扱い方を示します。
 
 [表示](/Manual/JoyconHandlerManual.md)
+
+## ジョイコン接続方法
+PCにジョイコンを接続する方法を示します。
+
+[表示](/Manual/JoyconConnectionManual.md)
