@@ -19,9 +19,10 @@ public interface IState
     E_State Update(PlayerController parent);
     E_State FixedUpdate(PlayerController parent);
 }
+
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] PlayerParameter _playerParameter;
+    [SerializeField] PlayerParameter _playerParameter = default!;
     IPlayer _player;
 
     // ó‘ÔŠÇ—
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
         {
             return IState.E_State.Unchanged;
         }
+
         public IState.E_State FixedUpdate(PlayerController parent)
         {
             parent._player.Dash();
@@ -62,6 +64,7 @@ public class PlayerController : MonoBehaviour
         {
             throw new System.NotImplementedException();
         }
+
         public IState.E_State FixedUpdate(PlayerController parent)
         {
             throw new System.NotImplementedException();
@@ -87,40 +90,42 @@ public class PlayerController : MonoBehaviour
 
     void InitializeState()
     {
-        var next_state = states[(int)_currentState].Initialize(this);
+        var nextState = states[(int)_currentState].Initialize(this);
 
-        if (next_state != IState.E_State.Unchanged)
+        if (nextState != IState.E_State.Unchanged)
         {
-            _currentState = next_state;
+            _currentState = nextState;
             InitializeState();
         }
     }
+
     void UpdateState()
     {
-        var next_state = states[(int)_currentState].Update(this);
+        var nextState = states[(int)_currentState].Update(this);
 
-        if (next_state != IState.E_State.Unchanged)
+        if (nextState != IState.E_State.Unchanged)
         {
             //Ÿ‚Ìó‘Ô‚É‘JˆÚ
-            _currentState = next_state;
+            _currentState = nextState;
             InitializeState();
         }
     }
 
     void FixedUpdateState()
     {
-        var next_state = states[(int)_currentState].FixedUpdate(this);
+        var nextState = states[(int)_currentState].FixedUpdate(this);
 
-        if (next_state != IState.E_State.Unchanged)
+        if (nextState != IState.E_State.Unchanged)
         {
             //Ÿ‚Ìó‘Ô‚É‘JˆÚ
-            _currentState = next_state;
+            _currentState = nextState;
             InitializeState();
         }
     }
 
     private void Awake()
     {
+        //TODO:•—‘D‚Ìˆ—‚ğ’Ç‰Á‚·‚éÛ‚ÉInflatablePlayer‚Æ“ü‚ê‘Ö‚¦‚éˆ—‚ğ’Ç‰Á‚·‚é
         _player = new DeflatablePlayer(_playerParameter);
     }
 

@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class DeflatablePlayer : IPlayer
 {
-    PlayerParameter _playerParameter;
+    readonly PlayerParameter _playerParameter;
 
     public DeflatablePlayer(PlayerParameter playerParameter)
     {
         _playerParameter = playerParameter;
     }
+
     public void BoostDash()
     {
         throw new System.NotImplementedException();
@@ -25,6 +26,7 @@ public class DeflatablePlayer : IPlayer
 
         Vector3 moveVec = (axis.y * cameraForward + axis.x * _playerParameter.CameraTransform.right) * _playerParameter.MoveSpeed;
 
+        //TODO:ƒWƒƒƒ“ƒvÀ‘•‚É³®‚ÈˆÚ“®ˆ—‚É•ÏX
         _playerParameter.Rb.velocity = moveVec;
     }
 
