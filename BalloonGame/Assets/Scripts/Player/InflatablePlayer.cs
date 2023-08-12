@@ -16,7 +16,7 @@ public class InflatablePlayer : IPlayer
 
     public void Dash()
     {
-        Vector2 axis = _playerParameter.JoyconHandler.Stick;
+        Vector2 axis = _playerParameter.JoyconRight.Stick;
 
         if (axis.magnitude <= 0.02f) return;
 

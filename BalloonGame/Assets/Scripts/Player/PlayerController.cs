@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         public IState.E_State Initialize(PlayerController parent)
         {
+            parent._playerParameter.JoyconLeft.OnDownButtonPressed += () => parent._player.Jump(parent._playerParameter.Rb);
             return IState.E_State.Unchanged;
         }
 
