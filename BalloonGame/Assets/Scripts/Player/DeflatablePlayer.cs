@@ -5,6 +5,7 @@ using UnityEngine;
 public class DeflatablePlayer : IPlayer
 {
     readonly PlayerParameter _playerParameter;
+    static readonly Vector3 ignoreYCorrection = new(1f, 0f, 1f);
 
     public DeflatablePlayer(PlayerParameter playerParameter)
     {
@@ -18,20 +19,20 @@ public class DeflatablePlayer : IPlayer
 
     public void Dash()
     {
-        Vector2 axis = _playerParameter.JoyconHandler.Stick;
+        Vector2 axis = _playerParameter.JoyconRight.Stick;
 
-        //Todo:Axis‚Ìmagunitude‚É‚æ‚Á‚Äreturn‚³‚¹‚é
         //Y‚ğ–³‹
-        Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, new Vector3(1f, 0f, 1f)).normalized;
+        Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;
+        Vector3 cameraRight = Vector3.Scale(_playerParameter.CameraTransform.right, ignoreYCorrection).normalized;
 
-        Vector3 moveVec = (axis.y * cameraForward + axis.x * _playerParameter.CameraTransform.right) * _playerParameter.MoveSpeed;
+        Vector3 moveVec = (axis.y * cameraForward + axis.x * cameraRight);
+        Vector3 force = moveVec.normalized * (_playerParameter.TargetMoveSpeed);
 
-        //TODO:ƒWƒƒƒ“ƒvÀ‘•‚É³®‚ÈˆÚ“®ˆ—‚É•ÏX
-        _playerParameter.Rb.velocity = moveVec;
+        _playerParameter.Rb.velocity = new(force.x, _playerParameter.Rb.velocity.y, force.z);
     }
 
     public void Jump(Rigidbody rb)
     {
-        throw new System.NotImplementedException();
+        rb.AddForce(Vector3.up * _playerParameter.JumpPower, ForceMode.Impulse);
     }
 }

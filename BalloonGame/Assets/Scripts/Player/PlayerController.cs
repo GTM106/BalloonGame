@@ -23,6 +23,7 @@ public interface IState
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] PlayerParameter _playerParameter = default!;
+    [SerializeField] GroundCheck _groundCheck = default!;
     IPlayer _player;
 
     // 状態管理
@@ -57,17 +58,18 @@ public class PlayerController : MonoBehaviour
     {
         public IState.E_State Initialize(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            parent._player.Jump(parent._playerParameter.Rb);
+            return IState.E_State.Unchanged;
         }
 
         public IState.E_State Update(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
     }
 
@@ -75,16 +77,17 @@ public class PlayerController : MonoBehaviour
     {
         public IState.E_State Initialize(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
 
         public IState.E_State Update(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
+
         public IState.E_State FixedUpdate(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
     }
 
@@ -127,6 +130,18 @@ public class PlayerController : MonoBehaviour
     {
         //TODO:風船の処理を追加する際にInflatablePlayerと入れ替える処理を追加する
         _player = new DeflatablePlayer(_playerParameter);
+        InitializeState();
+        _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
+    }
+
+    private void JoyconLeft_OnDownButtonPressed()
+    {
+        //ステート関係なしにひとまず行います。
+        //ステートパターンに当てはめる作業は後ほど行います。
+        if (_groundCheck.IsGround(out _))
+        {
+            _player.Jump(_playerParameter.Rb);
+        }
     }
 
     private void Update()
