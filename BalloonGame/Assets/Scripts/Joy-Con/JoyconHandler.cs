@@ -12,6 +12,13 @@ public class JoyconHandler : MonoBehaviour
         RingCon,
     }
 
+    enum ActionPhase
+    {
+        None,
+        Performed,
+        Canceled,
+    }
+
     [SerializeField] JoyconType joyconType;
 
     List<Joycon> joycons;
@@ -80,6 +87,7 @@ public class JoyconHandler : MonoBehaviour
     readonly Dictionary<Joycon.Button, Action> onButtonPressed = new();
     readonly Dictionary<Joycon.Button, Action> onButtonReleased = new();
     readonly Dictionary<Joycon.Button, Action> onButtonHeld = new();
+    readonly ActionPhase[] actionPhase = new ActionPhase[(int)Joycon.Button.SHOULDER_2 + 1];
 
     private void Start()
     {
@@ -174,6 +182,9 @@ public class JoyconHandler : MonoBehaviour
         //Dictionary‚ÅŒÄ‚Ñ•ª‚¯‚é
         if (j.GetButtonUp(button))
         {
+            if (actionPhase[(int)button] == ActionPhase.Canceled) return;
+            actionPhase[(int)button] = ActionPhase.Canceled;
+
             if (onButtonReleased.TryGetValue(button, out Action action))
             {
                 action?.Invoke();
@@ -181,6 +192,9 @@ public class JoyconHandler : MonoBehaviour
         }
         if (j.GetButtonDown(button))
         {
+            if (actionPhase[(int)button] == ActionPhase.Performed) return;
+            actionPhase[(int)button] = ActionPhase.Performed;
+
             if (onButtonPressed.TryGetValue(button, out Action action))
             {
                 action?.Invoke();

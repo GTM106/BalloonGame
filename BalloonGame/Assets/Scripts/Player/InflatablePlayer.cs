@@ -7,7 +7,8 @@ using UnityEngine;
 /// </summary>
 public class InflatablePlayer : IPlayer
 {
-    PlayerParameter _playerParameter;
+    readonly PlayerParameter _playerParameter;
+    static readonly Vector3 ignoreYCorrection = new(1f, 0f, 1f);
 
     public InflatablePlayer(PlayerParameter playerParameter)
     {
@@ -18,15 +19,14 @@ public class InflatablePlayer : IPlayer
     {
         Vector2 axis = _playerParameter.JoyconRight.Stick;
 
-        if (axis.magnitude <= 0.02f) return;
-
         //Y‚ð–³Ž‹
-        Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, new Vector3(1f, 0f, 1f)).normalized;
+        Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;
+        Vector3 cameraRight = Vector3.Scale(_playerParameter.CameraTransform.right, ignoreYCorrection).normalized;
 
-        Vector3 moveVec = (axis.y * cameraForward + axis.x * _playerParameter.CameraTransform.right);
-        Vector3 force = moveVec.normalized * (_playerParameter.TargetMoveSpeed - _playerParameter.Rb.velocity.magnitude);
+        Vector3 moveVec = (axis.y * cameraForward + axis.x * cameraRight);
+        Vector3 force = moveVec.normalized * (_playerParameter.TargetMoveSpeed);
 
-        _playerParameter.Rb.AddForce(force * _playerParameter.MovePower, ForceMode.Acceleration);
+        _playerParameter.Rb.velocity = new(force.x, _playerParameter.Rb.velocity.y, force.z);
     }
 
     public void BoostDash()
