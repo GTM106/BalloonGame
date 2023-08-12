@@ -24,14 +24,14 @@ public class DeflatablePlayer : IPlayer
         //Y‚ğ–³‹
         Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, new Vector3(1f, 0f, 1f)).normalized;
 
-        Vector3 moveVec = (axis.y * cameraForward + axis.x * _playerParameter.CameraTransform.right) * _playerParameter.MoveSpeed;
-
-        //TODO:ƒWƒƒƒ“ƒvÀ‘•‚É³®‚ÈˆÚ“®ˆ—‚É•ÏX
-        _playerParameter.Rb.velocity = moveVec;
+        Vector3 moveVec = (axis.y * cameraForward + axis.x * _playerParameter.CameraTransform.right);
+        Vector3 force = moveVec.normalized * (_playerParameter.MoveSpeed - _playerParameter.Rb.velocity.magnitude);
+        
+        _playerParameter.Rb.AddForce(force,ForceMode.Acceleration);
     }
 
     public void Jump(Rigidbody rb)
     {
-        throw new System.NotImplementedException();
+        rb.AddForce(Vector3.up * _playerParameter.JumpPower, ForceMode.Impulse);
     }
 }
