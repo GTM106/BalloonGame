@@ -33,7 +33,7 @@ public class InflatablePlayer : IPlayer
 
     public void BoostDash()
     {
-
+        //TODO:ぶっ飛びダッシュ処理を記述
     }
 
     public void Jump(Rigidbody rb)
