@@ -1,8 +1,13 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
+
+public enum BalloonState
+{
+    Normal,
+    Expands
+}
 
 public class BalloonController : MonoBehaviour
 {
@@ -24,17 +29,18 @@ public class BalloonController : MonoBehaviour
         float time = 0f;
         Vector3 startVec = transform.localScale;
 
+        _isAnimation = true;
+
         while (time < _scaleAnimationDuration)
         {
-            _isAnimation = true;
+            await UniTask.Yield(token);
+
             time += Time.deltaTime;
             float progress = Mathf.Clamp01(time / _scaleAnimationDuration);
 
             Vector3 scale = startVec;
             scale += _scaleOffset * progress;
             transform.localScale = scale;
-
-            await UniTask.Yield(token);
         }
 
         _isAnimation = false;
