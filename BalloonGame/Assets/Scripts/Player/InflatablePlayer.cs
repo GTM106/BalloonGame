@@ -10,6 +10,8 @@ public class InflatablePlayer : IPlayer
     readonly PlayerParameter _playerParameter;
     static readonly Vector3 ignoreYCorrection = new(1f, 0f, 1f);
 
+    public float Multiplier => _playerParameter.MultiplierExpand;
+
     public InflatablePlayer(PlayerParameter playerParameter)
     {
         _playerParameter = playerParameter;
@@ -37,5 +39,11 @@ public class InflatablePlayer : IPlayer
     public void Jump(Rigidbody rb)
     {
         rb.AddForce(Vector3.up * _playerParameter.JumpPower, ForceMode.Impulse);
+    }
+
+    public void AdjustingGravity()
+    {
+        //1‚ğŠî€‚Æ‚·‚é’l‚¾‚¯d—Í‚ğ’Ç‰Á‚ÅŠ|‚¯‚é
+        _playerParameter.Rb.AddForce((Multiplier - 1f) * Physics.gravity, ForceMode.Acceleration);
     }
 }
