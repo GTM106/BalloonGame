@@ -13,6 +13,11 @@ public class BalloonHandler : MonoBehaviour
         _ringPushAction.action.performed += OnRingconPushed;
     }
 
+    private void OnDestroy()
+    {
+        _ringPushAction.action.performed -= OnRingconPushed;
+    }
+
     private void OnRingconPushed(InputAction.CallbackContext obj)
     {
         _balloonController.Expand();
