@@ -15,6 +15,7 @@ public class BalloonController : MonoBehaviour
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
     [SerializeField] Vector3 _scaleOffset = Vector3.one / 2f;
     [SerializeField, Min(0f)] float _scaleAmountDeflatingPerSecond;
+    [SerializeField] int _boostFlame = default!;
 
     bool _isAnimation = false;
     float _defaultScaleValue = 0f;
@@ -47,6 +48,13 @@ public class BalloonController : MonoBehaviour
         ScaleAnimation().Forget();
         if (State == BalloonState.Expands) return;
         State = BalloonState.Expands;
+    }
+
+    public async void OnRingconPull()
+    {
+        transform.localScale = Vector3.one * _defaultScaleValue;
+        await UniTask.DelayFrame(_boostFlame,PlayerLoopTiming.FixedUpdate);
+        State = BalloonState.Normal;
     }
 
     private async UniTask ScaleAnimation()

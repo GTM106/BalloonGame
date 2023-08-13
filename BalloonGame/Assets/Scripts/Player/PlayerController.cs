@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public interface IState
 {
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] PlayerParameter _playerParameter = default!;
     [SerializeField] BalloonController _balloonController = default!;
     [SerializeField] GroundCheck _groundCheck = default!;
+    [SerializeField] InputActionReference _ringconPullAction = default!;
     IPlayer _player;
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
@@ -139,6 +141,13 @@ public class PlayerController : MonoBehaviour
 
         _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
+
+        _ringconPullAction.action.performed += OnRingconPull;
+    }
+
+    private void OnRingconPull(InputAction.CallbackContext obj)
+    {
+        _player.BoostDash();
     }
 
     private void OnBalloonStateChanged(BalloonState state)
