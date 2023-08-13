@@ -7,6 +7,7 @@ public class BalloonHandler : MonoBehaviour
 {
     [SerializeField] InputActionReference _ringPushAction = default!;
     [SerializeField] BalloonController _balloonController = default!;
+
     private void Awake()
     {
         _ringPushAction.action.performed += OnRingconPushed;

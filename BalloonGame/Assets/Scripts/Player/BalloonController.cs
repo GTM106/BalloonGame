@@ -10,6 +10,7 @@ public class BalloonController : MonoBehaviour
     [SerializeField] Vector3 _scaleOffset = Vector3.one / 2f;
 
     bool _isAnimation = false;
+
     public void Expand()
     {
         ScaleAnimation().Forget();
@@ -35,6 +36,7 @@ public class BalloonController : MonoBehaviour
 
             await UniTask.Yield(token);
         }
+
         _isAnimation = false;
     }
 }
