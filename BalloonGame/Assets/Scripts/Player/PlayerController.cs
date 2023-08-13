@@ -23,8 +23,12 @@ public interface IState
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] PlayerParameter _playerParameter = default!;
+    [SerializeField] BalloonController _balloonController = default!;
     [SerializeField] GroundCheck _groundCheck = default!;
     IPlayer _player;
+    IPlayer _inflatablePlayer;
+    IPlayer _deflatablePlayer;
+
 
     // ó‘ÔŠÇ—
     IState.E_State _currentState = IState.E_State.Control;
@@ -128,10 +132,17 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        //TODO:•—‘D‚Ìˆ—‚ğ’Ç‰Á‚·‚éÛ‚ÉInflatablePlayer‚Æ“ü‚ê‘Ö‚¦‚éˆ—‚ğ’Ç‰Á‚·‚é
-        _player = new DeflatablePlayer(_playerParameter);
+        _inflatablePlayer = new InflatablePlayer(_playerParameter);
+        _deflatablePlayer = new DeflatablePlayer(_playerParameter);
+
         InitializeState();
+        _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
+    }
+
+    private void OnBalloonStateChanged(BalloonState state)
+    {
+        _player = state == BalloonState.Normal ? _deflatablePlayer : _inflatablePlayer;
     }
 
     private void JoyconLeft_OnDownButtonPressed()
@@ -152,5 +163,12 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         FixedUpdateState();
+        _player.AdjustingGravity();
+    }
+
+    private void OnDestroy()
+    {
+        _balloonController.OnStateChanged -= OnBalloonStateChanged;
+        _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
     }
 }

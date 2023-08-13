@@ -14,7 +14,10 @@ public class PlayerParameter
     [Header("ˆÚ“®‘¬“x")]
     [SerializeField, Min(0f)] float _targetMoveSpeed = default!;
     [SerializeField, Min(0f)] float _movePower= default!;
-
+    [Header("’ÊíŽž‚Ìd—Í")]
+    [SerializeField] float _multiplierNormal = default!;
+    [Header("–c’£Žž‚Ìd—Í")]
+    [SerializeField] float _multiplierExpand = default!;
     public Rigidbody Rb => _rb;
     public Transform CameraTransform => _cameraTransform;
     public JoyconHandler JoyconRight => _joyconRight;
@@ -22,4 +25,6 @@ public class PlayerParameter
     public float JumpPower => _jumpPower;
     public float TargetMoveSpeed => _targetMoveSpeed;
     public float MovePower => _movePower;
+    public float MultiplierNormal => _multiplierNormal;
+    public float MultiplierExpand => _multiplierExpand;
 }

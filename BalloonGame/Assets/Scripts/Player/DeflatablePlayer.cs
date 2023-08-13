@@ -7,14 +7,11 @@ public class DeflatablePlayer : IPlayer
     readonly PlayerParameter _playerParameter;
     static readonly Vector3 ignoreYCorrection = new(1f, 0f, 1f);
 
+    public float Multiplier => _playerParameter.MultiplierNormal;
+
     public DeflatablePlayer(PlayerParameter playerParameter)
     {
         _playerParameter = playerParameter;
-    }
-
-    public void BoostDash()
-    {
-        throw new System.NotImplementedException();
     }
 
     public void Dash()
@@ -31,8 +28,19 @@ public class DeflatablePlayer : IPlayer
         _playerParameter.Rb.velocity = new(force.x, _playerParameter.Rb.velocity.y, force.z);
     }
 
+    public void BoostDash()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void Jump(Rigidbody rb)
     {
         rb.AddForce(Vector3.up * _playerParameter.JumpPower, ForceMode.Impulse);
+    }
+
+    public void AdjustingGravity()
+    {
+        //1ÇäÓèÄÇ∆Ç∑ÇÈílÇæÇØèdóÕÇí«â¡Ç≈ä|ÇØÇÈ
+        _playerParameter.Rb.AddForce((Multiplier - 1f) * Physics.gravity, ForceMode.Acceleration);
     }
 }

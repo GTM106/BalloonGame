@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,14 +12,41 @@ public enum BalloonState
 
 public class BalloonController : MonoBehaviour
 {
-    [SerializeField] float _scaleAnimationDuration = 0.1f;
+    [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
     [SerializeField] Vector3 _scaleOffset = Vector3.one / 2f;
+    [SerializeField, Min(0f)] float _scaleAmountDeflatingPerSecond;
 
     bool _isAnimation = false;
+    float _defaultScaleValue = 0f;
+
+    BalloonState _state;
+    BalloonState State
+    {
+        get { return _state; }
+        set
+        {
+            OnStateChanged?.Invoke(value);
+            _state = value;
+        }
+    }
+
+    public event Action<BalloonState> OnStateChanged;
+
+    private void Awake()
+    {
+        _defaultScaleValue = transform.localScale.x;
+    }
+
+    private void Update()
+    {
+        BalloonDeflation();
+    }
 
     public void Expand()
     {
         ScaleAnimation().Forget();
+        if (State == BalloonState.Expands) return;
+        State = BalloonState.Expands;
     }
 
     private async UniTask ScaleAnimation()
@@ -45,4 +73,23 @@ public class BalloonController : MonoBehaviour
 
         _isAnimation = false;
     }
+
+    private void BalloonDeflation()
+    {
+        if (State == BalloonState.Normal) return;
+        //ãÛãCÇì¸ÇÍÇƒÇ¢ÇÈéûÇÕé¿çsÇµÇ»Ç¢
+        if (_isAnimation) return;
+
+        float scaleDecrease = _scaleAmountDeflatingPerSecond * Time.deltaTime;
+        Vector3 scale = transform.localScale;
+        float scaleValue = Mathf.Max(transform.localScale.x - scaleDecrease, _defaultScaleValue);
+        scale.Set(scaleValue, scaleValue, scaleValue);
+        transform.localScale = scale;
+
+        if (Mathf.Approximately(scaleValue, _defaultScaleValue))
+        {
+            State = BalloonState.Normal;
+        }
+    }
+
 }
