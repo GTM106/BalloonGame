@@ -29,7 +29,6 @@ public class PlayerController : MonoBehaviour
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
 
-
     // èÛë‘ä«óù
     IState.E_State _currentState = IState.E_State.Control;
     static readonly IState[] states = new IState[(int)IState.E_State.MAX]
@@ -134,8 +133,10 @@ public class PlayerController : MonoBehaviour
     {
         _inflatablePlayer = new InflatablePlayer(_playerParameter);
         _deflatablePlayer = new DeflatablePlayer(_playerParameter);
+        _player = _deflatablePlayer;
 
         InitializeState();
+
         _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
     }
