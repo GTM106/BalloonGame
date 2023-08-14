@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,9 +32,18 @@ public class InflatablePlayer : IPlayer
         _playerParameter.Rb.velocity = new(force.x, _playerParameter.Rb.velocity.y, force.z);
     }
 
-    public void BoostDash()
+    public async void BoostDash()
     {
+        Vector3 velocity = _playerParameter.CameraTransform.forward.normalized * _playerParameter.BoostDashPower;
+        _playerParameter.Rb.velocity = velocity;
+        
+        for (int i = 0; i < _playerParameter.BoostFlame; i++)
+        {
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+            _playerParameter.Rb.velocity = velocity;
+        }
 
+        _playerParameter.Rb.velocity = Vector3.zero;
     }
 
     public void Jump(Rigidbody rb)
