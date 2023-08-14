@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
         {
             //1s‚É‚Ü‚Æ‚ß‚ç‚ê‚Ü‚·‚ªA‰Â“Ç«‚Ì‚½‚ß‚É’·‚­‘‚¢‚Ä‚¢‚Ü‚·
             _boostDashFrame++;
-            if (_boostDashFrame >= parent._playerParameter.BoostFlame) return IState.E_State.Control;
+            if (_boostDashFrame >= parent._playerParameter.BoostFrame) return IState.E_State.Control;
 
             return IState.E_State.Unchanged;
         }

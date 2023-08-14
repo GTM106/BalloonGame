@@ -21,7 +21,7 @@ public class BalloonController : MonoBehaviour
     [Header("1秒間にどのくらいスケールが縮むか")]
     [SerializeField, Min(0f)] float _scaleAmountDeflatingPerSecond;
     [Header("吹っ飛びダッシュの持続時間。PlayerControllerと同じ値を設定してください")]
-    [SerializeField, Min(0)] int _boostFlame = default!;
+    [SerializeField, Min(0)] int _boostFrame = default!;
 
     float _defaultScaleValue;
 
@@ -62,7 +62,7 @@ public class BalloonController : MonoBehaviour
         State = BalloonState.BoostDash;
         transform.localScale = Vector3.one * _defaultScaleValue;
 
-        await UniTask.DelayFrame(_boostFlame, PlayerLoopTiming.FixedUpdate);
+        await UniTask.DelayFrame(_boostFrame, PlayerLoopTiming.FixedUpdate);
 
         State = BalloonState.Normal;
     }

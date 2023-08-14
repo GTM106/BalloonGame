@@ -619,7 +619,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684436267}
-  m_LocalRotation: {x: 0.012653497, y: -0.5450432, z: 0.008227282, w: 0.83827215}
+  m_LocalRotation: {x: 0.012653496, y: -0.5450432, z: 0.008227282, w: 0.83827215}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -698,7 +698,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815182734}
-  m_LocalRotation: {x: -0.0025560667, y: -0.54510266, z: -0.0016619499, w: 0.8383637}
+  m_LocalRotation: {x: -0.0025560677, y: -0.54510266, z: -0.0016619506, w: 0.8383637}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1255,12 +1255,11 @@ MonoBehaviour:
     _joyconRight: {fileID: 1817689890}
     _joyconLeft: {fileID: 1269433273}
     _jumpPower: 7
-    _targetMoveSpeed: 10
-    _movePower: 100
+    _moveSpeed: 10
     _multiplierNormal: 3
     _multiplierExpand: 1
     _boostDashPower: 10
-    _boostFlame: 50
+    _boostFrame: 50
   _balloonController: {fileID: 1208625842}
   _groundCheck: {fileID: 1168340598}
   _ringconPullAction: {fileID: 8623513572866432721, guid: 585a3b88238186a44b1683b16bca7288,
@@ -1349,9 +1348,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scaleAnimationDuration: 0.1
-  _scaleOffset: {x: 0.5, y: 0.5, z: 0.5}
+  _scaleOffset: 0.5
   _scaleAmountDeflatingPerSecond: 0.01
-  _boostFlame: 50
+  _boostFrame: 50
 --- !u!135 &1208625843
 SphereCollider:
   m_ObjectHideFlags: 0
