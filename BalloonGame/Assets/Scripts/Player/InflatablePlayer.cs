@@ -27,7 +27,7 @@ public class InflatablePlayer : IPlayer
         Vector3 cameraRight = Vector3.Scale(_playerParameter.CameraTransform.right, ignoreYCorrection).normalized;
 
         Vector3 moveVec = (axis.y * cameraForward + axis.x * cameraRight);
-        Vector3 force = moveVec.normalized * (_playerParameter.TargetMoveSpeed);
+        Vector3 force = moveVec.normalized * (_playerParameter.MoveSpeed);
 
         _playerParameter.Rb.velocity = new(force.x, _playerParameter.Rb.velocity.y, force.z);
     }
@@ -37,7 +37,7 @@ public class InflatablePlayer : IPlayer
         Vector3 velocity = _playerParameter.CameraTransform.forward.normalized * _playerParameter.BoostDashPower;
         _playerParameter.Rb.velocity = velocity;
         
-        for (int i = 0; i < _playerParameter.BoostFlame; i++)
+        for (int i = 0; i < _playerParameter.BoostFrame; i++)
         {
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
             _playerParameter.Rb.velocity = velocity;
