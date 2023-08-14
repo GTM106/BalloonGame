@@ -44,7 +44,7 @@
                 {
                     "name": "RingconPull",
                     "type": "Button",
-                    "id": "a28140cc-5676-49ec-ad32-43f7af77809b",
+                    "id": "8c3961a6-3693-42e6-bcf3-07c45738c6f0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -296,22 +296,22 @@
                 },
                 {
                     "name": "",
-                    "id": "dc83838c-96e5-4495-b8f1-635855d3b531",
-                    "path": "<Gamepad>/rightTrigger",
+                    "id": "322200b9-401d-470e-8396-426aa246fca8",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "RingconPull",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "be1a98c6-ebcc-4879-913f-39b2546d6148",
-                    "path": "<Gamepad>/rightShoulder",
+                    "id": "80248ee5-fa6f-4709-a2af-3a9e2540e40a",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "RingconPull",
                     "isComposite": false,
                     "isPartOfComposite": false

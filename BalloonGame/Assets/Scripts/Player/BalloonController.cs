@@ -7,18 +7,23 @@ using UnityEngine;
 public enum BalloonState
 {
     Normal,
-    Expands
+    Expands,
+    ScaleAnimation,
+    BoostDash,
 }
 
 public class BalloonController : MonoBehaviour
 {
+    [Header("膨張アニメーションの持続時間")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
-    [SerializeField] Vector3 _scaleOffset = Vector3.one / 2f;
+    [Header("どのくらい膨張するか。スケール単位")]
+    [SerializeField, Min(0f)] float _scaleOffset = 0.5f;
+    [Header("1秒間にどのくらいスケールが縮むか")]
     [SerializeField, Min(0f)] float _scaleAmountDeflatingPerSecond;
-    [SerializeField] int _boostFlame = default!;
+    [Header("吹っ飛びダッシュの持続時間。PlayerControllerと同じ値を設定してください")]
+    [SerializeField, Min(0)] int _boostFlame = default!;
 
-    bool _isAnimation = false;
-    float _defaultScaleValue = 0f;
+    float _defaultScaleValue;
 
     BalloonState _state;
     BalloonState State
@@ -26,7 +31,7 @@ public class BalloonController : MonoBehaviour
         get { return _state; }
         set
         {
-            OnStateChanged?.Invoke(value);
+            if (_state != value) OnStateChanged?.Invoke(value);
             _state = value;
         }
     }
@@ -45,27 +50,32 @@ public class BalloonController : MonoBehaviour
 
     public void Expand()
     {
+        if (State is not BalloonState.Normal and not BalloonState.Expands) return;
+
         ScaleAnimation().Forget();
-        if (State == BalloonState.Expands) return;
-        State = BalloonState.Expands;
     }
 
     public async void OnRingconPull()
     {
+        if (State != BalloonState.Expands) return;
+
+        State = BalloonState.BoostDash;
         transform.localScale = Vector3.one * _defaultScaleValue;
-        await UniTask.DelayFrame(_boostFlame,PlayerLoopTiming.FixedUpdate);
+
+        await UniTask.DelayFrame(_boostFlame, PlayerLoopTiming.FixedUpdate);
+
         State = BalloonState.Normal;
     }
 
     private async UniTask ScaleAnimation()
     {
-        if (_isAnimation) return;
+        if (State == BalloonState.ScaleAnimation) return;
 
         var token = this.GetCancellationTokenOnDestroy();
         float time = 0f;
         Vector3 startVec = transform.localScale;
 
-        _isAnimation = true;
+        State = BalloonState.ScaleAnimation;
 
         while (time < _scaleAnimationDuration)
         {
@@ -75,18 +85,16 @@ public class BalloonController : MonoBehaviour
             float progress = Mathf.Clamp01(time / _scaleAnimationDuration);
 
             Vector3 scale = startVec;
-            scale += _scaleOffset * progress;
+            scale += Vector3.one * _scaleOffset * progress;
             transform.localScale = scale;
         }
 
-        _isAnimation = false;
+        State = BalloonState.Expands;
     }
 
     private void BalloonDeflation()
     {
-        if (State == BalloonState.Normal) return;
-        //空気を入れている時は実行しない
-        if (_isAnimation) return;
+        if (State != BalloonState.Expands) return;
 
         float scaleDecrease = _scaleAmountDeflatingPerSecond * Time.deltaTime;
         Vector3 scale = transform.localScale;
@@ -99,5 +107,4 @@ public class BalloonController : MonoBehaviour
             State = BalloonState.Normal;
         }
     }
-
 }
