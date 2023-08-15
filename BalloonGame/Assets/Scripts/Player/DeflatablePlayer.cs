@@ -23,14 +23,15 @@ public class DeflatablePlayer : IPlayer
         Vector3 cameraRight = Vector3.Scale(_playerParameter.CameraTransform.right, ignoreYCorrection).normalized;
 
         Vector3 moveVec = (axis.y * cameraForward + axis.x * cameraRight);
-        Vector3 force = moveVec.normalized * (_playerParameter.TargetMoveSpeed);
+        Vector3 force = moveVec.normalized * (_playerParameter.MoveSpeed);
 
         _playerParameter.Rb.velocity = new(force.x, _playerParameter.Rb.velocity.y, force.z);
     }
 
     public void BoostDash()
     {
-        throw new System.NotImplementedException();
+        //ぶっ飛びダッシュ失敗時の処理を記述
+        Debug.Log("ぶっ飛びダッシュをするには風船が膨らんでいる必要があります");
     }
 
     public void Jump(Rigidbody rb)
