@@ -5,10 +5,27 @@ using UnityEngine;
 public class DeflatablePlayer : IPlayer
 {
     readonly PlayerParameter _playerParameter;
+    static readonly Vector3 ignoreYCorrection = new(1f, 0f, 1f);
+
+    public float Multiplier => _playerParameter.MultiplierNormal;
 
     public DeflatablePlayer(PlayerParameter playerParameter)
     {
         _playerParameter = playerParameter;
+    }
+
+    public void Dash()
+    {
+        Vector2 axis = _playerParameter.JoyconRight.Stick;
+
+        //Yを無視
+        Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;
+        Vector3 cameraRight = Vector3.Scale(_playerParameter.CameraTransform.right, ignoreYCorrection).normalized;
+
+        Vector3 moveVec = (axis.y * cameraForward + axis.x * cameraRight);
+        Vector3 force = moveVec.normalized * (_playerParameter.TargetMoveSpeed);
+
+        _playerParameter.Rb.velocity = new(force.x, _playerParameter.Rb.velocity.y, force.z);
     }
 
     public void BoostDash()
@@ -16,22 +33,14 @@ public class DeflatablePlayer : IPlayer
         throw new System.NotImplementedException();
     }
 
-    public void Dash()
-    {
-        Vector2 axis = _playerParameter.JoyconHandler.Stick;
-
-        //Todo:Axisのmagunitudeによってreturnさせる
-        //Yを無視
-        Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, new Vector3(1f, 0f, 1f)).normalized;
-
-        Vector3 moveVec = (axis.y * cameraForward + axis.x * _playerParameter.CameraTransform.right) * _playerParameter.MoveSpeed;
-
-        //TODO:ジャンプ実装時に正式な移動処理に変更
-        _playerParameter.Rb.velocity = moveVec;
-    }
-
     public void Jump(Rigidbody rb)
     {
-        throw new System.NotImplementedException();
+        rb.AddForce(Vector3.up * _playerParameter.JumpPower, ForceMode.Impulse);
+    }
+
+    public void AdjustingGravity()
+    {
+        //1を基準とする値だけ重力を追加で掛ける
+        _playerParameter.Rb.AddForce((Multiplier - 1f) * Physics.gravity, ForceMode.Acceleration);
     }
 }

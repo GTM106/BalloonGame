@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPlayer
+public interface IPlayer : IAdjustGravity
 {
     /// <summary>
     /// ’Êíƒ_ƒbƒVƒ…

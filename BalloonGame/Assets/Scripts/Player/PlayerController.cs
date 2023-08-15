@@ -23,7 +23,11 @@ public interface IState
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] PlayerParameter _playerParameter = default!;
+    [SerializeField] BalloonController _balloonController = default!;
+    [SerializeField] GroundCheck _groundCheck = default!;
     IPlayer _player;
+    IPlayer _inflatablePlayer;
+    IPlayer _deflatablePlayer;
 
     // 状態管理
     IState.E_State _currentState = IState.E_State.Control;
@@ -57,17 +61,18 @@ public class PlayerController : MonoBehaviour
     {
         public IState.E_State Initialize(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            parent._player.Jump(parent._playerParameter.Rb);
+            return IState.E_State.Unchanged;
         }
 
         public IState.E_State Update(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
     }
 
@@ -75,16 +80,17 @@ public class PlayerController : MonoBehaviour
     {
         public IState.E_State Initialize(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
 
         public IState.E_State Update(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
+
         public IState.E_State FixedUpdate(PlayerController parent)
         {
-            throw new System.NotImplementedException();
+            return IState.E_State.Unchanged;
         }
     }
 
@@ -125,8 +131,29 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        //TODO:風船の処理を追加する際にInflatablePlayerと入れ替える処理を追加する
-        _player = new DeflatablePlayer(_playerParameter);
+        _inflatablePlayer = new InflatablePlayer(_playerParameter);
+        _deflatablePlayer = new DeflatablePlayer(_playerParameter);
+        _player = _deflatablePlayer;
+
+        InitializeState();
+
+        _balloonController.OnStateChanged += OnBalloonStateChanged;
+        _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
+    }
+
+    private void OnBalloonStateChanged(BalloonState state)
+    {
+        _player = state == BalloonState.Normal ? _deflatablePlayer : _inflatablePlayer;
+    }
+
+    private void JoyconLeft_OnDownButtonPressed()
+    {
+        //ステート関係なしにひとまず行います。
+        //ステートパターンに当てはめる作業は後ほど行います。
+        if (_groundCheck.IsGround(out _))
+        {
+            _player.Jump(_playerParameter.Rb);
+        }
     }
 
     private void Update()
@@ -137,5 +164,12 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         FixedUpdateState();
+        _player.AdjustingGravity();
+    }
+
+    private void OnDestroy()
+    {
+        _balloonController.OnStateChanged -= OnBalloonStateChanged;
+        _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
     }
 }
