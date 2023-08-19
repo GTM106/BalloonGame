@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] BalloonController _balloonController = default!;
     [SerializeField] GroundCheck _groundCheck = default!;
     [SerializeField] InputActionReference _ringconPullAction = default!;
+    [SerializeField] Collider _collider = default!;
     IPlayer _player;
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
@@ -227,6 +228,36 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged -= OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
         _ringconPullAction.action.performed -= OnRingconPull;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //Player接触処理のインターフェースを継承しているオブジェクトの処理を呼ぶ
+        //何が実行されるかはインターフェースの継承先を参照してください。
+        if (other.TryGetComponent(out IHittable hitObject))
+        {
+            hitObject.OnEnter(_collider);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        //Player接触処理のインターフェースを継承しているオブジェクトの処理を呼ぶ
+        //何が実行されるかはインターフェースの継承先を参照してください。
+        if (other.TryGetComponent(out IHittable hitObject))
+        {
+            hitObject.OnStay(_collider);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        //Player接触処理のインターフェースを継承しているオブジェクトの処理を呼ぶ
+        //何が実行されるかはインターフェースの継承先を参照してください。
+        if (other.TryGetComponent(out IHittable hitObject))
+        {
+            hitObject.OnExit(_collider);
+        }
     }
 
     private void OnRingconPull(InputAction.CallbackContext obj)
