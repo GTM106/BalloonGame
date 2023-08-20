@@ -18,7 +18,11 @@
     ],
     "m_Keywords": [],
     "m_Dropdowns": [],
-    "m_CategoryData": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "1ecb49406dea4f97b8c5f1f91112b336"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "8c61b138b5244b94807a88be8aedba00"
@@ -508,6 +512,27 @@
         "z": 0.0,
         "w": 0.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "1ecb49406dea4f97b8c5f1f91112b336",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "f30a1cf277fd458eaa60a9236664506a"
+        },
+        {
+            "m_Id": "52ae62590427418d9914d7fe9efbf754"
+        },
+        {
+            "m_Id": "242839ecdbd24c119d81d375e38c3b6b"
+        },
+        {
+            "m_Id": "cd1e6de5b324452b879f569980bad02c"
+        }
+    ]
 }
 
 {
@@ -1543,7 +1568,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "bfc8d3288c6b46a2bf211de6046c55fe",
     "m_Id": 0,
-    "m_DisplayName": "Float",
+    "m_DisplayName": "Blend",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -1666,10 +1691,10 @@
     "m_Guid": {
         "m_GuidSerialized": "76d9d210-5b32-4358-999c-ef6bab181bc0"
     },
-    "m_Name": "Float",
+    "m_Name": "Blend",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Float",
-    "m_DefaultReferenceName": "_Float",
+    "m_RefNameGeneratedByDisplayName": "Blend",
+    "m_DefaultReferenceName": "_Blend",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
