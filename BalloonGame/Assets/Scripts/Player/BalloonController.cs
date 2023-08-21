@@ -14,22 +14,26 @@ public enum BalloonState
 
 public class BalloonController : MonoBehaviour
 {
+    [SerializeField] WaterEvent _waterEvent = default!;
     [Header("膨張アニメーションの持続時間")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
     [Header("どのくらい膨張するか。スケール単位")]
     [SerializeField, Min(0f)] float _scaleOffset = 0.5f;
     [Header("1秒間にどのくらいスケールが縮むか")]
     [SerializeField, Min(0f)] float _scaleAmountDeflatingPerSecond;
+    [Header("水に入っているとき1秒間にどのくらいスケールが縮むか")]
+    [SerializeField, Min(0f)] float _scaleAmountDeflatingPerSecondInWater;
     [Header("吹っ飛びダッシュの持続時間。PlayerControllerと同じ値を設定してください")]
     [SerializeField, Min(0)] int _boostFrame = default!;
 
     float _defaultScaleValue;
 
+    //プロパティの方を使用してください
     BalloonState _state;
-    BalloonState State
+    public BalloonState State
     {
         get { return _state; }
-        set
+        private set
         {
             if (_state != value) OnStateChanged?.Invoke(value);
             _state = value;
@@ -41,18 +45,24 @@ public class BalloonController : MonoBehaviour
     private void Awake()
     {
         _defaultScaleValue = transform.localScale.x;
+        _waterEvent.OnStayAction += OnWaterStay;
     }
 
     private void Update()
     {
-        BalloonDeflation();
+        BalloonDeflation(_scaleAmountDeflatingPerSecond);
+    }
+
+    private void OnDestroy()
+    {
+        _waterEvent.OnStayAction -= OnWaterStay;
     }
 
     public void Expand()
     {
         if (State is not BalloonState.Normal and not BalloonState.Expands) return;
 
-        ScaleAnimation().Forget();
+        ExpandScaleAnimation().Forget();
     }
 
     public async void OnRingconPull()
@@ -67,7 +77,7 @@ public class BalloonController : MonoBehaviour
         State = BalloonState.Normal;
     }
 
-    private async UniTask ScaleAnimation()
+    private async UniTask ExpandScaleAnimation()
     {
         if (State == BalloonState.ScaleAnimation) return;
 
@@ -92,11 +102,11 @@ public class BalloonController : MonoBehaviour
         State = BalloonState.Expands;
     }
 
-    private void BalloonDeflation()
+    private void BalloonDeflation(float scaleAmountDeflatingPerSecond)
     {
         if (State != BalloonState.Expands) return;
 
-        float scaleDecrease = _scaleAmountDeflatingPerSecond * Time.deltaTime;
+        float scaleDecrease = scaleAmountDeflatingPerSecond * Time.deltaTime;
         Vector3 scale = transform.localScale;
         float scaleValue = Mathf.Max(transform.localScale.x - scaleDecrease, _defaultScaleValue);
         scale.Set(scaleValue, scaleValue, scaleValue);
@@ -106,5 +116,12 @@ public class BalloonController : MonoBehaviour
         {
             State = BalloonState.Normal;
         }
+    }
+
+    private void OnWaterStay()
+    {
+        if (State is not BalloonState.Expands and not BalloonState.ScaleAnimation) return;
+
+        BalloonDeflation(_scaleAmountDeflatingPerSecondInWater);
     }
 }

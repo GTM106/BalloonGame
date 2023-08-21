@@ -20,6 +20,11 @@ public class PlayerParameter
     [Header("ぶっ飛びジャンプの力。frameはBalloonと同じ値にしてください")]
     [SerializeField, Min(0f)] float _boostDashPower = default!;
     [SerializeField, Min(0)] int _boostFrame = default!;
+    [Header("膨張時における水に入っているときの浮力")]
+    [SerializeField] float _buoyancyExpand = default!;
+    [Header("通常時における水に入っているときの浮力")]
+    [SerializeField] float _buoyancyNormal = default!;
+
     public Rigidbody Rb => _rb;
     public Transform CameraTransform => _cameraTransform;
     public JoyconHandler JoyconRight => _joyconRight;
@@ -30,4 +35,7 @@ public class PlayerParameter
     public float MultiplierExpand => _multiplierExpand;
     public float BoostDashPower => _boostDashPower;
     public int BoostFrame => _boostFrame;
+    public float BuoyancyExpand => _buoyancyExpand;
+    public float BuoyancyNormal => _buoyancyNormal;
+
 }

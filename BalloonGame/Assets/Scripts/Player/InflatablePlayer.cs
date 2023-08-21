@@ -9,6 +9,8 @@ using UnityEngine;
 public class InflatablePlayer : IPlayer
 {
     readonly PlayerParameter _playerParameter;
+    readonly Rigidbody _rigidbody;
+
     static readonly Vector3 ignoreYCorrection = new(1f, 0f, 1f);
 
     public float Multiplier => _playerParameter.MultiplierExpand;
@@ -16,6 +18,7 @@ public class InflatablePlayer : IPlayer
     public InflatablePlayer(PlayerParameter playerParameter)
     {
         _playerParameter = playerParameter;
+        _rigidbody = _playerParameter.Rb;
     }
 
     public void Dash()
@@ -29,21 +32,21 @@ public class InflatablePlayer : IPlayer
         Vector3 moveVec = (axis.y * cameraForward + axis.x * cameraRight);
         Vector3 force = moveVec.normalized * (_playerParameter.MoveSpeed);
 
-        _playerParameter.Rb.velocity = new(force.x, _playerParameter.Rb.velocity.y, force.z);
+        _rigidbody.velocity = new(force.x, _rigidbody.velocity.y, force.z);
     }
 
     public async void BoostDash()
     {
         Vector3 velocity = _playerParameter.CameraTransform.forward.normalized * _playerParameter.BoostDashPower;
-        _playerParameter.Rb.velocity = velocity;
-        
+        _rigidbody.velocity = velocity;
+
         for (int i = 0; i < _playerParameter.BoostFrame; i++)
         {
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
-            _playerParameter.Rb.velocity = velocity;
+            _rigidbody.velocity = velocity;
         }
 
-        _playerParameter.Rb.velocity = Vector3.zero;
+        _rigidbody.velocity = Vector3.zero;
     }
 
     public void Jump(Rigidbody rb)
@@ -54,6 +57,11 @@ public class InflatablePlayer : IPlayer
     public void AdjustingGravity()
     {
         //1‚ðŠî€‚Æ‚·‚é’l‚¾‚¯d—Í‚ð’Ç‰Á‚ÅŠ|‚¯‚é
-        _playerParameter.Rb.AddForce((Multiplier - 1f) * Physics.gravity, ForceMode.Acceleration);
+        _rigidbody.AddForce((Multiplier - 1f) * Physics.gravity, ForceMode.Acceleration);
+    }
+
+    public void OnWaterStay()
+    {
+        _rigidbody.AddForce(Vector3.up * _playerParameter.BuoyancyExpand, ForceMode.Acceleration);
     }
 }

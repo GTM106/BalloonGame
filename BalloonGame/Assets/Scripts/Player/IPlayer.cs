@@ -19,4 +19,9 @@ public interface IPlayer : IAdjustGravity
     /// </summary>
     /// <param name="rb">playerのリジッドボディ</param>
     public void Jump(Rigidbody rb);
+
+    /// <summary>
+    /// 水に接触中、常に行われる処理
+    /// </summary>
+    public void OnWaterStay();
 }
