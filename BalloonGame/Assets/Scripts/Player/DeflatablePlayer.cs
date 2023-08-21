@@ -5,6 +5,7 @@ using UnityEngine;
 public class DeflatablePlayer : IPlayer
 {
     readonly PlayerParameter _playerParameter;
+    readonly Rigidbody _rigidbody;
     static readonly Vector3 ignoreYCorrection = new(1f, 0f, 1f);
 
     public float Multiplier => _playerParameter.MultiplierNormal;
@@ -12,6 +13,7 @@ public class DeflatablePlayer : IPlayer
     public DeflatablePlayer(PlayerParameter playerParameter)
     {
         _playerParameter = playerParameter;
+        _rigidbody = playerParameter.Rb;
     }
 
     public void Dash()
@@ -25,7 +27,7 @@ public class DeflatablePlayer : IPlayer
         Vector3 moveVec = (axis.y * cameraForward + axis.x * cameraRight);
         Vector3 force = moveVec.normalized * (_playerParameter.MoveSpeed);
 
-        _playerParameter.Rb.velocity = new(force.x, _playerParameter.Rb.velocity.y, force.z);
+        _rigidbody.velocity = new(force.x, _rigidbody.velocity.y, force.z);
     }
 
     public void BoostDash()
@@ -42,6 +44,11 @@ public class DeflatablePlayer : IPlayer
     public void AdjustingGravity()
     {
         //1ÇäÓèÄÇ∆Ç∑ÇÈílÇæÇØèdóÕÇí«â¡Ç≈ä|ÇØÇÈ
-        _playerParameter.Rb.AddForce((Multiplier - 1f) * Physics.gravity, ForceMode.Acceleration);
+        _rigidbody.AddForce((Multiplier - 1f) * Physics.gravity, ForceMode.Acceleration);
+    }
+
+    public void OnWaterStay()
+    {
+        _rigidbody.AddForce(Vector3.up * _playerParameter.BuoyancyNormal, ForceMode.Acceleration);
     }
 }

@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GroundCheck _groundCheck = default!;
     [SerializeField] InputActionReference _ringconPullAction = default!;
     [SerializeField] Collider _collider = default!;
+    [SerializeField] WaterEvent _waterEvent = default!;
     IPlayer _player;
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
@@ -207,6 +208,7 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
         _ringconPullAction.action.performed += OnRingconPull;
+        _waterEvent.OnStayAction += OnWaterStay;
 
         _playerPairs.Add(BalloonState.Normal, _deflatablePlayer);
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
@@ -228,6 +230,7 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged -= OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
         _ringconPullAction.action.performed -= OnRingconPull;
+        _waterEvent.OnStayAction -= OnWaterStay;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -236,7 +239,7 @@ public class PlayerController : MonoBehaviour
         //何が実行されるかはインターフェースの継承先を参照してください。
         if (other.TryGetComponent(out IHittable hitObject))
         {
-            hitObject.OnEnter(_collider);
+            hitObject.OnEnter(_collider, _balloonController.State);
         }
     }
 
@@ -246,7 +249,7 @@ public class PlayerController : MonoBehaviour
         //何が実行されるかはインターフェースの継承先を参照してください。
         if (other.TryGetComponent(out IHittable hitObject))
         {
-            hitObject.OnStay(_collider);
+            hitObject.OnStay(_collider, _balloonController.State);
         }
     }
 
@@ -256,7 +259,7 @@ public class PlayerController : MonoBehaviour
         //何が実行されるかはインターフェースの継承先を参照してください。
         if (other.TryGetComponent(out IHittable hitObject))
         {
-            hitObject.OnExit(_collider);
+            hitObject.OnExit(_collider, _balloonController.State);
         }
     }
 
@@ -271,6 +274,11 @@ public class PlayerController : MonoBehaviour
         {
             _player = player;
         }
+    }
+
+    private void OnWaterStay()
+    {
+        _player.OnWaterStay();
     }
 
     private void JoyconLeft_OnDownButtonPressed()
