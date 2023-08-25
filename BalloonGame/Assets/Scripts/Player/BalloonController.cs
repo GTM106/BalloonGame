@@ -1,8 +1,11 @@
+using Cinemachine;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum BalloonState
 {
@@ -15,6 +18,8 @@ public enum BalloonState
 public class BalloonController : MonoBehaviour
 {
     [SerializeField] WaterEvent _waterEvent = default!;
+    [SerializeField] CinemachineTargetGroup _cinemachineTargetGroup = default!;
+
     [Header("膨張アニメーションの持続時間")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
     [Header("どのくらい膨張するか。スケール単位")]
@@ -70,7 +75,7 @@ public class BalloonController : MonoBehaviour
         if (State != BalloonState.Expands) return;
 
         State = BalloonState.BoostDash;
-        transform.localScale = Vector3.one * _defaultScaleValue;
+        ChangeScale(_defaultScaleValue);
 
         await UniTask.DelayFrame(_boostFrame, PlayerLoopTiming.FixedUpdate);
 
@@ -80,10 +85,9 @@ public class BalloonController : MonoBehaviour
     private async UniTask ExpandScaleAnimation()
     {
         if (State == BalloonState.ScaleAnimation) return;
-
         var token = this.GetCancellationTokenOnDestroy();
         float time = 0f;
-        Vector3 startVec = transform.localScale;
+        float startValue = transform.localScale.x;
 
         State = BalloonState.ScaleAnimation;
 
@@ -94,9 +98,8 @@ public class BalloonController : MonoBehaviour
             time += Time.deltaTime;
             float progress = Mathf.Clamp01(time / _scaleAnimationDuration);
 
-            Vector3 scale = startVec;
-            scale += Vector3.one * _scaleOffset * progress;
-            transform.localScale = scale;
+            float scaleValue = startValue + _scaleOffset * progress;
+            ChangeScale(scaleValue);
         }
 
         State = BalloonState.Expands;
@@ -107,10 +110,8 @@ public class BalloonController : MonoBehaviour
         if (State != BalloonState.Expands) return;
 
         float scaleDecrease = scaleAmountDeflatingPerSecond * Time.deltaTime;
-        Vector3 scale = transform.localScale;
         float scaleValue = Mathf.Max(transform.localScale.x - scaleDecrease, _defaultScaleValue);
-        scale.Set(scaleValue, scaleValue, scaleValue);
-        transform.localScale = scale;
+        ChangeScale(scaleValue);
 
         if (Mathf.Approximately(scaleValue, _defaultScaleValue))
         {
@@ -123,5 +124,11 @@ public class BalloonController : MonoBehaviour
         if (State is not BalloonState.Expands and not BalloonState.ScaleAnimation) return;
 
         BalloonDeflation(_scaleAmountDeflatingPerSecondInWater);
+    }
+
+    private void ChangeScale(float newScale)
+    {
+        _cinemachineTargetGroup.m_Targets[0].radius = newScale;
+        transform.localScale = Vector3.one * newScale;
     }
 }
