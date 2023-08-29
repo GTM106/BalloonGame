@@ -23,7 +23,7 @@ public class InflatablePlayer : IPlayer
 
     public void Dash()
     {
-        Vector2 axis = _playerParameter.JoyconRight.Stick;
+        Vector2 axis = _playerParameter.JoyconRight.Stick.SnapToFourDirections();
 
         //Y‚ð–³Ž‹
         Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;
@@ -33,6 +33,12 @@ public class InflatablePlayer : IPlayer
         Vector3 force = moveVec.normalized * (_playerParameter.MoveSpeed);
 
         _rigidbody.velocity = new(force.x, _rigidbody.velocity.y, force.z);
+
+        if (axis.magnitude <= 0.02f) return;
+
+        //is•ûŒü‚ðŒü‚­
+        Vector3 direction = cameraForward * axis.y + cameraRight * axis.x;
+        _rigidbody.transform.localRotation = Quaternion.LookRotation(direction);
     }
 
     public async void BoostDash()
