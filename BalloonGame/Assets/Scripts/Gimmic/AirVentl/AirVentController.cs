@@ -8,11 +8,12 @@ public class AirVentController : MonoBehaviour, IHittable
 
     private void Awake()
     {
-        _ui1.enabled = false; 
+        _ui1.enabled = false;
     }
+
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-
+        _ui1.enabled = true;
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
@@ -22,6 +23,6 @@ public class AirVentController : MonoBehaviour, IHittable
 
     public void OnStay(Collider playerCollider, BalloonState balloonState)
     {
-        _ui1.enabled = true;
+        //DoNothing
     }
 }
