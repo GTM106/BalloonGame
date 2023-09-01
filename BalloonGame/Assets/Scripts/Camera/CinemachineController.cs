@@ -12,14 +12,23 @@ public class CinemachineController : MonoBehaviour
     [SerializeField] bool _changeTopRigToggle = true;
     [SerializeField, Min(0f)] float _changeTopRigDuration = 0.2f;
 
+    [Header("ジャイロ")]
+    [SerializeField] bool _gyroInversionX;
+    [SerializeField] bool _gyroInversionY;
+    [SerializeField, Min(0f)] float _gyroSpeedX = 0.5f;
+    [SerializeField, Min(0f)] float _gyroSpeedY = 0.5f;
+
     static readonly float topRigValue = 1f;
 
     private void Update()
     {
+        float gyroX = _joyconHandler.Gyro.x * (_gyroInversionX ? -1f : 1f) * _gyroSpeedX;
+        float gyroY = _joyconHandler.Gyro.y * (_gyroInversionY ? -1f : 1f) * _gyroSpeedY;
+
         //Cinemachine側でInputManager,InputSystemが使えますが、
         //今回はJoyconを読み取る形式に独自の形式を利用しているため直接入力値を書き換えます。
-        _freeLook.m_XAxis.m_InputAxisValue = _joyconHandler.Stick.x;
-        _freeLook.m_YAxis.m_InputAxisValue = _joyconHandler.Stick.y;
+        _freeLook.m_XAxis.m_InputAxisValue = _joyconHandler.Stick.x + gyroX;
+        _freeLook.m_YAxis.m_InputAxisValue = _joyconHandler.Stick.y + gyroY;
     }
 
     public async void OnAfterBoostDash()
