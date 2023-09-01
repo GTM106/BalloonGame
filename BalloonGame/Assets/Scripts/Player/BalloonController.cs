@@ -19,6 +19,7 @@ public class BalloonController : MonoBehaviour
 {
     [SerializeField] WaterEvent _waterEvent = default!;
     [SerializeField] CinemachineTargetGroup _cinemachineTargetGroup = default!;
+    [SerializeField] CinemachineController _cinemachineController = default!;
 
     [Header("膨張アニメーションの持続時間")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
@@ -75,7 +76,7 @@ public class BalloonController : MonoBehaviour
         if (State != BalloonState.Expands) return;
 
         State = BalloonState.BoostDash;
-        
+
         //この処理だけはChangeScaleでなく直接書き換える。
         transform.localScale = Vector3.one * _defaultScaleValue;
 
@@ -83,6 +84,8 @@ public class BalloonController : MonoBehaviour
 
         //radiusの書き換えはブースト後に変更
         _cinemachineTargetGroup.m_Targets[0].radius = _defaultScaleValue;
+
+        _cinemachineController.OnAfterBoostDash();
 
         State = BalloonState.Normal;
     }
