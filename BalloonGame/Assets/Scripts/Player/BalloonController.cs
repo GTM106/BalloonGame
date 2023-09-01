@@ -75,9 +75,14 @@ public class BalloonController : MonoBehaviour
         if (State != BalloonState.Expands) return;
 
         State = BalloonState.BoostDash;
-        ChangeScale(_defaultScaleValue);
+        
+        //この処理だけはChangeScaleでなく直接書き換える。
+        transform.localScale = Vector3.one * _defaultScaleValue;
 
         await UniTask.DelayFrame(_boostFrame, PlayerLoopTiming.FixedUpdate);
+
+        //radiusの書き換えはブースト後に変更
+        _cinemachineTargetGroup.m_Targets[0].radius = _defaultScaleValue;
 
         State = BalloonState.Normal;
     }
