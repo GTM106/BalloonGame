@@ -74,18 +74,28 @@ public class BalloonController : MonoBehaviour
     public async void OnRingconPull()
     {
         if (State != BalloonState.Expands) return;
+        var token = this.GetCancellationTokenOnDestroy();
 
         State = BalloonState.BoostDash;
 
         //この処理だけはChangeScaleでなく直接書き換える。
         transform.localScale = Vector3.one * _defaultScaleValue;
 
-        await UniTask.DelayFrame(_boostFrame, PlayerLoopTiming.FixedUpdate);
+        _cinemachineController.OnAfterBoostDash(_boostFrame);
 
-        //radiusの書き換えはブースト後に変更
-        _cinemachineTargetGroup.m_Targets[0].radius = _defaultScaleValue;
+        int currentFrame = 0;
 
-        _cinemachineController.OnAfterBoostDash();
+        while (currentFrame <= _boostFrame)
+        {
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+
+            float progress = currentFrame / _boostFrame;
+
+            //吹っ飛びダッシュだけは特例でスケールを無視してカメラの視野角を変更
+            _cinemachineTargetGroup.m_Targets[0].radius = _defaultScaleValue * progress;
+
+            currentFrame++;
+        }
 
         State = BalloonState.Normal;
     }
@@ -136,6 +146,7 @@ public class BalloonController : MonoBehaviour
 
     private void ChangeScale(float newScale)
     {
+        //カメラの視野角を変更
         _cinemachineTargetGroup.m_Targets[0].radius = newScale;
         transform.localScale = Vector3.one * newScale;
     }
