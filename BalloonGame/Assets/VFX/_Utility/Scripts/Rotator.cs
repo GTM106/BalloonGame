@@ -4,9 +4,6 @@ using UnityEngine;
 
 namespace DissolveExample
 {
-
-
-
     public class Rotator : MonoBehaviour
     {
         public float Speed;
