@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine.InputSystem;
 public class AirVentHandler : MonoBehaviour
 {
     [SerializeField] InputActionReference _ringPushAction = default!;
+    public event Action OnRingconPush;
 
     private void Awake()
     {
@@ -19,6 +21,6 @@ public class AirVentHandler : MonoBehaviour
 
     private void OnRingconPushed(InputAction.CallbackContext obj)
     {
-
+        OnRingconPush?.Invoke();
     }
 }
