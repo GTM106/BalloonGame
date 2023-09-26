@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1288,6 +1288,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _freeLook: {fileID: 1081264632}
   _joyconHandler: {fileID: 1269433273}
+  _changeTopRigToggle: 1
+  _gyroInversionX: 0
+  _gyroInversionY: 0
+  _gyroSpeedX: 0.5
+  _gyroSpeedY: 0.5
 --- !u!114 &1081264635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1481,10 +1486,14 @@ MonoBehaviour:
     _multiplierExpand: 1
     _boostDashPower: 10
     _boostFrame: 50
+    _buoyancyExpand: 0
+    _buoyancyNormal: 0
   _balloonController: {fileID: 1208625842}
   _groundCheck: {fileID: 1168340598}
   _ringconPullAction: {fileID: 8623513572866432721, guid: 585a3b88238186a44b1683b16bca7288,
     type: 3}
+  _collider: {fileID: 0}
+  _waterEvent: {fileID: 0}
 --- !u!114 &1168340598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1582,9 +1591,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92dd7ae3cfe7b8f4996090afa0bacce9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _waterEvent: {fileID: 0}
+  _cinemachineTargetGroup: {fileID: 0}
+  _cinemachineController: {fileID: 0}
   _scaleAnimationDuration: 0.1
   _scaleOffset: 0.5
   _scaleAmountDeflatingPerSecond: 0.01
+  _scaleAmountDeflatingPerSecondInWater: 0
   _boostFrame: 50
 --- !u!135 &1208625843
 SphereCollider:
