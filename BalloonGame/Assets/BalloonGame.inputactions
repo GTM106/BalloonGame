@@ -42,6 +42,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "AirVentPush",
+                    "type": "Button",
+                    "id": "cea4949b-d82b-4d71-a585-eee704248fe6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "RingconPull",
                     "type": "Button",
                     "id": "8c3961a6-3693-42e6-bcf3-07c45738c6f0",
@@ -335,6 +344,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "RingconPull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dad5c69e-74d7-4897-9ce3-1f8f0b4ebcd4",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AirVentPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "14bfa3c0-0b8d-457a-a107-94380550158c",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AirVentPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4890c264-4871-4a64-af68-086c0da82f05",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AirVentPush",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
