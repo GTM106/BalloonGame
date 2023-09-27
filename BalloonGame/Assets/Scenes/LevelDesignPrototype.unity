@@ -3299,7 +3299,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815182734}
-  m_LocalRotation: {x: 0.19300497, y: -0.5304636, z: 0.12549151, w: 0.8158489}
+  m_LocalRotation: {x: 0.19300495, y: -0.5304635, z: 0.1254915, w: 0.8158489}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5596,8 +5596,8 @@ MonoBehaviour:
   _cinemachineController: {fileID: 1081264634}
   _scaleAnimationDuration: 0.1
   _scaleOffset: 0.5
-  _scaleAmountDeflatingPerSecond: 0.01
-  _scaleAmountDeflatingPerSecondInWater: 0.1
+  _scaleAmountDeflatingPerSecond: 0.05
+  _scaleAmountDeflatingPerSecondInWater: 0.2
   _boostFrame: 50
 --- !u!135 &1208625843
 SphereCollider:
