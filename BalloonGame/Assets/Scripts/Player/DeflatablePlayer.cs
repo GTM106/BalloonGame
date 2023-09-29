@@ -20,7 +20,6 @@ public class DeflatablePlayer : IPlayer
     public void Dash()
     {
         Vector2 axis = _playerParameter.JoyconRight.Stick.SnapToFourDirections();
-        axis += Gamepad.current.leftStick.ReadValue();
 
         //Y‚ð–³Ž‹
         Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;
