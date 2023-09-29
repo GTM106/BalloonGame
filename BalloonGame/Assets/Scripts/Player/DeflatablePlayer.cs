@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DeflatablePlayer : IPlayer
 {
@@ -19,6 +20,7 @@ public class DeflatablePlayer : IPlayer
     public void Dash()
     {
         Vector2 axis = _playerParameter.JoyconRight.Stick.SnapToFourDirections();
+        axis += Gamepad.current.leftStick.ReadValue();
 
         //Yを無視
         Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;
@@ -26,8 +28,20 @@ public class DeflatablePlayer : IPlayer
 
         Vector3 moveVec = (axis.y * cameraForward + axis.x * cameraRight);
         Vector3 force = moveVec.normalized * (_playerParameter.MoveSpeed);
+        force.Set(force.x, 0f, force.z);
 
-        _rigidbody.velocity = new(force.x, _rigidbody.velocity.y, force.z);
+        //最大スピードを超えたら加速等の制御ができないようにする。
+        //上昇や落下の速度は最大スピードに含めない。
+        Vector3 currentVelocityIgnoreY = Vector3.Scale(_rigidbody.velocity, ignoreYCorrection);
+
+        if (currentVelocityIgnoreY.magnitude < _playerParameter.MaxMoveSpeed)
+        {
+            //指定したスピードから現在の速度を引いて加速力を求める
+            float currentSpeed = _playerParameter.MoveSpeed - currentVelocityIgnoreY.magnitude;
+            
+            //調整された加速力で力を加える
+            _rigidbody.AddForce(force * currentSpeed);
+        }      
 
         if (axis.magnitude <= 0.02f) return;
 
