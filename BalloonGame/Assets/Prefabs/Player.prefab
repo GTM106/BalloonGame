@@ -96,7 +96,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960072499487829733}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5fe6079e7529a2c48aa7292585637ee1, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -121,7 +121,7 @@ Rigidbody:
   m_GameObject: {fileID: 1960072499487829733}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -156,11 +156,11 @@ MonoBehaviour:
     _cameraTransform: {fileID: 0}
     _joyconRight: {fileID: 0}
     _joyconLeft: {fileID: 0}
-    _jumpPower: 7
-    _moveSpeed: 10
+    _jumpPower: 30
+    _moveSpeed: 20
     _maxMoveSpeed: 10
-    _multiplierNormal: 3
-    _multiplierExpand: 0.5
+    _multiplierNormal: 10
+    _multiplierExpand: 3
     _boostDashPower: 30
     _boostFrame: 50
     _buoyancyExpand: 50
