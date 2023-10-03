@@ -19,7 +19,7 @@ public class DeflatablePlayer : IPlayer
 
     public void Dash()
     {
-        Vector2 axis = _playerParameter.JoyconRight.Stick.SnapToFourDirections();
+        Vector2 axis = _playerParameter.JoyconRight.Stick;
 
         //Y‚ð–³Ž‹
         Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;

@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// 風船が膨張している時のプレイヤーの処理
@@ -24,8 +23,8 @@ public class InflatablePlayer : IPlayer
 
     public void Dash()
     {
-        Vector2 axis = _playerParameter.JoyconRight.Stick.SnapToFourDirections();
-        
+        Vector2 axis = _playerParameter.JoyconRight.Stick;
+
         //Yを無視
         Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;
         Vector3 cameraRight = Vector3.Scale(_playerParameter.CameraTransform.right, ignoreYCorrection).normalized;
@@ -33,18 +32,8 @@ public class InflatablePlayer : IPlayer
         Vector3 moveVec = (axis.y * cameraForward + axis.x * cameraRight);
         Vector3 force = moveVec.normalized * (_playerParameter.MoveSpeed);
 
-        //最大スピードを超えたら加速等の制御ができないようにする。
-        //上昇や落下(Y)の速度は最大スピードに含めない。
-        Vector3 currentVelocityIgnoreY = Vector3.Scale(_rigidbody.velocity, ignoreYCorrection);
+        _rigidbody.velocity = new(force.x, _rigidbody.velocity.y, force.z);
 
-        if (currentVelocityIgnoreY.magnitude < _playerParameter.MaxMoveSpeed)
-        {
-            //指定したスピードから現在の速度を引いて加速力を求める
-            float currentSpeed = _playerParameter.MoveSpeed - currentVelocityIgnoreY.magnitude;
-
-            //調整された加速力で力を加える
-            _rigidbody.AddForce(force * currentSpeed);
-        }
         if (axis.magnitude <= 0.02f) return;
 
         //進行方向を向く
