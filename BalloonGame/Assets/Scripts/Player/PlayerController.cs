@@ -12,6 +12,7 @@ public interface IState
         Jumping,
         Falling,
         BoostDash,
+        GameOver,
 
         MAX,
 
@@ -22,6 +23,7 @@ public interface IState
     E_State Update(PlayerController parent);
     E_State FixedUpdate(PlayerController parent);
     E_State RingconPull(PlayerController parent);
+    E_State RingconPush(PlayerController parent);
 }
 
 public class PlayerController : MonoBehaviour
@@ -29,9 +31,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] PlayerParameter _playerParameter = default!;
     [SerializeField] BalloonController _balloonController = default!;
     [SerializeField] GroundCheck _groundCheck = default!;
+    [SerializeField] InputActionReference _ringconPushAction = default!;
     [SerializeField] InputActionReference _ringconPullAction = default!;
-    [SerializeField] Collider _collider = default!;
+    [SerializeField] Collider _playerCollider = default!;
     [SerializeField] WaterEvent _waterEvent = default!;
+    [SerializeField] Canvas _gameOverCanvas = default!;
+    [SerializeField] PlayerGameOverEvent _playerGameOverEvent = default!;
+    
     IPlayer _player;
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
@@ -46,6 +52,7 @@ public class PlayerController : MonoBehaviour
         new JumpingState(),
         new FallingState(),
         new BoostDashState(),
+        new GameOverState(),
     };
 
     class ControlState : IState
@@ -69,6 +76,11 @@ public class PlayerController : MonoBehaviour
         public IState.E_State RingconPull(PlayerController parent)
         {
             return IState.E_State.BoostDash;
+        }
+
+        public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
         }
     }
 
@@ -94,6 +106,11 @@ public class PlayerController : MonoBehaviour
         {
             return IState.E_State.BoostDash;
         }
+
+        public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
     }
 
     class FallingState : IState
@@ -116,6 +133,11 @@ public class PlayerController : MonoBehaviour
         public IState.E_State RingconPull(PlayerController parent)
         {
             return IState.E_State.BoostDash;
+        }
+
+        public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
         }
     }
 
@@ -147,6 +169,71 @@ public class PlayerController : MonoBehaviour
         public IState.E_State RingconPull(PlayerController parent)
         {
             return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+    }
+
+    class GameOverState : IState
+    {
+        int _currentPressCount;
+
+        public IState.E_State Initialize(PlayerController parent)
+        {
+            _currentPressCount = 0;
+            //TODO:AN500を再生。
+            //TODO:AN501を再生。
+
+            parent._gameOverCanvas.enabled = true;
+
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State Update(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State FixedUpdate(PlayerController parent)
+        {
+            if (_currentPressCount >= parent._playerParameter.RequiredPushCount)
+            {
+                //TODO:AN501からAN502に遷移。
+
+                parent._gameOverCanvas.enabled = false;
+
+                return IState.E_State.Control;
+            }
+
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State RingconPull(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State RingconPush(PlayerController parent)
+        {
+            _currentPressCount++;
+            
+            //一度でもプッシュされたら表示する
+            parent._gameOverCanvas.enabled = true;
+
+            return IState.E_State.Unchanged;
+        }
+    }
+
+    //ステートを強制的に変える
+    private void ForceChangeState(IState.E_State nextState)
+    {
+        if (nextState != IState.E_State.Unchanged)
+        {
+            _currentState = nextState;
+            InitializeState();
         }
     }
 
@@ -197,6 +284,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void RingconPushState()
+    {
+        var nextState = states[(int)_currentState].RingconPush(this);
+
+        if (nextState != IState.E_State.Unchanged)
+        {
+            //次の状態に遷移
+            _currentState = nextState;
+            InitializeState();
+        }
+    }
+
     private void Awake()
     {
         _inflatablePlayer = new InflatablePlayer(_playerParameter);
@@ -208,10 +307,20 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
         _ringconPullAction.action.performed += OnRingconPull;
+        _ringconPushAction.action.performed += OnRingconPush;
         _waterEvent.OnStayAction += OnWaterStay;
 
         _playerPairs.Add(BalloonState.Normal, _deflatablePlayer);
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
+
+        _gameOverCanvas.enabled = false;
+
+        _playerGameOverEvent.OnGameOver += OnGameOver;
+    }
+
+    private void OnGameOver()
+    {
+        ForceChangeState(IState.E_State.GameOver);
     }
 
     private void Update()
@@ -239,7 +348,7 @@ public class PlayerController : MonoBehaviour
         //何が実行されるかはインターフェースの継承先を参照してください。
         if (other.TryGetComponent(out IHittable hitObject))
         {
-            hitObject.OnEnter(_collider, _balloonController.State);
+            hitObject.OnEnter(_playerCollider, _balloonController.State);
         }
     }
 
@@ -249,7 +358,7 @@ public class PlayerController : MonoBehaviour
         //何が実行されるかはインターフェースの継承先を参照してください。
         if (other.TryGetComponent(out IHittable hitObject))
         {
-            hitObject.OnStay(_collider, _balloonController.State);
+            hitObject.OnStay(_playerCollider, _balloonController.State);
         }
     }
 
@@ -259,13 +368,18 @@ public class PlayerController : MonoBehaviour
         //何が実行されるかはインターフェースの継承先を参照してください。
         if (other.TryGetComponent(out IHittable hitObject))
         {
-            hitObject.OnExit(_collider, _balloonController.State);
+            hitObject.OnExit(_playerCollider, _balloonController.State);
         }
     }
 
     private void OnRingconPull(InputAction.CallbackContext obj)
     {
         RingconPullState();
+    }
+
+    private void OnRingconPush(InputAction.CallbackContext obj)
+    {
+        RingconPushState();
     }
 
     private void OnBalloonStateChanged(BalloonState state)

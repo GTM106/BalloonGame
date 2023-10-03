@@ -24,6 +24,8 @@ public class PlayerParameter
     [SerializeField] float _buoyancyExpand = default!;
     [Header("通常時における水に入っているときの浮力")]
     [SerializeField] float _buoyancyNormal = default!;
+    [Header("ゲームオーバーからの復活に必要なプッシュ数")]
+    [SerializeField, Min(0)] int _requiredPushCount = default!;
 
     public Rigidbody Rb => _rb;
     public Transform CameraTransform => _cameraTransform;
@@ -37,5 +39,5 @@ public class PlayerParameter
     public int BoostFrame => _boostFrame;
     public float BuoyancyExpand => _buoyancyExpand;
     public float BuoyancyNormal => _buoyancyNormal;
-
+    public int RequiredPushCount => _requiredPushCount;
 }
