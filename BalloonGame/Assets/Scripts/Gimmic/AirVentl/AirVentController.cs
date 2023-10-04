@@ -5,12 +5,13 @@ using UnityEngine;
 public class AirVentController : MonoBehaviour, IHittable
 {
     [SerializeField] AirVentInteractable _airVentInteractable = default!;
-    [SerializeField] Canvas _ui1 = default!;
     [SerializeField] AirVentHandler _airVentHandler = default!;
+
+    int _defaultLayer;
 
     private void Awake()
     {
-        _ui1.enabled = false;
+        _defaultLayer = gameObject.layer;
     }
 
     private void OnRingconPush()
@@ -20,13 +21,13 @@ public class AirVentController : MonoBehaviour, IHittable
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        _ui1.enabled = true;
+        gameObject.layer = LayerMask.NameToLayer("Outline");
         _airVentHandler.OnRingconPush += OnRingconPush;
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
     {
-        _ui1.enabled = false;
+        gameObject.layer = _defaultLayer;
         _airVentHandler.OnRingconPush -= OnRingconPush;
     }
 
