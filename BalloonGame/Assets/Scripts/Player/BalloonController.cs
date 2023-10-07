@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public enum BalloonState
@@ -17,6 +18,10 @@ public enum BalloonState
 
 public class BalloonController : MonoBehaviour
 {
+    //â∫ãLÇÃInputActionReferenceÇÕÅAHandlerÇÃñäÑÇÇ‡ÇøÇ‹Ç∑
+    [SerializeField] InputActionReference _ringPushAction = default!;
+    [SerializeField] InputActionReference _ringPullAction = default!;
+
     [SerializeField] WaterEvent _waterEvent = default!;
     [SerializeField] CinemachineTargetGroup _cinemachineTargetGroup = default!;
     [SerializeField] CinemachineController _cinemachineController = default!;
@@ -52,6 +57,8 @@ public class BalloonController : MonoBehaviour
     {
         _defaultScaleValue = transform.localScale.x;
         _waterEvent.OnStayAction += OnWaterStay;
+        _ringPushAction.action.performed += OnRingconPushed;
+        _ringPullAction.action.performed += OnRingconPulled;
     }
 
     private void Update()
@@ -62,16 +69,28 @@ public class BalloonController : MonoBehaviour
     private void OnDestroy()
     {
         _waterEvent.OnStayAction -= OnWaterStay;
+        _ringPushAction.action.performed -= OnRingconPushed;
+        _ringPullAction.action.performed -= OnRingconPulled;
     }
 
-    public void Expand()
+    private void OnRingconPushed(InputAction.CallbackContext obj)
+    {
+        Expand();
+    }
+
+    private void OnRingconPulled(InputAction.CallbackContext obj)
+    {
+        OnRingconPull();
+    }
+
+    private void Expand()
     {
         if (State is not BalloonState.Normal and not BalloonState.Expands) return;
 
         ExpandScaleAnimation().Forget();
     }
 
-    public async void OnRingconPull()
+    private async void OnRingconPull()
     {
         if (State != BalloonState.Expands) return;
         var token = this.GetCancellationTokenOnDestroy();
