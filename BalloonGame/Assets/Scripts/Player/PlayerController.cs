@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] WaterEvent _waterEvent = default!;
     [SerializeField] Canvas _gameOverCanvas = default!;
     [SerializeField] PlayerGameOverEvent _playerGameOverEvent = default!;
-    
+
     IPlayer _player;
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
@@ -201,9 +201,8 @@ public class PlayerController : MonoBehaviour
         {
             if (_currentPressCount >= parent._playerParameter.RequiredPushCount)
             {
-                //TODO:AN501からAN502に遷移。
-
-                parent._gameOverCanvas.enabled = false;
+                //復活通知を送る
+                parent._playerGameOverEvent.Revive();
 
                 return IState.E_State.Control;
             }
@@ -219,7 +218,7 @@ public class PlayerController : MonoBehaviour
         public IState.E_State RingconPush(PlayerController parent)
         {
             _currentPressCount++;
-            
+
             //一度でもプッシュされたら表示する
             parent._gameOverCanvas.enabled = true;
 
@@ -309,13 +308,20 @@ public class PlayerController : MonoBehaviour
         _ringconPullAction.action.performed += OnRingconPull;
         _ringconPushAction.action.performed += OnRingconPush;
         _waterEvent.OnStayAction += OnWaterStay;
+        _playerGameOverEvent.OnGameOver += OnGameOver;
+        _playerGameOverEvent.OnRevive += OnRevive;
 
         _playerPairs.Add(BalloonState.Normal, _deflatablePlayer);
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
 
         _gameOverCanvas.enabled = false;
+    }
 
-        _playerGameOverEvent.OnGameOver += OnGameOver;
+    private void OnRevive()
+    {                
+        //TODO:AN501からAN502に遷移。
+
+        _gameOverCanvas.enabled = false;
     }
 
     private void OnGameOver()
@@ -339,7 +345,10 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged -= OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
         _ringconPullAction.action.performed -= OnRingconPull;
+        _ringconPushAction.action.performed -= OnRingconPush;
         _waterEvent.OnStayAction -= OnWaterStay;
+        _playerGameOverEvent.OnGameOver -= OnGameOver;
+        _playerGameOverEvent.OnRevive -= OnRevive;
     }
 
     private void OnTriggerEnter(Collider other)

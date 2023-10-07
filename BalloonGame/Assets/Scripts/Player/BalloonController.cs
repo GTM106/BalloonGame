@@ -3,9 +3,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum BalloonState
 {
@@ -13,6 +11,7 @@ public enum BalloonState
     Expands,
     ScaleAnimation,
     BoostDash,
+    GameOver,
 }
 
 public class BalloonController : MonoBehaviour
@@ -20,6 +19,7 @@ public class BalloonController : MonoBehaviour
     [SerializeField] WaterEvent _waterEvent = default!;
     [SerializeField] CinemachineTargetGroup _cinemachineTargetGroup = default!;
     [SerializeField] CinemachineController _cinemachineController = default!;
+    [SerializeField] PlayerGameOverEvent _playerGameOverEvent = default!;
 
     [Header("膨張アニメーションの持続時間")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
@@ -52,6 +52,20 @@ public class BalloonController : MonoBehaviour
     {
         _defaultScaleValue = transform.localScale.x;
         _waterEvent.OnStayAction += OnWaterStay;
+        _playerGameOverEvent.OnGameOver += OnGameOver;
+        _playerGameOverEvent.OnRevive += OnRevive;
+    }
+
+    private void OnRevive()
+    {
+        State = BalloonState.Normal;
+    }
+
+    private void OnGameOver()
+    {
+        //風船の空気を抜く
+        ChangeScale(_defaultScaleValue);
+        State = BalloonState.GameOver;
     }
 
     private void Update()
@@ -62,6 +76,8 @@ public class BalloonController : MonoBehaviour
     private void OnDestroy()
     {
         _waterEvent.OnStayAction -= OnWaterStay;
+        _playerGameOverEvent.OnGameOver -= OnGameOver;
+        _playerGameOverEvent.OnRevive -= OnRevive;
     }
 
     public void Expand()
@@ -111,6 +127,9 @@ public class BalloonController : MonoBehaviour
 
         while (time < _scaleAnimationDuration)
         {
+            //膨らみ途中にゲームオーバーになったら処理終了
+            if (State == BalloonState.GameOver) return;
+
             await UniTask.Yield(token);
 
             time += Time.deltaTime;
