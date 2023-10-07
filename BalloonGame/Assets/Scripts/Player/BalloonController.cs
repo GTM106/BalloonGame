@@ -127,10 +127,10 @@ public class BalloonController : MonoBehaviour
 
         while (time < _scaleAnimationDuration)
         {
+            await UniTask.Yield(token);
+            
             //–c‚ç‚Ý“r’†‚ÉƒQ[ƒ€ƒI[ƒo[‚É‚È‚Á‚½‚çˆ—I—¹
             if (State == BalloonState.GameOver) return;
-
-            await UniTask.Yield(token);
 
             time += Time.deltaTime;
             float progress = Mathf.Clamp01(time / _scaleAnimationDuration);
