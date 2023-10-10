@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -14,37 +13,39 @@ public enum BalloonState
     Expands,
     ScaleAnimation,
     BoostDash,
+    GameOver,
 }
 
 public class BalloonController : MonoBehaviour
 {
-    //‰º‹L‚ÌInputActionReference‚ÍAHandler‚Ì–ğŠ„‚ğ‚à‚¿‚Ü‚·
+    //ä¸‹è¨˜ã®InputActionReferenceã¯ã€Handlerã®å½¹å‰²ã‚’ã‚‚ã¡ã¾ã™
     [SerializeField] InputActionReference _ringPushAction = default!;
     [SerializeField] InputActionReference _ringPullAction = default!;
 
     [SerializeField] WaterEvent _waterEvent = default!;
     [SerializeField] CinemachineTargetGroup _cinemachineTargetGroup = default!;
     [SerializeField] CinemachineController _cinemachineController = default!;
+    [SerializeField] PlayerGameOverEvent _playerGameOverEvent = default!;
 
     [SerializeField] SkinnedMeshRenderer _skinnedMeshRenderer = default!;
 
-    [Header("–c’£ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‘±ŠÔ")]
+    [Header("è†¨å¼µã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æŒç¶šæ™‚é–“")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
-    [Header("1‰ñƒvƒbƒVƒ…‚Å‚Ç‚Ì‚­‚ç‚¢–c’£‚·‚é‚©B\nBrendShape‚Ì’l‚ğQl‚É‚µ‚Ä‚­‚¾‚³‚¢")]
+    [Header("1å›ãƒ—ãƒƒã‚·ãƒ¥ã§ã©ã®ãã‚‰ã„è†¨å¼µã™ã‚‹ã‹ã€‚\nBrendShapeã®å€¤ã‚’å‚è€ƒã«ã—ã¦ãã ã•ã„")]
     [SerializeField, Min(0f)] float _scaleOffset = 10f;
-    [Header("1•bŠÔ‚É‚Ç‚Ì‚­‚ç‚¢•—‘D‚ªk‚Ş‚©B\nBrendShape‚Ì’l‚ğQl‚É‚µ‚Ä‚­‚¾‚³‚¢")]
+    [Header("1ç§’é–“ã«ã©ã®ãã‚‰ã„é¢¨èˆ¹ãŒç¸®ã‚€ã‹ã€‚\nBrendShapeã®å€¤ã‚’å‚è€ƒã«ã—ã¦ãã ã•ã„")]
     [SerializeField, Min(0f)] float _scaleAmountDeflatingPerSecond;
-    [Header("…‚É“ü‚Á‚Ä‚¢‚é‚Æ‚«1•bŠÔ‚É‚Ç‚Ì‚­‚ç‚¢•—‘D‚ªk‚Ş‚©B\nBrendShape‚Ì’l‚ğQl‚É‚µ‚Ä‚­‚¾‚³‚¢")]
+    [Header("æ°´ã«å…¥ã£ã¦ã„ã‚‹ã¨ã1ç§’é–“ã«ã©ã®ãã‚‰ã„é¢¨èˆ¹ãŒç¸®ã‚€ã‹ã€‚\nBrendShapeã®å€¤ã‚’å‚è€ƒã«ã—ã¦ãã ã•ã„")]
     [SerializeField, Min(0f)] float _scaleAmountDeflatingPerSecondInWater;
-    [Header("CinemachineTargetGroup‚É‚¨‚¯‚éradius‚ÌÅ‘å’l")]
+    [Header("CinemachineTargetGroupã«ãŠã‘ã‚‹radiusã®æœ€å¤§å€¤")]
     [SerializeField, Min(1f)] float cameraRadiusMax = 3.25f;
-    [Header("‚Á”ò‚Ñƒ_ƒbƒVƒ…‚Ì‘±ŠÔBPlayerController‚Æ“¯‚¶’l‚ğİ’è‚µ‚Ä‚­‚¾‚³‚¢")]
+    [Header("å¹ã£é£›ã³ãƒ€ãƒƒã‚·ãƒ¥ã®æŒç¶šæ™‚é–“ã€‚PlayerControllerã¨åŒã˜å€¤ã‚’è¨­å®šã—ã¦ãã ã•ã„")]
     [SerializeField, Min(0)] int _boostFrame = default!;
 
-    //•—‘D‚Ì–c‚ç‚İ‹ï‡‚Ì‰Šú’lBAwake‚Å‰Šú‰»‚µ‚Ä‚¢‚Ü‚·
+    //é¢¨èˆ¹ã®è†¨ã‚‰ã¿å…·åˆã®åˆæœŸå€¤ã€‚Awakeã§åˆæœŸåŒ–ã—ã¦ã„ã¾ã™
     float _defaultBlendShapeWeight;
 
-    //ƒvƒƒpƒeƒB‚Ì•û‚ğg—p‚µ‚Ä‚­‚¾‚³‚¢
+    //ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®æ–¹ã‚’ä½¿ç”¨ã—ã¦ãã ã•ã„
     BalloonState _state;
     public BalloonState State
     {
@@ -66,6 +67,20 @@ public class BalloonController : MonoBehaviour
         _waterEvent.OnStayAction += OnWaterStay;
         _ringPushAction.action.performed += OnRingconPushed;
         _ringPullAction.action.performed += OnRingconPulled;
+        _playerGameOverEvent.OnGameOver += OnGameOver;
+        _playerGameOverEvent.OnRevive += OnRevive;
+    }
+
+    private void OnRevive()
+    {
+        State = BalloonState.Normal;
+    }
+
+    private void OnGameOver()
+    {
+        //é¢¨èˆ¹ã®ç©ºæ°—ã‚’æŠœã
+        ChangeScale(_defaultScaleValue);
+        State = BalloonState.GameOver;
     }
 
     private void Update()
@@ -78,6 +93,8 @@ public class BalloonController : MonoBehaviour
         _waterEvent.OnStayAction -= OnWaterStay;
         _ringPushAction.action.performed -= OnRingconPushed;
         _ringPullAction.action.performed -= OnRingconPulled;
+        _playerGameOverEvent.OnGameOver -= OnGameOver;
+        _playerGameOverEvent.OnRevive -= OnRevive;
     }
 
     private void OnRingconPushed(InputAction.CallbackContext obj)
@@ -88,6 +105,8 @@ public class BalloonController : MonoBehaviour
     private void OnRingconPulled(InputAction.CallbackContext obj)
     {
         OnRingconPull();
+        _playerGameOverEvent.OnGameOver -= OnGameOver;
+        _playerGameOverEvent.OnRevive -= OnRevive;
     }
 
     private void Expand()
@@ -104,7 +123,7 @@ public class BalloonController : MonoBehaviour
 
         State = BalloonState.BoostDash;
 
-        //‚±‚Ìˆ—‚¾‚¯‚ÍChangeScale‚Å‚È‚­’¼Ú‘‚«Š·‚¦‚éB
+        //ã“ã®å‡¦ç†ã ã‘ã¯ChangeScaleã§ãªãç›´æ¥æ›¸ãæ›ãˆã‚‹ã€‚
         _skinnedMeshRenderer.SetBlendShapeWeight(0, _defaultBlendShapeWeight);
 
         _cinemachineController.OnAfterBoostDash(_boostFrame);
@@ -118,7 +137,7 @@ public class BalloonController : MonoBehaviour
 
             float progress = Mathf.Clamp01(currentFrame / _boostFrame);
 
-            //‚Á”ò‚Ñƒ_ƒbƒVƒ…‚¾‚¯‚Í“Á—á‚ÅƒXƒP[ƒ‹‚ğ–³‹‚µ‚ÄƒJƒƒ‰‚Ì‹–ìŠp‚ğ•ÏX
+            //å¹ã£é£›ã³ãƒ€ãƒƒã‚·ãƒ¥ã ã‘ã¯ç‰¹ä¾‹ã§ã‚¹ã‚±ãƒ¼ãƒ«ã‚’ç„¡è¦–ã—ã¦ã‚«ãƒ¡ãƒ©ã®è¦–é‡è§’ã‚’å¤‰æ›´
             _cinemachineTargetGroup.m_Targets[0].radius = startValue * (1f - progress);
 
             currentFrame++;
@@ -138,6 +157,9 @@ public class BalloonController : MonoBehaviour
         while (time < _scaleAnimationDuration)
         {
             await UniTask.Yield(token);
+            
+            //è†¨ã‚‰ã¿é€”ä¸­ã«ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã«ãªã£ãŸã‚‰å‡¦ç†çµ‚äº†
+            if (State == BalloonState.GameOver) return;
 
             time += Time.deltaTime;
             float progress = Mathf.Clamp01(time / _scaleAnimationDuration);
@@ -145,7 +167,7 @@ public class BalloonController : MonoBehaviour
 
             ChangeScale(scaleValue);
 
-            //Å‘å‚Ü‚Å–c‚ç‚ñ‚¾‚çˆ—–c‚ç‚İƒAƒjƒ[ƒVƒ‡ƒ“‚ğI—¹
+            //æœ€å¤§ã¾ã§è†¨ã‚‰ã‚“ã ã‚‰å‡¦ç†è†¨ã‚‰ã¿ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’çµ‚äº†
             if (Mathf.Approximately(scaleValue, MaxBrandShapeValue)) break;
         }
 
@@ -177,17 +199,17 @@ public class BalloonController : MonoBehaviour
     {
         _skinnedMeshRenderer.SetBlendShapeWeight(0, newScale);
 
-        //ƒJƒƒ‰‚Ì‹–ìŠp‚ğ•ÏX
+        //ã‚«ãƒ¡ãƒ©ã®è¦–é‡è§’ã‚’å¤‰æ›´
         _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
     }
 
     private float BlendShapeWeight2CameraRadius(float blendShapeWeight)
     {
-        //radious‚ÌÅ’á’lB0~MaxBrandShapeValue ‚ğ Offset~cameraRadiusMax‚É
-        //’²®‚·‚é‚½‚ß‚ÉAÅ’á’l‚ğ‚ ‚í‚¹‚é‚½‚ß‚ÌOffset
+        //radiousã®æœ€ä½å€¤ã€‚0~MaxBrandShapeValue ã‚’ Offset~cameraRadiusMaxã«
+        //èª¿æ•´ã™ã‚‹ãŸã‚ã«ã€æœ€ä½å€¤ã‚’ã‚ã‚ã›ã‚‹ãŸã‚ã®Offset
         const float Offset = 1f;
 
-        //Œ»İ‚Ìis“x(–c‚ç‚İ“x(0~MaxBrandShapeValue))‚ğ•ÏŠ·
+        //ç¾åœ¨ã®é€²è¡Œåº¦(è†¨ã‚‰ã¿åº¦(0~MaxBrandShapeValue))ã‚’å¤‰æ›
         float progress = blendShapeWeight / MaxBrandShapeValue * (cameraRadiusMax - Offset);
 
         return progress + Offset;
