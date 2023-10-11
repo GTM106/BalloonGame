@@ -26,6 +26,7 @@ public class BalloonController : MonoBehaviour
     [SerializeField] CinemachineTargetGroup _cinemachineTargetGroup = default!;
     [SerializeField] CinemachineController _cinemachineController = default!;
     [SerializeField] PlayerGameOverEvent _playerGameOverEvent = default!;
+    [SerializeField] Material _MAT_AtiiBalloon = default!;
 
     [SerializeField] SkinnedMeshRenderer _skinnedMeshRenderer = default!;
 
@@ -38,7 +39,9 @@ public class BalloonController : MonoBehaviour
     [Header("水に入っているとき1秒間にどのくらい風船が縮むか。\nBrendShapeの値を参考にしてください")]
     [SerializeField, Min(0f)] float _scaleAmountDeflatingPerSecondInWater;
     [Header("CinemachineTargetGroupにおけるradiusの最大値")]
-    [SerializeField, Min(1f)] float cameraRadiusMax = 3.25f;
+    [SerializeField, Min(1f)] float _cameraRadiusMax = 3.25f;
+    [Header("風船のマテリアルのSmoothness値の最大値")]
+    [SerializeField, Range(0.4f, 1f)] float _smoothnessMax = 1f;
     [Header("吹っ飛びダッシュの持続時間。PlayerControllerと同じ値を設定してください")]
     [SerializeField, Min(0)] int _boostFrame = default!;
 
@@ -80,6 +83,10 @@ public class BalloonController : MonoBehaviour
     {
         //風船の空気を抜く
         ChangeScale(_defaultBlendShapeWeight);
+
+        //カメラの視野角を変更
+        _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+
         State = BalloonState.GameOver;
     }
 
@@ -105,8 +112,6 @@ public class BalloonController : MonoBehaviour
     private void OnRingconPulled(InputAction.CallbackContext obj)
     {
         OnRingconPull();
-        _playerGameOverEvent.OnGameOver -= OnGameOver;
-        _playerGameOverEvent.OnRevive -= OnRevive;
     }
 
     private void Expand()
@@ -123,8 +128,7 @@ public class BalloonController : MonoBehaviour
 
         State = BalloonState.BoostDash;
 
-        //この処理だけはChangeScaleでなく直接書き換える。
-        _skinnedMeshRenderer.SetBlendShapeWeight(0, _defaultBlendShapeWeight);
+        ChangeScale(_defaultBlendShapeWeight);
 
         _cinemachineController.OnAfterBoostDash(_boostFrame);
 
@@ -157,7 +161,7 @@ public class BalloonController : MonoBehaviour
         while (time < _scaleAnimationDuration)
         {
             await UniTask.Yield(token);
-            
+
             //膨らみ途中にゲームオーバーになったら処理終了
             if (State == BalloonState.GameOver) return;
 
@@ -166,6 +170,9 @@ public class BalloonController : MonoBehaviour
             float scaleValue = Mathf.Min(startValue + _scaleOffset * progress, MaxBrandShapeValue);
 
             ChangeScale(scaleValue);
+            
+            //カメラの視野角を変更
+            _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
 
             //最大まで膨らんだら処理膨らみアニメーションを終了
             if (Mathf.Approximately(scaleValue, MaxBrandShapeValue)) break;
@@ -181,6 +188,9 @@ public class BalloonController : MonoBehaviour
         float scaleDecrease = scaleAmountDeflatingPerSecond * Time.deltaTime;
         float scaleValue = Mathf.Max(_skinnedMeshRenderer.GetBlendShapeWeight(0) - scaleDecrease, _defaultBlendShapeWeight);
         ChangeScale(scaleValue);
+
+        //カメラの視野角を変更
+        _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
 
         if (Mathf.Approximately(scaleValue, _defaultBlendShapeWeight))
         {
@@ -199,8 +209,10 @@ public class BalloonController : MonoBehaviour
     {
         _skinnedMeshRenderer.SetBlendShapeWeight(0, newScale);
 
-        //カメラの視野角を変更
-        _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+        float weight = _skinnedMeshRenderer.GetBlendShapeWeight(0);
+
+        //スペキュラーを変更
+        _MAT_AtiiBalloon.SetFloat("_Smoothness", BlendShapeWeight2Smoothness(weight));
     }
 
     private float BlendShapeWeight2CameraRadius(float blendShapeWeight)
@@ -210,7 +222,19 @@ public class BalloonController : MonoBehaviour
         const float Offset = 1f;
 
         //現在の進行度(膨らみ度(0~MaxBrandShapeValue))を変換
-        float progress = blendShapeWeight / MaxBrandShapeValue * (cameraRadiusMax - Offset);
+        float progress = blendShapeWeight / MaxBrandShapeValue * (_cameraRadiusMax - Offset);
+
+        return progress + Offset;
+    }
+
+    private float BlendShapeWeight2Smoothness(float blendShapeWeight)
+    {
+        //radiousの最低値。0~Max を Offset~Max+Offsetに
+        //調整するために、最低値をあわせるためのOffset
+        const float Offset = 0.4f;
+
+        //現在の進行度(膨らみ度(0~MaxBrandShapeValue))を変換
+        float progress = blendShapeWeight / MaxBrandShapeValue * (_smoothnessMax - Offset);
 
         return progress + Offset;
     }
