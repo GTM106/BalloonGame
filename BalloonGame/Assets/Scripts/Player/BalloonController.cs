@@ -79,7 +79,7 @@ public class BalloonController : MonoBehaviour
     private void OnGameOver()
     {
         //風船の空気を抜く
-        ChangeScale(_defaultScaleValue);
+        ChangeScale(_defaultBlendShapeWeight);
         State = BalloonState.GameOver;
     }
 
