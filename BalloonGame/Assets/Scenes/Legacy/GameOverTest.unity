@@ -1839,85 +1839,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &518509453
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1168340595}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 302f71e925364ed4c8544c29fbab4789,
-        type: 3}
-      propertyPath: m_Name
-      value: Atii
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 302f71e925364ed4c8544c29fbab4789, type: 3}
---- !u!4 &518509454 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 302f71e925364ed4c8544c29fbab4789,
-    type: 3}
-  m_PrefabInstance: {fileID: 518509453}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &585651282
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4754,7 +4675,6 @@ Transform:
   m_Children:
   - {fileID: 1208625840}
   - {fileID: 1784121600}
-  - {fileID: 518509454}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4804,6 +4724,7 @@ MonoBehaviour:
     _joyconLeft: {fileID: 1269433273}
     _jumpPower: 7
     _moveSpeed: 10
+    _maxMoveSpeed: 0
     _multiplierNormal: 3
     _multiplierExpand: 0.5
     _boostDashPower: 30
@@ -5256,14 +5177,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92dd7ae3cfe7b8f4996090afa0bacce9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ringPushAction: {fileID: 0}
+  _ringPullAction: {fileID: 0}
   _waterEvent: {fileID: 1077309036}
   _cinemachineTargetGroup: {fileID: 751176631}
   _cinemachineController: {fileID: 1081264634}
   _playerGameOverEvent: {fileID: 1879325949}
+  _MAT_AtiiBalloon: {fileID: 0}
+  _skinnedMeshRenderer: {fileID: 0}
   _scaleAnimationDuration: 0.1
   _scaleOffset: 0.5
   _scaleAmountDeflatingPerSecond: 0.01
   _scaleAmountDeflatingPerSecondInWater: 0.1
+  _cameraRadiusMax: 3.25
+  _smoothnessMax: 1
   _boostFrame: 50
 --- !u!135 &1208625843
 SphereCollider:
