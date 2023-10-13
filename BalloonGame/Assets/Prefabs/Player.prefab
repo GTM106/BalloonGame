@@ -34,7 +34,7 @@ Transform:
   m_Children:
   - {fileID: 4591887592478856138}
   m_Father: {fileID: 0}
-  m_RootOrder: 23
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2826682229555106861
 CapsuleCollider:
@@ -112,12 +112,17 @@ MonoBehaviour:
     _boostFrame: 50
     _buoyancyExpand: 50
     _buoyancyNormal: 20
+    _requiredPushCount: 3
   _balloonController: {fileID: 8645611423024036285}
   _groundCheck: {fileID: 5537941699024868813}
+  _ringconPushAction: {fileID: 2269632662786835952, guid: 585a3b88238186a44b1683b16bca7288,
+    type: 3}
   _ringconPullAction: {fileID: 8623513572866432721, guid: 585a3b88238186a44b1683b16bca7288,
     type: 3}
-  _collider: {fileID: 2826682229555106861}
+  _playerCollider: {fileID: 2826682229555106861}
   _waterEvent: {fileID: 0}
+  _gameOverCanvas: {fileID: 0}
+  _playerGameOverEvent: {fileID: 0}
 --- !u!114 &5537941699024868813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,10 +695,13 @@ MonoBehaviour:
   _waterEvent: {fileID: 0}
   _cinemachineTargetGroup: {fileID: 0}
   _cinemachineController: {fileID: 0}
+  _playerGameOverEvent: {fileID: 0}
+  _MAT_AtiiBalloon: {fileID: 2100000, guid: 8f32f5504106cd74784d5eb01dbac4ae, type: 2}
   _skinnedMeshRenderer: {fileID: 6339516709635158566}
   _scaleAnimationDuration: 0.1
   _scaleOffset: 10
   _scaleAmountDeflatingPerSecond: 0.01
   _scaleAmountDeflatingPerSecondInWater: 0.1
-  cameraRadiusMax: 3.25
+  _cameraRadiusMax: 3.25
+  _smoothnessMax: 1
   _boostFrame: 50
