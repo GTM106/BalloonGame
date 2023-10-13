@@ -4383,6 +4383,17 @@ PrefabInstance:
       objectReference: {fileID: 1077309036}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
+      propertyPath: _playerCollider
+      value: 
+      objectReference: {fileID: 1835069739}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _ringconPushAction
+      value: 
+      objectReference: {fileID: 2269632662786835952, guid: 585a3b88238186a44b1683b16bca7288,
+        type: 3}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
       propertyPath: _playerParameter._joyconLeft
       value: 
       objectReference: {fileID: 1269433273}
@@ -4396,6 +4407,11 @@ PrefabInstance:
       propertyPath: _playerParameter._cameraTransform
       value: 
       objectReference: {fileID: 79850532}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._requiredPushCount
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4219734522724283064, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: m_RootOrder
@@ -4456,6 +4472,16 @@ PrefabInstance:
       propertyPath: _waterEvent
       value: 
       objectReference: {fileID: 1077309036}
+    - target: {fileID: 8645611423024036285, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _SmoothnessMax
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8645611423024036285, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _MAT_AtiiBalloon
+      value: 
+      objectReference: {fileID: 2100000, guid: 8f32f5504106cd74784d5eb01dbac4ae, type: 2}
     - target: {fileID: 8645611423024036285, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _cinemachineController
@@ -7680,6 +7706,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0118b877e06ebe04db718c6c800ea41e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!136 &1835069739 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 2826682229555106861, guid: 151285aef4bd2e740998ee2111a79809,
+    type: 3}
+  m_PrefabInstance: {fileID: 1195513375}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2031002472
 GameObject:
   m_ObjectHideFlags: 0
