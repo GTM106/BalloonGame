@@ -13,6 +13,7 @@ public class CinemachineController : MonoBehaviour
     [SerializeField] bool _changeTopRigToggle = true;
 
     [Header("ÉWÉÉÉCÉç")]
+    [SerializeField] bool _gyroEnabled = true;
     [SerializeField] bool _gyroInversionX;
     [SerializeField] bool _gyroInversionY;
     [SerializeField, Min(0f)] Vector2 _gyroSpeed = new(0.5f, 0.5f);
@@ -45,6 +46,8 @@ public class CinemachineController : MonoBehaviour
 
     private void Gyro()
     {
+        if (!_gyroEnabled) return;
+
         float x = _joyconHandler.Gyro.x;
         float y = _joyconHandler.Gyro.y;
 

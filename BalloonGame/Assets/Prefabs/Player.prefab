@@ -43,7 +43,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960072499487829733}
-  m_Material: {fileID: 13400000, guid: 5fe6079e7529a2c48aa7292585637ee1, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   groundCheckDistance: 1
   groundLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 115
 --- !u!1001 &4049598162661585953
 PrefabInstance:
   m_ObjectHideFlags: 0

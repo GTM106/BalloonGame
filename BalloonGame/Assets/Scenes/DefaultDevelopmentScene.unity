@@ -3291,6 +3291,7 @@ MonoBehaviour:
   _freeLook: {fileID: 1081264632}
   _joyconHandler: {fileID: 1269433273}
   _changeTopRigToggle: 1
+  _gyroEnabled: 1
   _gyroInversionX: 1
   _gyroInversionY: 0
   _gyroSpeed: {x: 5, y: 5}
@@ -3319,7 +3320,7 @@ MonoBehaviour:
   m_DistanceLimit: 0
   m_MinimumOcclusionTime: 0
   m_CameraRadius: 0.1
-  m_Strategy: 1
+  m_Strategy: 2
   m_MaximumEffort: 4
   m_SmoothingTime: 0
   m_Damping: 0
