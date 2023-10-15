@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AirVentController : MonoBehaviour, IHittable
 {
     [SerializeField] AirventEvent _airventEvent = default!;
-    [SerializeField] AirVentInteractable _airVentInteractable = default!;
     [SerializeField] AirVentHandler _airVentHandler = default!;
+    [SerializeField] List<AirVentInteractable> _airVentInteractables = default!;
 
     int _defaultLayer;
 
@@ -17,7 +18,10 @@ public class AirVentController : MonoBehaviour, IHittable
 
     private void OnRingconPush()
     {
-        _airVentInteractable.Interact();
+        foreach (var item in _airVentInteractables)
+        {
+            item.Interact();
+        }
     }
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
