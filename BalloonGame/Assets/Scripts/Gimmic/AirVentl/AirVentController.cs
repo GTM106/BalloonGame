@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AirVentController : MonoBehaviour, IHittable
 {
+    [SerializeField] AirventEvent _airventEvent = default!;
     [SerializeField] AirVentInteractable _airVentInteractable = default!;
     [SerializeField] AirVentHandler _airVentHandler = default!;
 
@@ -22,16 +23,19 @@ public class AirVentController : MonoBehaviour, IHittable
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
         gameObject.layer = LayerMask.NameToLayer("Outline");
+        _airventEvent.OnEnter();
         _airVentHandler.OnRingconPush += OnRingconPush;
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
     {
         gameObject.layer = _defaultLayer;
+        _airventEvent.OnExit();
         _airVentHandler.OnRingconPush -= OnRingconPush;
     }
 
     public void OnStay(Collider playerCollider, BalloonState balloonState)
     {
+
     }
 }
