@@ -13,6 +13,7 @@ public enum BalloonState
     Expands,
     ScaleAnimation,
     BoostDash,
+    Disabled,
     GameOver,
 }
 
@@ -25,6 +26,7 @@ public class BalloonController : MonoBehaviour
     [SerializeField] WaterEvent _waterEvent = default!;
     [SerializeField] CinemachineTargetGroup _cinemachineTargetGroup = default!;
     [SerializeField] CinemachineController _cinemachineController = default!;
+    [SerializeField] AirventEvent _airVentEvent = default!;
     [SerializeField] PlayerGameOverEvent _playerGameOverEvent = default!;
     [SerializeField] Material _MAT_AtiiBalloon = default!;
 
@@ -72,6 +74,18 @@ public class BalloonController : MonoBehaviour
         _ringPullAction.action.performed += OnRingconPulled;
         _playerGameOverEvent.OnGameOver += OnGameOver;
         _playerGameOverEvent.OnRevive += OnRevive;
+        _airVentEvent.OnEnterAirVent += OnEnterAirVent;
+        _airVentEvent.OnExitAirVent += OnExitAirVent;
+    }
+
+    private void OnEnterAirVent()
+    {
+        State = BalloonState.Disabled;
+    }
+
+    private void OnExitAirVent() 
+    {
+        State = BalloonState.Normal;
     }
 
     private void OnRevive()
@@ -102,6 +116,8 @@ public class BalloonController : MonoBehaviour
         _ringPullAction.action.performed -= OnRingconPulled;
         _playerGameOverEvent.OnGameOver -= OnGameOver;
         _playerGameOverEvent.OnRevive -= OnRevive;
+        _airVentEvent.OnEnterAirVent -= OnEnterAirVent;
+        _airVentEvent.OnExitAirVent -= OnExitAirVent;
     }
 
     private void OnRingconPushed(InputAction.CallbackContext obj)
