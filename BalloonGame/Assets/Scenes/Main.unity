@@ -1731,6 +1731,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _waterEvent
+      value: 
+      objectReference: {fileID: 661170279}
+    - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _scaleOffset
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _airVentEvent
+      value: 
+      objectReference: {fileID: 1456480350}
+    - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerGameOverEvent
+      value: 
+      objectReference: {fileID: 1452517107}
+    - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _cinemachineController
+      value: 
+      objectReference: {fileID: 1081264634}
+    - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _cinemachineTargetGroup
+      value: 
+      objectReference: {fileID: 751176631}
+    - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _scaleAmountDeflatingPerSecond
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 8645611423024036285, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _waterEvent
@@ -1767,10 +1802,42 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3815245713374808432, guid: 151285aef4bd2e740998ee2111a79809, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7029670592322840486, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 161932612}
   m_SourcePrefab: {fileID: 100100000, guid: 151285aef4bd2e740998ee2111a79809, type: 3}
+--- !u!1 &161932611 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7029670592322840486, guid: 151285aef4bd2e740998ee2111a79809,
+    type: 3}
+  m_PrefabInstance: {fileID: 161932610}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &161932612
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 161932611}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3043ef2785d59fa4ebf6c2f1ba4d54f0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &179751231
 GameObject:
   m_ObjectHideFlags: 0
