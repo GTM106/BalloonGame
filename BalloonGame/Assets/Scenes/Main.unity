@@ -1618,6 +1618,11 @@ PrefabInstance:
       objectReference: {fileID: 301649133}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
+      propertyPath: _balloonController
+      value: 
+      objectReference: {fileID: 1092474853}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
       propertyPath: _playerGameOverEvent
       value: 
       objectReference: {fileID: 1452517107}
@@ -1676,6 +1681,17 @@ PrefabInstance:
       propertyPath: _playerParameter._multiplierNormal
       value: 10.13
       objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._animationChanger._animator
+      value: 
+      objectReference: {fileID: 161932612}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._animationChanger._stateData
+      value: 
+      objectReference: {fileID: 11400000, guid: ed26950821b571e44ae9ad2a4e7eb345,
+        type: 2}
     - target: {fileID: 4219734522724283064, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: m_RootOrder
@@ -1751,6 +1767,11 @@ PrefabInstance:
       propertyPath: _playerGameOverEvent
       value: 
       objectReference: {fileID: 1452517107}
+    - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _skinnedMeshRenderer
+      value: 
+      objectReference: {fileID: 1092474854}
     - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _cinemachineController
@@ -8436,6 +8457,24 @@ MonoBehaviour:
   m_Damping: 0
   m_DampingWhenOccluded: 0
   m_OptimalTargetDistance: 0
+--- !u!114 &1092474853 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+    type: 3}
+  m_PrefabInstance: {fileID: 161932610}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92dd7ae3cfe7b8f4996090afa0bacce9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!137 &1092474854 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8662585628166104269, guid: 151285aef4bd2e740998ee2111a79809,
+    type: 3}
+  m_PrefabInstance: {fileID: 161932610}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1123919273 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4524279901043504245, guid: 4ba13533c3953de4b97a958d449e6b7d,
@@ -12358,7 +12397,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Over
+  m_text: Pushed three times to revive.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

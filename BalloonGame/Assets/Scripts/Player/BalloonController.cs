@@ -76,6 +76,8 @@ public class BalloonController : MonoBehaviour
         _playerGameOverEvent.OnRevive += OnRevive;
         _airVentEvent.OnEnterAirVent += OnEnterAirVent;
         _airVentEvent.OnExitAirVent += OnExitAirVent;
+
+        State = Mathf.Approximately(_defaultBlendShapeWeight, 0f) ? BalloonState.Normal : BalloonState.Expands;
     }
 
     private void OnEnterAirVent()
@@ -83,7 +85,7 @@ public class BalloonController : MonoBehaviour
         State = BalloonState.Disabled;
     }
 
-    private void OnExitAirVent() 
+    private void OnExitAirVent()
     {
         State = BalloonState.Normal;
     }
@@ -186,7 +188,7 @@ public class BalloonController : MonoBehaviour
             float scaleValue = Mathf.Min(startValue + _scaleOffset * progress, MaxBrandShapeValue);
 
             ChangeScale(scaleValue);
-            
+
             //カメラの視野角を変更
             _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
 

@@ -13,6 +13,7 @@ public interface IState
         Falling,
         BoostDash,
         GameOver,
+        Revive,
 
         MAX,
 
@@ -53,6 +54,7 @@ public class PlayerController : MonoBehaviour
         new FallingState(),
         new BoostDashState(),
         new GameOverState(),
+        new ReviveState(),
     };
 
     class ControlState : IState
@@ -69,7 +71,17 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
-            parent._player.Dash();
+            parent._player.Dash(parent._currentState);
+            if (parent._playerParameter.Rb.velocity.magnitude <= 0.01f)
+            {
+                parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Idle);
+            }
+
+            if (!parent._groundCheck.IsGround(out _))
+            {
+                return IState.E_State.Falling;
+            }
+
             return IState.E_State.Unchanged;
         }
 
@@ -99,6 +111,11 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
+            if (parent._playerParameter.Rb.velocity.y <= 0f)
+            {
+                return IState.E_State.Falling;
+            }
+
             return IState.E_State.Unchanged;
         }
 
@@ -127,6 +144,11 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
+            if (parent._groundCheck.IsGround(out _)) return IState.E_State.Control;
+
+            parent._player.Fall();
+            parent._player.Dash(parent._currentState);
+
             return IState.E_State.Unchanged;
         }
 
@@ -184,8 +206,7 @@ public class PlayerController : MonoBehaviour
         public IState.E_State Initialize(PlayerController parent)
         {
             _currentPressCount = 0;
-            //TODO:AN500を再生。
-            //TODO:AN501を再生。
+            parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Down);
 
             parent._gameOverCanvas.enabled = true;
 
@@ -204,7 +225,7 @@ public class PlayerController : MonoBehaviour
                 //復活通知を送る
                 parent._playerGameOverEvent.Revive();
 
-                return IState.E_State.Control;
+                return IState.E_State.Revive;
             }
 
             return IState.E_State.Unchanged;
@@ -222,6 +243,44 @@ public class PlayerController : MonoBehaviour
             //一度でもプッシュされたら表示する
             parent._gameOverCanvas.enabled = true;
 
+            return IState.E_State.Unchanged;
+        }
+    }
+
+    class ReviveState : IState
+    {
+        int reviveFrame;
+
+        public IState.E_State Initialize(PlayerController parent)
+        {
+            reviveFrame = 50;
+            parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Retry);
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State Update(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State FixedUpdate(PlayerController parent)
+        {
+            reviveFrame--;
+            if (reviveFrame <= 0)
+            {
+                return IState.E_State.Control;
+            }
+
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State RingconPull(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State RingconPush(PlayerController parent)
+        {
             return IState.E_State.Unchanged;
         }
     }
@@ -318,9 +377,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnRevive()
-    {                
-        //TODO:AN501からAN502に遷移。
-
+    {
         _gameOverCanvas.enabled = false;
     }
 
@@ -397,6 +454,15 @@ public class PlayerController : MonoBehaviour
         {
             _player = player;
         }
+
+        if (state == BalloonState.Expands)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AirIn);
+        }
+        if (state == BalloonState.Normal)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AirOut);
+        }
     }
 
     private void OnWaterStay()
@@ -406,11 +472,9 @@ public class PlayerController : MonoBehaviour
 
     private void JoyconLeft_OnDownButtonPressed()
     {
-        //ステート関係なしにひとまず行います。
-        //ステートパターンに当てはめる作業は後ほど行います。
-        if (_groundCheck.IsGround(out _))
-        {
-            _player.Jump(_playerParameter.Rb);
-        }
+        if (!_groundCheck.IsGround(out _)) return;
+        if (_currentState is IState.E_State.GameOver or IState.E_State.Revive) return;
+
+        ForceChangeState(IState.E_State.Jumping);
     }
 }
