@@ -1692,6 +1692,31 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: ed26950821b571e44ae9ad2a4e7eb345,
         type: 2}
+    - target: {fileID: 3743360721003562900, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3743360721003562900, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3743360721003562900, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3743360721003562900, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[2]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3743360721003562900, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[3]
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4219734522724283064, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: m_RootOrder
@@ -1821,6 +1846,21 @@ PrefabInstance:
         type: 3}
       propertyPath: _scaleAmountDeflatingPerSecond
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8662585628166104269, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8662585628166104269, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8662585628166104269, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[1]
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
