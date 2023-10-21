@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +24,7 @@ public interface IState
     E_State FixedUpdate(PlayerController parent);
     E_State RingconPull(PlayerController parent);
     E_State RingconPush(PlayerController parent);
+    E_State JumpButtonPressed(PlayerController parent);
 }
 
 public class PlayerController : MonoBehaviour
@@ -94,6 +94,11 @@ public class PlayerController : MonoBehaviour
         {
             return IState.E_State.Unchanged;
         }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
+        {
+            return IState.E_State.Jumping;
+        }
     }
 
     class JumpingState : IState
@@ -125,6 +130,11 @@ public class PlayerController : MonoBehaviour
         }
 
         public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
         {
             return IState.E_State.Unchanged;
         }
@@ -161,6 +171,11 @@ public class PlayerController : MonoBehaviour
         {
             return IState.E_State.Unchanged;
         }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
     }
 
     class BoostDashState : IState
@@ -194,6 +209,11 @@ public class PlayerController : MonoBehaviour
         }
 
         public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
         {
             return IState.E_State.Unchanged;
         }
@@ -245,15 +265,22 @@ public class PlayerController : MonoBehaviour
 
             return IState.E_State.Unchanged;
         }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
     }
 
     class ReviveState : IState
     {
-        int reviveFrame;
+        //アニメーションの待機フレーム。
+        const int REVIVE_ANIMATION_WAIT_FRAME = 50;
+        int _reviveFrame;
 
         public IState.E_State Initialize(PlayerController parent)
         {
-            reviveFrame = 50;
+            _reviveFrame = REVIVE_ANIMATION_WAIT_FRAME;
             parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Retry);
             return IState.E_State.Unchanged;
         }
@@ -265,8 +292,8 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
-            reviveFrame--;
-            if (reviveFrame <= 0)
+            _reviveFrame--;
+            if (_reviveFrame <= 0)
             {
                 return IState.E_State.Control;
             }
@@ -280,6 +307,11 @@ public class PlayerController : MonoBehaviour
         }
 
         public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
         {
             return IState.E_State.Unchanged;
         }
@@ -354,6 +386,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void JoyconLeft_OnDownButtonPressed()
+    {
+        //接地状態じゃないと作動させない
+        if (!_groundCheck.IsGround(out _)) return;
+
+        var nextState = states[(int)_currentState].JumpButtonPressed(this);
+
+        if (nextState != IState.E_State.Unchanged)
+        {
+            //次の状態に遷移
+            _currentState = nextState;
+            InitializeState();
+        }
+    }
+
     private void Awake()
     {
         _inflatablePlayer = new InflatablePlayer(_playerParameter);
@@ -374,16 +421,6 @@ public class PlayerController : MonoBehaviour
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
 
         _gameOverCanvas.enabled = false;
-    }
-
-    private void OnRevive()
-    {
-        _gameOverCanvas.enabled = false;
-    }
-
-    private void OnGameOver()
-    {
-        ForceChangeState(IState.E_State.GameOver);
     }
 
     private void Update()
@@ -470,11 +507,13 @@ public class PlayerController : MonoBehaviour
         _player.OnWaterStay();
     }
 
-    private void JoyconLeft_OnDownButtonPressed()
+    private void OnRevive()
     {
-        if (!_groundCheck.IsGround(out _)) return;
-        if (_currentState is IState.E_State.GameOver or IState.E_State.Revive) return;
+        _gameOverCanvas.enabled = false;
+    }
 
-        ForceChangeState(IState.E_State.Jumping);
+    private void OnGameOver()
+    {
+        ForceChangeState(IState.E_State.GameOver);
     }
 }
