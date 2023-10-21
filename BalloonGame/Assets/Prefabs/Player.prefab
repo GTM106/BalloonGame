@@ -114,6 +114,9 @@ MonoBehaviour:
     _buoyancyExpand: 50
     _buoyancyNormal: 20
     _requiredPushCount: 3
+    _animationChanger:
+      _animator: {fileID: 0}
+      _stateData: {fileID: 11400000, guid: ed26950821b571e44ae9ad2a4e7eb345, type: 2}
   _balloonController: {fileID: 8645611423024036285}
   _groundCheck: {fileID: 5537941699024868813}
   _ringconPushAction: {fileID: 2269632662786835952, guid: 585a3b88238186a44b1683b16bca7288,
