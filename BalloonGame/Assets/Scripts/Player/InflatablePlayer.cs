@@ -21,7 +21,7 @@ public class InflatablePlayer : IPlayer
         _rigidbody = _playerParameter.Rb;
     }
 
-    public void Dash()
+    public void Dash(IState.E_State state)
     {
         Vector2 axis = _playerParameter.JoyconRight.Stick;
 
@@ -51,12 +51,19 @@ public class InflatablePlayer : IPlayer
         //êiçsï˚å¸Çå¸Ç≠
         Vector3 direction = cameraForward * axis.y + cameraRight * axis.x;
         _rigidbody.transform.localRotation = Quaternion.LookRotation(direction);
+
+        if (state is IState.E_State.Control)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Run);
+        }
     }
 
     public async void BoostDash()
     {
         Vector3 velocity = _playerParameter.CameraTransform.forward.normalized * _playerParameter.BoostDashPower;
         _rigidbody.velocity = velocity;
+
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BDash);
 
         for (int i = 0; i < _playerParameter.BoostFrame; i++)
         {
@@ -70,6 +77,8 @@ public class InflatablePlayer : IPlayer
     public void Jump(Rigidbody rb)
     {
         rb.AddForce(Vector3.up * _playerParameter.JumpPower, ForceMode.Impulse);
+
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BJump);
     }
 
     public void AdjustingGravity()
@@ -81,5 +90,10 @@ public class InflatablePlayer : IPlayer
     public void OnWaterStay()
     {
         _rigidbody.AddForce(Vector3.up * _playerParameter.BuoyancyExpand, ForceMode.Acceleration);
+    }
+
+    public void Fall()
+    {
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BFall);
     }
 }

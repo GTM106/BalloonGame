@@ -12,7 +12,7 @@ public class PlayerParameter
     [Header("ジャンプ時のパワー")]
     [SerializeField, Min(0f)] float _jumpPower = default!;
     [Header("移動速度")]
-    [SerializeField, Min(0f)] float _moveSpeed = default!;    
+    [SerializeField, Min(0f)] float _moveSpeed = default!;
     [Header("最大移動速度。風などによりこれより大きくなる可能性はあります")]
     [SerializeField, Min(0f)] float _maxMoveSpeed = default!;
     [Header("通常時の重力")]
@@ -28,6 +28,7 @@ public class PlayerParameter
     [SerializeField] float _buoyancyNormal = default!;
     [Header("ゲームオーバーからの復活に必要なプッシュ数")]
     [SerializeField, Min(0)] int _requiredPushCount = default!;
+    [SerializeField] AnimationChanger<E_Atii> _animationChanger = default!;
 
     public Rigidbody Rb => _rb;
     public Transform CameraTransform => _cameraTransform;
@@ -43,4 +44,5 @@ public class PlayerParameter
     public float BuoyancyExpand => _buoyancyExpand;
     public float BuoyancyNormal => _buoyancyNormal;
     public int RequiredPushCount => _requiredPushCount;
+    public AnimationChanger<E_Atii> AnimationChanger => _animationChanger;
 }
