@@ -7,14 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_OutLine
-  m_Shader: {fileID: -6465566751694194690, guid: 6468a70d66a55da47921ff9b772da68b,
+  m_Name: Shader Graphs_OutLine_ScreenDepth
+  m_Shader: {fileID: -6465566751694194690, guid: 55ef543b4cc62d0438c1dc2e3eeb7ebe,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -38,16 +38,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EdghWidth: 0.032
-    - _Float: 0.001
-    - _Offset: 0.001
+    - _EdghWidth: 0.023
+    - _Float: 0.26
+    - _Float_1: 1.2
+    - _Float_2: 2
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _position: 3.22
+    - _position: 0.76
     m_Colors:
-    - _Color: {r: 41.86123, g: 60.377357, b: 0, a: 0.84313726}
+    - _Color: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &1643891962284103845
+--- !u!114 &4527602436711984663
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
