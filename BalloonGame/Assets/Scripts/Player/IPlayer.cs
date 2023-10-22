@@ -7,7 +7,7 @@ public interface IPlayer : IAdjustGravity
     /// <summary>
     /// 通常ダッシュ
     /// </summary>
-    public void Dash();
+    public void Dash(IState.E_State state);
 
     /// <summary>
     /// ぶっ飛びダッシュ
@@ -24,4 +24,9 @@ public interface IPlayer : IAdjustGravity
     /// 水に接触中、常に行われる処理
     /// </summary>
     public void OnWaterStay();
+
+    /// <summary>
+    /// 落下時に行われる処理
+    /// </summary>
+    public void Fall();
 }
