@@ -60,7 +60,15 @@ public class InflatablePlayer : IPlayer
 
     public async void BoostDash()
     {
-        Vector3 velocity = _playerParameter.CameraTransform.forward.normalized * _playerParameter.BoostDashPower;
+        Vector3 dir = _playerParameter.BoostDashType switch
+        {
+            BoostDashDirection.CameraForward => _playerParameter.CameraTransform.forward,
+            BoostDashDirection.PlayerForward => _rigidbody.transform.forward,
+            _ => throw new System.NotImplementedException()
+        };
+
+        Vector3 velocity = dir.normalized * _playerParameter.BoostDashPower;
+        velocity.Set(velocity.x, _playerParameter.BoostDashAngle, velocity.z);
         _rigidbody.velocity = velocity;
 
         _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BDash);
