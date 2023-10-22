@@ -1,36 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AirVentController : MonoBehaviour, IHittable
 {
-    [SerializeField] AirVentInteractable _airVentInteractable = default!;
-    [SerializeField] Canvas _ui1 = default!;
+    [SerializeField] AirventEvent _airventEvent = default!;
     [SerializeField] AirVentHandler _airVentHandler = default!;
+    [SerializeField] List<AirVentInteractable> _airVentInteractables = default!;
+
+    int _defaultLayer;
 
     private void Awake()
     {
-        _ui1.enabled = false;
+        _defaultLayer = gameObject.layer;
     }
 
     private void OnRingconPush()
     {
-        _airVentInteractable.Interact();
+        foreach (var item in _airVentInteractables)
+        {
+            item.Interact();
+        }
     }
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        _ui1.enabled = true;
+        gameObject.layer = LayerMask.NameToLayer("Outline");
+        _airventEvent.OnEnter();
         _airVentHandler.OnRingconPush += OnRingconPush;
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
     {
-        _ui1.enabled = false;
+        gameObject.layer = _defaultLayer;
+        _airventEvent.OnExit();
         _airVentHandler.OnRingconPush -= OnRingconPush;
     }
 
     public void OnStay(Collider playerCollider, BalloonState balloonState)
     {
+
     }
 }

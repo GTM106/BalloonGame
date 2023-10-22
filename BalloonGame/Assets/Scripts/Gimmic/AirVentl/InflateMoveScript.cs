@@ -24,7 +24,7 @@ public class InflateMoveScript : AirVentInteractable
 
     bool hasMovedFromStartPosition = false;
     float rollBackTime = 0f;
-    const float MIN_DISTANCE = 0.1f;
+    const float MIN_DISTANCE = 0.01f;
 
     private void Awake()
     {
