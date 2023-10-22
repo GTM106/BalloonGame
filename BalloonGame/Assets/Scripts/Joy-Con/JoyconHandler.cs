@@ -25,9 +25,21 @@ public class JoyconHandler : MonoBehaviour
 
     Vector2 _stick = Vector2.zero;
 
+    /// <summary>
+    /// ジャイロ
+    /// </summary>
     public Vector3 Gyro { get; private set; }
+    /// <summary>
+    /// 加速度
+    /// </summary>
     public Vector3 Accel { get; private set; }
+    /// <summary>
+    /// 傾き
+    /// </summary>
     public Quaternion Orientation { get; private set; }
+    /// <summary>
+    /// スティック入力値
+    /// </summary>
     public Vector2 Stick => _stick;
 
     //左側のボタン

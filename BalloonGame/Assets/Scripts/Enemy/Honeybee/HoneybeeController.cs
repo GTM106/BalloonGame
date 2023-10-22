@@ -5,9 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class HoneybeeController : MonoBehaviour, IHittable
 {
-    [SerializeField] Rigidbody _rigidbody;
+    [SerializeField] Rigidbody _rigidbody = default!;
+    [SerializeField] PlayerGameOverEvent _gameOverEvent = default!;
 
-    [SerializeField] List<Transform> _wayPoints;
+    [SerializeField] List<Transform> _wayPoints = default!;
     [SerializeField, Min(0f)] float _moveSpeed = 0.5f;
     [SerializeField, Min(0f)] float _wayPointDistance = 0.02f;
 
@@ -24,6 +25,7 @@ public class HoneybeeController : MonoBehaviour, IHittable
     private void Reset()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _gameOverEvent = FindAnyObjectByType<PlayerGameOverEvent>();
     }
 
     void FixedUpdate()
@@ -33,8 +35,7 @@ public class HoneybeeController : MonoBehaviour, IHittable
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        //TODO:ゲームオーバー処理に遷移
-        print("ゲームオーバー処理に遷移します。今は未実装のため遷移しません");
+        _gameOverEvent.GameOver();
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
@@ -49,6 +50,8 @@ public class HoneybeeController : MonoBehaviour, IHittable
 
     private void Move()
     {
+        if (_wayPoints.Count <= 0) return;
+
         Vector3 wayPoint = _wayPoints[_currentPoint].position;
         Vector3 honeybeePos = _transform.position;
 

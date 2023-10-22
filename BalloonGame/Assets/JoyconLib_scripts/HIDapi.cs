@@ -5,7 +5,8 @@ using System;
 using System.Text;
 
 
-public class HIDapi {
+public class HIDapi
+{
 
     [DllImport("hidapi")]
     public static extern int hid_init();
@@ -62,7 +63,11 @@ public class HIDapi {
     public static extern int hid_write(IntPtr device, byte[] data, UIntPtr length);
 }
 
-struct hid_device_info {
+struct hid_device_info
+{
+    //割り当てられない警告を無視。
+    //ライブラリなので下手にコードを書き換えるより警告を出さない形式に変更します
+#pragma warning disable CS0649
     public string path;
     public ushort vendor_id;
     public ushort product_id;
@@ -74,4 +79,5 @@ struct hid_device_info {
     public ushort usage;
     public int interface_number;
     public IntPtr next;
+#pragma warning restore CS0649
 }

@@ -13,13 +13,17 @@ public class CinemachineController : MonoBehaviour
     [SerializeField] bool _changeTopRigToggle = true;
 
     [Header("ジャイロ")]
+    [SerializeField] bool _gyroEnabled = true;
     [SerializeField] bool _gyroInversionX;
     [SerializeField] bool _gyroInversionY;
-    [SerializeField, Min(0f)] float _gyroSpeedX = 0.5f;
-    [SerializeField, Min(0f)] float _gyroSpeedY = 0.5f;
+    [SerializeField, Min(0f)] Vector2 _gyroSpeed = new(0.5f, 0.5f);
+    [SerializeField, Min(0f)] Vector2 _gyroDeadZone = new(0.1f, 0.1f);
 
     static readonly float topRigValue = 1f;
     static readonly float middleRigValue = 0.5f;
+
+    //gyroのデッドゾーンに関する保存に使用
+    Vector2 _prebGyroValue = new();
 
     private void Awake()
     {
@@ -28,17 +32,52 @@ public class CinemachineController : MonoBehaviour
 
     private void OnTriggerButtonPressed()
     {
+        //カメラリセット
         _freeLook.m_YAxis.Value = middleRigValue;
     }
 
     private void Update()
     {
-        float gyroX = _joyconHandler.Gyro.x * (_gyroInversionX ? -1f : 1f) * _gyroSpeedX;
-        float gyroY = _joyconHandler.Gyro.y * (_gyroInversionY ? -1f : 1f) * _gyroSpeedY;
+        _freeLook.m_XAxis.m_InputAxisValue = _joyconHandler.Stick.x;
+        _freeLook.m_YAxis.m_InputAxisValue = _joyconHandler.Stick.y;
+
+        Gyro();
+    }
+
+    private void Gyro()
+    {
+        if (!_gyroEnabled) return;
+
+        float x = _joyconHandler.Gyro.x;
+        float y = _joyconHandler.Gyro.y;
+
+        GyroX(x);
+        GyroY(y);
+
+        _prebGyroValue.Set(x, y);
+    }
+
+    private void GyroX(float x)
+    {
+        //直前フレームと今回のフレームのジャイロ値の差の絶対値がデッドゾーンより小さいならジャイロは機能させない
+        if (Mathf.Abs(x - _prebGyroValue.x) <= _gyroDeadZone.x) return;
+
+        float gyroX = x * (_gyroInversionX ? -1f : 1f) * _gyroSpeed.x;
 
         //Cinemachine側でInputManager,InputSystemが使えますが、
         //今回はJoyconを読み取る形式に独自の形式を利用しているため直接入力値を書き換えます。
         _freeLook.m_XAxis.m_InputAxisValue = _joyconHandler.Stick.x + gyroX;
+    }
+
+    private void GyroY(float y)
+    {
+        //直前フレームと今回のフレームのジャイロ値の差の絶対値がデッドゾーンより小さいならジャイロは機能させない
+        if (Mathf.Abs(y - _prebGyroValue.y) <= _gyroDeadZone.y) return;
+
+        float gyroY = y * (_gyroInversionY ? -1f : 1f) * _gyroSpeed.y;
+
+        //Cinemachine側でInputManager,InputSystemが使えますが、
+        //今回はJoyconを読み取る形式に独自の形式を利用しているため直接入力値を書き換えます。
         _freeLook.m_YAxis.m_InputAxisValue = _joyconHandler.Stick.y + gyroY;
     }
 

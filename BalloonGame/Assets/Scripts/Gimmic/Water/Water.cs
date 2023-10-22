@@ -18,13 +18,22 @@ public class Water : MonoBehaviour, IHittable
 
     int _playerSitesInWaterCount = 0;
 
+    //プレイヤーの空気抵抗の初期値。
+    float _defaultPlayerDrag = InvalidValue;
+    static readonly float InvalidValue = -1f;
+
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
+        if (Mathf.Approximately(_defaultPlayerDrag, InvalidValue))
+        {
+            _defaultPlayerDrag = playerCollider.attachedRigidbody.drag;
+        }
+
         _playerSitesInWaterCount++;
         PlayEffect();
         PlaySE();
         _audioLowPassFilter.enabled = true;
-        
+
         if (_playerSitesInWaterCount >= _playerSitesInWaterCountMin)
         {
             _waterEvent.OnEnter();
@@ -33,8 +42,7 @@ public class Water : MonoBehaviour, IHittable
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
     {
-        //初期は0で固定とします
-        playerCollider.attachedRigidbody.drag = 0f;
+        playerCollider.attachedRigidbody.drag = _defaultPlayerDrag;
 
         PlayEffect();
         PlaySE();
