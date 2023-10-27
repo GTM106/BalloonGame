@@ -209,7 +209,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 79850529}
-  m_LocalRotation: {x: 0.035677124, y: -0.5509692, z: 0.023585679, w: 0.833429}
+  m_LocalRotation: {x: 0.03567712, y: -0.5509692, z: 0.023585683, w: 0.833429}
   m_LocalPosition: {x: 4.6003513, y: 1.73, z: -1.9587666}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2361,7 +2361,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684436267}
-  m_LocalRotation: {x: 0.03567712, y: -0.5509691, z: 0.023585677, w: 0.8334289}
+  m_LocalRotation: {x: 0.03567712, y: -0.5509692, z: 0.023585683, w: 0.833429}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3039,7 +3039,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 790490456}
   m_LocalRotation: {x: 1.110223e-17, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.76, y: 0.29, z: -2.44}
+  m_LocalPosition: {x: 9.76, y: 0.35, z: -2.44}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4904,16 +4904,11 @@ MonoBehaviour:
     _maxMoveSpeed: 0
     _multiplierNormal: 3
     _multiplierExpand: 0.5
-    _boostDashType: 0
     _boostDashPower: 30
     _boostFrame: 50
-    _boostDashAngle: 0
     _buoyancyExpand: 50
     _buoyancyNormal: 20
     _requiredPushCount: 0
-    _animationChanger:
-      _animator: {fileID: 0}
-      _stateData: {fileID: 0}
   _balloonController: {fileID: 1208625842}
   _groundCheck: {fileID: 1168340598}
   _ringconPushAction: {fileID: 0}
