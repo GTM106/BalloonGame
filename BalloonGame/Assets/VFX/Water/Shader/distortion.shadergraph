@@ -206,9 +206,6 @@
         },
         {
             "m_Id": "ae861254c60f4537b987e11a0531e9de"
-        },
-        {
-            "m_Id": "28a2144ba60e4f8cb21eca3473089ec4"
         }
     ],
     "m_GroupDatas": [
@@ -1007,9 +1004,6 @@
             },
             {
                 "m_Id": "5f833aaf3c144660a5e2adda8a56b859"
-            },
-            {
-                "m_Id": "28a2144ba60e4f8cb21eca3473089ec4"
             }
         ]
     },
@@ -2218,40 +2212,6 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
-    "m_ObjectId": "28a2144ba60e4f8cb21eca3473089ec4",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "SurfaceDescription.Specular",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 0.0,
-            "height": 0.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "fc7b22c92dda4dacb1c09de14d08fba7"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_SerializedDescriptor": "SurfaceDescription.Specular"
 }
 
 {
@@ -6675,7 +6635,7 @@
     "m_ActiveSubTarget": {
         "m_Id": "269e0947b2fb4aa4965c76fc900339c3"
     },
-    "m_AllowMaterialOverride": true,
+    "m_AllowMaterialOverride": false,
     "m_SurfaceType": 1,
     "m_ZTestMode": 4,
     "m_ZWriteControl": 0,
@@ -6935,36 +6895,6 @@
         "r": 0.0,
         "g": 0.0,
         "b": 0.0,
-        "a": 1.0
-    }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.ColorRGBMaterialSlot",
-    "m_ObjectId": "fc7b22c92dda4dacb1c09de14d08fba7",
-    "m_Id": 0,
-    "m_DisplayName": "Specular Color",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Specular",
-    "m_StageCapability": 2,
-    "m_Value": {
-        "x": 0.5,
-        "y": 0.5,
-        "z": 0.5
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-    },
-    "m_Labels": [],
-    "m_ColorMode": 0,
-    "m_DefaultColor": {
-        "r": 0.5,
-        "g": 0.5,
-        "b": 0.5,
         "a": 1.0
     }
 }
