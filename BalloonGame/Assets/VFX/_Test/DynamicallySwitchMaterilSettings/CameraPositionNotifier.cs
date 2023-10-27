@@ -3,15 +3,21 @@ using UnityEngine;
 
 public class CameraPositionNotifier : MonoBehaviour
 {
-    // イベントデリゲートとイベントの宣言
-    public delegate void CameraPositionChangedEventHandler(object sender, CameraPositionChangedEventArgs e);
-    public event CameraPositionChangedEventHandler CameraPositionChanged;
+    // アクションの宣言
+    public event Action<CameraPositionNotifier, CameraPositionChangedEventArgs> CameraPositionChanged;
 
     private Vector3 lastCameraPosition;
+    //メインカメラのキャッシュ
+    private Transform cameraTransform;
+
+    private void Awake()
+    {
+        cameraTransform = Camera.main.transform;
+    }
 
     private void Update()
     {
-        Vector3 currentCameraPosition = Camera.main.transform.position;
+        Vector3 currentCameraPosition = cameraTransform.position;
         if (currentCameraPosition != lastCameraPosition)
         {
             lastCameraPosition = currentCameraPosition;
@@ -24,9 +30,6 @@ public class CameraPositionNotifier : MonoBehaviour
     private void OnCameraPositionChanged(Vector3 newPosition)
     {
         // カメラ位置が変更されたときにイベントをトリガー
-        if (CameraPositionChanged != null)
-        {
-            CameraPositionChanged(this, new CameraPositionChangedEventArgs(newPosition));
-        }
+        CameraPositionChanged?.Invoke(this, new CameraPositionChangedEventArgs(newPosition));
     }
 }

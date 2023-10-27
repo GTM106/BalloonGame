@@ -1,5 +1,4 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -8,11 +7,15 @@ using UnityEngine.Rendering.Universal;
 [RequireComponent(typeof(Volume))] // Rendererも自動的にアタッチ
 public class SwitchSurfaceType : MonoBehaviour
 {
+    [SerializeField] private CameraPositionNotifier cameraPositionNotifier;
+
     private Renderer objectRenderer;
+    private Collider cachedCollider; // コライダーコンポーネントのキャッシュ
 
     private void Awake()
     {
         objectRenderer = GetComponent<Renderer>();
+        cachedCollider = GetComponent<Collider>();
 
         if (objectRenderer == null)
         {
@@ -20,15 +23,20 @@ public class SwitchSurfaceType : MonoBehaviour
             return; // 早期リターン
         }
 
-        // カメラ位置変更イベントを監視
-        CameraPositionNotifier notifier = FindObjectOfType<CameraPositionNotifier>();
-        if (notifier == null)
+        if (cachedCollider == null)
         {
-            Debug.LogError("CameraPositionNotifierがシーン上にありません。どこでもいいので追加してください。");
+            Debug.LogError("Colliderが見つかりませんでした。このオブジェクトにColliderをつけてください");
+            return;
+        }
+
+        // カメラ位置変更イベントを監視
+        if (cameraPositionNotifier == null)
+        {
+            Debug.LogError("CameraPositionNotifierがアタッチされていません。インスペクターからCameraPositionNotifierをアタッチしてください。");
             return; // 早期リターン
         }
 
-        notifier.CameraPositionChanged += OnCameraPositionChanged;
+        cameraPositionNotifier.CameraPositionChanged += OnCameraPositionChanged;
     }
 
     private void OnCameraPositionChanged(object sender, CameraPositionChangedEventArgs e)
@@ -47,8 +55,8 @@ public class SwitchSurfaceType : MonoBehaviour
 
     private bool IsInsideCollider(Vector3 cameraPosition)
     {
-        Collider col = GetComponent<Collider>();
-        return col != null && col.bounds.Contains(cameraPosition);
+        if (cachedCollider == null) return false;
+        return cachedCollider.bounds.Contains(cameraPosition);
     }
 
     private void SetMaterialCullMode(CullMode cullMode)

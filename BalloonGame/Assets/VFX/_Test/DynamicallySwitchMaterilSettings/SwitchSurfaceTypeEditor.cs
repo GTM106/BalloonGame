@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -44,3 +45,4 @@ public class SwitchSurfaceTypeEditor : Editor
         volume.isGlobal = false;
     }
 }
+#endif
