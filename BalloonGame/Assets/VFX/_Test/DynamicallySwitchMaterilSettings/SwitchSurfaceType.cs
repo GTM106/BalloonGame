@@ -8,16 +8,12 @@ using UnityEngine.Rendering.Universal;
 [RequireComponent(typeof(Volume))] // Rendererも自動的にアタッチ
 public class SwitchSurfaceType : MonoBehaviour
 {
-    [SerializeField]private CameraPositionNotifier cameraPositionNotifier;
-    [SerializeField]private Renderer objectRenderer;
-    
-    private Collider cachedCollider; // コライダーコンポーネントのキャッシュ
+    [SerializeField] private CameraPositionNotifier cameraPositionNotifier;
+    [SerializeField] private Renderer objectRenderer;
+    [SerializeField] private Collider cachedCollider; // コライダーコンポーネントのキャッシュ
 
     private void Awake()
     {
-        objectRenderer = GetComponent<Renderer>();
-        cachedCollider = GetComponent<Collider>();
-
         if (objectRenderer == null)
         {
             Debug.LogError("Rendererが見つかりませんでした。このオブジェクトにRendererをつけてください");
@@ -37,6 +33,12 @@ public class SwitchSurfaceType : MonoBehaviour
             return; // 早期リターン
         }
         cameraPositionNotifier.CameraPositionChanged += OnCameraPositionChanged;
+    }
+
+    private void Reset()
+    {
+        objectRenderer = GetComponent<Renderer>();
+        cachedCollider = GetComponent<Collider>();
     }
 
     private void OnCameraPositionChanged(object sender, CameraPositionChangedEventArgs e)
