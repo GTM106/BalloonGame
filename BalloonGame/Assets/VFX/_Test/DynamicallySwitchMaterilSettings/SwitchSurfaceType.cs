@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -7,9 +8,9 @@ using UnityEngine.Rendering.Universal;
 [RequireComponent(typeof(Volume))] // Rendererも自動的にアタッチ
 public class SwitchSurfaceType : MonoBehaviour
 {
-    [SerializeField] private CameraPositionNotifier cameraPositionNotifier;
-
-    private Renderer objectRenderer;
+    [SerializeField]private CameraPositionNotifier cameraPositionNotifier;
+    [SerializeField]private Renderer objectRenderer;
+    
     private Collider cachedCollider; // コライダーコンポーネントのキャッシュ
 
     private void Awake()
@@ -35,7 +36,6 @@ public class SwitchSurfaceType : MonoBehaviour
             Debug.LogError("CameraPositionNotifierがアタッチされていません。インスペクターからCameraPositionNotifierをアタッチしてください。");
             return; // 早期リターン
         }
-
         cameraPositionNotifier.CameraPositionChanged += OnCameraPositionChanged;
     }
 
