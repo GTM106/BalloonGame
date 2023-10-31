@@ -428,10 +428,34 @@ public class PlayerController : MonoBehaviour
         UpdateState();
     }
 
+    GameObject obj;
+
     private void FixedUpdate()
     {
         FixedUpdateState();
         _player.AdjustingGravity();
+
+        Vector3 dir = _playerParameter.BoostDashType switch
+        {
+            BoostDashDirection.CameraForward => _playerParameter.CameraTransform.forward,
+            BoostDashDirection.PlayerForward => _playerParameter.Rb.transform.forward,
+            _ => throw new System.NotImplementedException()
+        };
+
+        Vector3 velocity = dir.normalized * _playerParameter.BoostDashPower;
+        velocity.Set(velocity.x, _playerParameter.BoostDashAngle, velocity.z);
+        Debug.DrawRay(transform.position, velocity, Color.red);
+        if (Physics.Raycast(transform.position, velocity, out var a,float.MaxValue,~(1<<7)))
+        {
+            if (obj == null)
+            {
+                obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                obj.layer = 7;
+                obj.GetComponent<Collider>().enabled = false;
+            }
+                obj.transform.position = a.point
+          ;
+        }
     }
 
     private void OnDestroy()
