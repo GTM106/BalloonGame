@@ -20,17 +20,17 @@ public enum BalloonState
 public class BalloonController : MonoBehaviour
 {
     //下記のInputActionReferenceは、Handlerの役割をもちます
-    [SerializeField] InputActionReference _ringPushAction = default!;
-    [SerializeField] InputActionReference _ringPullAction = default!;
+    [SerializeField, Required] InputActionReference _ringPushAction = default!;
+    [SerializeField, Required] InputActionReference _ringPullAction = default!;
 
-    [SerializeField] WaterEvent _waterEvent = default!;
-    [SerializeField] CinemachineTargetGroup _cinemachineTargetGroup = default!;
-    [SerializeField] CinemachineController _cinemachineController = default!;
-    [SerializeField] AirventEvent _airVentEvent = default!;
-    [SerializeField] PlayerGameOverEvent _playerGameOverEvent = default!;
-    [SerializeField] Material _MAT_AtiiBalloon = default!;
+    [SerializeField, Required] WaterEvent _waterEvent = default!;
+    [SerializeField, Required] CinemachineTargetGroup _cinemachineTargetGroup = default!;
+    [SerializeField, Required] CinemachineController _cinemachineController = default!;
+    [SerializeField, Required] AirventEvent _airVentEvent = default!;
+    [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
+    [SerializeField, Required] Material _MAT_AtiiBalloon = default!;
 
-    [SerializeField] SkinnedMeshRenderer _skinnedMeshRenderer = default!;
+    [SerializeField, Required] SkinnedMeshRenderer _skinnedMeshRenderer = default!;
 
     [Header("膨張アニメーションの持続時間")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
@@ -45,7 +45,8 @@ public class BalloonController : MonoBehaviour
     [Header("風船のマテリアルのSmoothness値の最大値")]
     [SerializeField, Range(0.4f, 1f)] float _smoothnessMax = 1f;
     [Header("吹っ飛びダッシュの持続時間。PlayerControllerと同じ値を設定してください")]
-    [SerializeField, Min(0)] int _boostFrame = default!;
+    [SerializeField, Min(0)] Vector2Int _boostFrames = default!;
+    int _boostFrame = 0;
 
     //風船の膨らみ具合の初期値。Awakeで初期化しています
     float _defaultBlendShapeWeight;
@@ -78,6 +79,7 @@ public class BalloonController : MonoBehaviour
         _airVentEvent.OnExitAirVent += OnExitAirVent;
 
         State = Mathf.Approximately(_defaultBlendShapeWeight, 0f) ? BalloonState.Normal : BalloonState.Expands;
+        _boostFrame = _boostFrames.x + (int)((_boostFrames.y - _boostFrames.x) * _skinnedMeshRenderer.GetBlendShapeWeight(0));
     }
 
     private void OnEnterAirVent()
@@ -145,19 +147,22 @@ public class BalloonController : MonoBehaviour
         var token = this.GetCancellationTokenOnDestroy();
 
         State = BalloonState.BoostDash;
+        
+        //処理中に_boostFrameが変更されるおそれがあるため値を保存しておく
+        int boostFrame = _boostFrame;
+
+        _cinemachineController.OnAfterBoostDash(boostFrame);
 
         ChangeScale(_defaultBlendShapeWeight);
-
-        _cinemachineController.OnAfterBoostDash(_boostFrame);
 
         float startValue = _cinemachineTargetGroup.m_Targets[0].radius;
         int currentFrame = 0;
 
-        while (currentFrame <= _boostFrame)
+        while (currentFrame <= boostFrame)
         {
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
 
-            float progress = Mathf.Clamp01(currentFrame / _boostFrame);
+            float progress = Mathf.Clamp01((float)currentFrame / boostFrame);
 
             //吹っ飛びダッシュだけは特例でスケールを無視してカメラの視野角を変更
             _cinemachineTargetGroup.m_Targets[0].radius = startValue * (1f - progress);

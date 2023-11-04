@@ -30,14 +30,14 @@ public interface IState
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] PlayerParameter _playerParameter = default!;
-    [SerializeField] BalloonController _balloonController = default!;
-    [SerializeField] GroundCheck _groundCheck = default!;
-    [SerializeField] InputActionReference _ringconPushAction = default!;
-    [SerializeField] InputActionReference _ringconPullAction = default!;
-    [SerializeField] Collider _playerCollider = default!;
-    [SerializeField] WaterEvent _waterEvent = default!;
-    [SerializeField] Canvas _gameOverCanvas = default!;
-    [SerializeField] PlayerGameOverEvent _playerGameOverEvent = default!;
+    [SerializeField, Required] BalloonController _balloonController = default!;
+    [SerializeField, Required] GroundCheck _groundCheck = default!;
+    [SerializeField, Required] InputActionReference _ringconPushAction = default!;
+    [SerializeField, Required] InputActionReference _ringconPullAction = default!;
+    [SerializeField, Required] Collider _playerCollider = default!;
+    [SerializeField, Required] WaterEvent _waterEvent = default!;
+    [SerializeField, Required] Canvas _gameOverCanvas = default!;
+    [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
 
     IPlayer _player;
     IPlayer _inflatablePlayer;

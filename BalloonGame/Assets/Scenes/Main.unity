@@ -1810,6 +1810,16 @@ PrefabInstance:
       objectReference: {fileID: 638917205}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
+      propertyPath: _playerParameter._boostFrame.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostFrame.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
       propertyPath: _playerParameter._buoyancyExpand
       value: 1000
       objectReference: {fileID: 0}
@@ -1825,6 +1835,16 @@ PrefabInstance:
       objectReference: {fileID: 79850532}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
+      propertyPath: _playerParameter._boostDashPower.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostDashPower.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
       propertyPath: _playerParameter._multiplierExpand
       value: 7
       objectReference: {fileID: 0}
@@ -1833,6 +1853,11 @@ PrefabInstance:
       propertyPath: _playerParameter._multiplierNormal
       value: 10.13
       objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._skinnedMeshRenderer
+      value: 
+      objectReference: {fileID: 1092474854}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerParameter._animationChanger._animator
@@ -1939,6 +1964,11 @@ PrefabInstance:
       propertyPath: _airVentEvent
       value: 
       objectReference: {fileID: 1456480350}
+    - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _boostFrames.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 6329098420772259517, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerGameOverEvent
