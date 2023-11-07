@@ -82,6 +82,11 @@ public class SoundManager : MonoBehaviour
     /// <param name="time">再生位置</param>
     public void PlayBGM(SoundSource sound, float time = 0f)
     {
+        if (_BGMLoop.outputAudioMixerGroup == null)
+        {
+            Debug.LogWarning(_BGMLoop.name + " の Output を null にすることは非推奨です。");
+        }
+
         ChangeBGM(_BGMLoop, sound);
         _BGMLoop.time = time;
         _BGMLoop.Play();
@@ -94,6 +99,15 @@ public class SoundManager : MonoBehaviour
     /// <param name="loop">再生したいループBGM</param>
     public void PlayBGM(SoundSource intro, SoundSource loop)
     {
+        if (_BGMIntro.outputAudioMixerGroup == null)
+        {
+            Debug.LogWarning(_BGMIntro.name + " の Output を null にすることは非推奨です。");
+        }
+        if (_BGMLoop.outputAudioMixerGroup == null)
+        {
+            Debug.LogWarning(_BGMLoop.name + " の Output を null にすることは非推奨です。");
+        }
+
         ChangeBGM(_BGMIntro, intro);
         _BGMIntro.PlayScheduled(AudioSettings.dspTime);
         ChangeBGM(_BGMLoop, loop);
@@ -102,6 +116,11 @@ public class SoundManager : MonoBehaviour
 
     public void PlayBGM(SoundSource sound, float fadeTime, float time)
     {
+        if (_BGMLoop.outputAudioMixerGroup == null)
+        {
+            Debug.LogWarning(_BGMLoop.name + " の Output を null にすることは非推奨です。");
+        }
+
         ChangeBGM(_BGMLoop, sound);
         float targetValue = _BGMLoop.volume;
 
@@ -188,6 +207,11 @@ public class SoundManager : MonoBehaviour
     /// <param name="sound">再生したいSE</param>
     public void PlaySE(AudioSource audioSource, SoundSource sound, float fadeTime = 0f)
     {
+        if (audioSource.outputAudioMixerGroup == null)
+        {
+            Debug.LogWarning(audioSource.name + " の Output を null にすることは非推奨です。");
+        }
+
         ChangeSE(audioSource, sound);
         float targetVolume = audioSource.volume;
 
