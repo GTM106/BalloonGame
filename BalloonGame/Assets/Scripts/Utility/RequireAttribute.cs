@@ -24,7 +24,7 @@ public class RequiredDrawer : PropertyDrawer
             EditorGUI.HelpBox(position, property.displayName + " must be set to a value.", MessageType.Error);
             
             //通常のプロパティフィールドの表示を下に持ってくる
-            position.y = position.height;
+            position.y += position.height;
         }
 
         //通常のプロパティフィールドの表示
