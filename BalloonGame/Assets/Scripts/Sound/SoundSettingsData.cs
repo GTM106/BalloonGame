@@ -372,7 +372,7 @@ public class SoundSettingsData : ScriptableObject
             //音源がセットされていなかったら再生しない
             if (currentAudioClip == null)
             {
-                string location = currentSoundSource >= SoundSource.SE1_SAMPLE ? "SE Clip : Element " + (currentSoundSource - SoundSource.SE1_SAMPLE) : "BGM Clip : Element " + (int)currentSoundSource;
+                string location = currentSoundSource >= SoundSource.SE001_PlayerWalking ? "SE Clip : Element " + (currentSoundSource - SoundSource.SE001_PlayerWalking) : "BGM Clip : Element " + (int)currentSoundSource;
                 Debug.LogWarning("試聴する音源がセットさせていません。\n" + location + "に再生したい音源をセットしてください。\n");
                 StopPreview();
                 return;

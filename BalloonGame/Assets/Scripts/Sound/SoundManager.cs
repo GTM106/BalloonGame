@@ -2,19 +2,25 @@ using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.Rendering;
-#endif
 
 public enum SoundSource
 {
     //名前を変更するときは、右クリックして名前の変更からお願いします
     //BGM
-    BGM1_SAMPLE,
+    BGM001_Title,
+    BGM002_Ingame,
+    BGM003_Succeed,
+    BGS001_Sand,
 
     //SE
-    SE1_SAMPLE,//この項目はSEの先頭固定でお願いします。
+    SE001_PlayerWalking,//この項目はSEの先頭固定でお願いします。
+    SE002_PlayerJumping,
+    SE003_PlayerLanding,
+    SE004_PlayerBalloonExpands,
+    SE005_PlayerBoostDash,
+    SE006_PlayerDamaged,
+    SE007_PlayerGetsItem,
+    SE010_,
 
     [InspectorName("")]
     Max,
@@ -55,7 +61,7 @@ public class SoundManager : MonoBehaviour
         _soundDatas = _SoundSettingsData.Datas;
         Instance = this;
 
-        PlayBGM(SoundSource.BGM1_SAMPLE);
+        PlayBGM(SoundSource.BGM001_Title);
     }
 
     //音源の切り替えを行う
