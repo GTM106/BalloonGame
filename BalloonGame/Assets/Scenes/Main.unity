@@ -17520,6 +17520,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sound
       objectReference: {fileID: 0}
+    - target: {fileID: 6193048331216081440, guid: d3de54fb77466594884b3a33e5e54b3a,
+        type: 3}
+      propertyPath: debugSoundSource
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6193048331216081440, guid: d3de54fb77466594884b3a33e5e54b3a,
+        type: 3}
+      propertyPath: _SoundSettingsData
+      value: 
+      objectReference: {fileID: 11400000, guid: 6f132532b33a30343806642c81e424cf,
+        type: 2}
+    - target: {fileID: 6193048331216081440, guid: d3de54fb77466594884b3a33e5e54b3a,
+        type: 3}
+      propertyPath: BGMClip.Array.data[0]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: a10bf225ceb86ee49ba4cb4f132f149d, type: 3}
     - target: {fileID: 7694764570986770471, guid: d3de54fb77466594884b3a33e5e54b3a,
         type: 3}
       propertyPath: OutputAudioMixerGroup

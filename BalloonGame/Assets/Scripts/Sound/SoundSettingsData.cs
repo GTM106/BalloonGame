@@ -1,296 +1,52 @@
 using System;
-using UnityEngine;
-using Cysharp.Threading.Tasks;
+using System.Collections;
+using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Rendering;
 #endif
+using UnityEngine;
 
-public enum SoundSource
-{
-    //名前を変更するときは、右クリックして名前の変更からお願いします
-    //BGM
-    BGM1_SAMPLE,
-
-    //SE
-    SE1_SAMPLE,//この項目はSEの先頭固定でお願いします。
-
-    [InspectorName("")]
-    Max,
-}
-
-[Serializable]
-public struct SoundSettings
-{
-    [SerializeField] AudioClip _clip;
-    [SerializeField, Range(0f, 1f)] float _volume;
-    [SerializeField, Range(0f, 3f)] float _pitch;
-
-    public AudioClip Clip => _clip;
-    public float Volume => _volume;
-    public float Pitch => _pitch;
-
-    public void SetParameter(float volume, float pitch)
-    {
-        if (_clip == null) throw new NullReferenceException("クリップがnullです。設定は棄却されました。");
-
-        _volume = volume;
-        _pitch = pitch;
-    }
-}
-
-public class SoundManager : MonoBehaviour
-{
+[CreateAssetMenu(fileName = "SoundSettingsData", menuName = "ScriptableObject/Sound Settings Data")]
+public class SoundSettingsData : ScriptableObject
+{    
     //エディタ拡張側で使用。シリアライズするが、インスペクタには表示させない。
     [Obsolete("エディタ拡張以外に使用することは想定されていません。")]
     [SerializeField, HideInInspector] SoundSource debugSoundSource;
 
-    public static SoundManager Instance { get; private set; }
+    [SerializeField] SoundSettings[] datas;
 
-    [SerializeField, Required] AudioSource _BGMLoop;
-    [SerializeField, Required] AudioSource _BGMIntro;
-
-    [SerializeField, HideInInspector] SoundSettings[] BGMClip;
-    [SerializeField, HideInInspector] SoundSettings[] SEClip;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
-
-    private void Reset()
-    {
-        BGMClip = new SoundSettings[(int)SoundSource.SE1_SAMPLE];
-        SEClip = new SoundSettings[(SoundSource.Max - SoundSource.SE1_SAMPLE)];
-    }
-
-    private void ChangeBGM(AudioSource audioSource, SoundSource sound)
-    {
-        int index = (int)sound;
-        if (index < 0 || BGMClip.Length <= index) return;
-
-        SoundSettings bgm = BGMClip[index];
-        audioSource.clip = bgm.Clip;
-        audioSource.volume = bgm.Volume;
-        audioSource.pitch = bgm.Pitch;
-    }
-
-    /// <summary>
-    /// BGMを再生する。
-    /// </summary>
-    /// <param name="sound">再生したいBGM</param>
-    /// <param name="time">再生位置</param>
-    public void PlayBGM(SoundSource sound, float time = 0f)
-    {
-        if (_BGMLoop.outputAudioMixerGroup == null)
-        {
-            Debug.LogWarning(_BGMLoop.name + " の Output を null にすることは非推奨です。");
-        }
-
-        ChangeBGM(_BGMLoop, sound);
-        _BGMLoop.time = time;
-        _BGMLoop.Play();
-    }
-
-    /// <summary>
-    /// BGMを再生する。
-    /// </summary>
-    /// <param name="intro">再生したいイントロ</param>
-    /// <param name="loop">再生したいループBGM</param>
-    public void PlayBGM(SoundSource intro, SoundSource loop)
-    {
-        if (_BGMIntro.outputAudioMixerGroup == null)
-        {
-            Debug.LogWarning(_BGMIntro.name + " の Output を null にすることは非推奨です。");
-        }
-        if (_BGMLoop.outputAudioMixerGroup == null)
-        {
-            Debug.LogWarning(_BGMLoop.name + " の Output を null にすることは非推奨です。");
-        }
-
-        ChangeBGM(_BGMIntro, intro);
-        _BGMIntro.PlayScheduled(AudioSettings.dspTime);
-        ChangeBGM(_BGMLoop, loop);
-        _BGMLoop.PlayScheduled(AudioSettings.dspTime + (_BGMIntro.clip.samples / (float)_BGMIntro.clip.frequency));
-    }
-
-    public void PlayBGM(SoundSource sound, float fadeTime, float time)
-    {
-        if (_BGMLoop.outputAudioMixerGroup == null)
-        {
-            Debug.LogWarning(_BGMLoop.name + " の Output を null にすることは非推奨です。");
-        }
-
-        ChangeBGM(_BGMLoop, sound);
-        float targetValue = _BGMLoop.volume;
-
-        _BGMLoop.volume = 0f;
-        _BGMLoop.time = time;
-        _BGMLoop.Play();
-        BGMFadein(fadeTime, targetValue).Forget();
-    }
-
-    public void StopBGM()
-    {
-        _BGMIntro.Stop();
-        _BGMLoop.Stop();
-    }
-
-    public async void StopBGM(float fadeTime)
-    {
-        await BGMFadeout(fadeTime);
-
-        StopBGM();
-    }
-
-    private async UniTask BGMFadein(float duration, float volume)
-    {
-        var token = this.GetCancellationTokenOnDestroy();
-
-        if (duration <= 0)
-        {
-            Debug.LogWarning("待機時間を負の値にはできません。");
-            return;
-        }
-
-        float fadeTime = 0f;
-
-        while (fadeTime < duration)
-        {
-            await UniTask.Yield(token);
-            fadeTime += Time.deltaTime;
-
-            _BGMLoop.volume = Mathf.Min(volume * (fadeTime / duration), volume);
-        }
-
-        _BGMLoop.volume = volume;
-    }
-
-    private async UniTask BGMFadeout(float duration)
-    {
-        var token = this.GetCancellationTokenOnDestroy();
-
-        if (duration < 0f)
-        {
-            Debug.LogWarning("待機時間を負の値にはできません。");
-            return;
-        }
-
-        float fadeTime = 0f;
-        float firstVolume = _BGMLoop.volume;
-
-        while (fadeTime < duration)
-        {
-            await UniTask.Yield(token);
-            fadeTime += Time.deltaTime;
-
-            _BGMLoop.volume = Mathf.Max(firstVolume * (1f - (fadeTime / duration)), 0f);
-        }
-
-        _BGMLoop.volume = 0f;
-    }
-
-    private void ChangeSE(AudioSource audioSource, SoundSource sound)
-    {
-        int index = (int)sound - BGMClip.Length;
-        if (index < 0 || SEClip.Length <= index) return;
-
-        SoundSettings se = SEClip[index];
-        audioSource.clip = se.Clip;
-        audioSource.volume = se.Volume;
-        audioSource.pitch = se.Pitch;
-    }
-
-    /// <summary>
-    /// SEを再生します。
-    /// </summary>
-    /// <param name="sound">再生したいSE</param>
-    public void PlaySE(AudioSource audioSource, SoundSource sound, float fadeTime = 0f)
-    {
-        if (audioSource.outputAudioMixerGroup == null)
-        {
-            Debug.LogWarning(audioSource.name + " の Output を null にすることは非推奨です。");
-        }
-
-        ChangeSE(audioSource, sound);
-        float targetVolume = audioSource.volume;
-
-        SEFadein(audioSource, fadeTime, targetVolume).Forget();
-        audioSource.Play();
-    }
-
-    public async void StopSE(AudioSource audioSource, float fadeTime = 0f)
-    {
-        await SEFadeout(audioSource, fadeTime);
-        audioSource.Stop();
-    }
-
-    private async UniTask SEFadein(AudioSource source, float duration, float targetVolume)
-    {
-        var token = this.GetCancellationTokenOnDestroy();
-        if (duration <= 0)
-        {
-            source.volume = targetVolume;
-            return;
-        }
-
-        float fadeTime = 0;
-
-        while (source.volume < targetVolume)
-        {
-            await UniTask.Yield(token);
-            fadeTime += Time.deltaTime;
-
-            source.volume = Mathf.Min(targetVolume * (fadeTime / duration), targetVolume);
-        }
-
-        source.volume = targetVolume;
-    }
-
-    private async UniTask SEFadeout(AudioSource source, float duration)
-    {
-        var token = this.GetCancellationTokenOnDestroy();
-
-        if (duration <= 0f) return;
-
-        float fadeTime = 0f;
-        float firstVolume = source.volume;
-
-        while (source.volume > 0f)
-        {
-            await UniTask.Yield(token);
-            fadeTime += Time.deltaTime;
-
-            source.volume = Mathf.Max(firstVolume * (1f - (fadeTime / duration)), 0f);
-        }
-    }
+    public SoundSettings[] Datas => datas;
 
 #if UNITY_EDITOR
-#pragma warning disable CS0618 // 型またはメンバーが旧型式です
-    [CustomEditor(typeof(SoundManager))]
-    public class SoundManagerEditor : Editor
+    [CustomEditor(typeof(SoundSettingsData))]
+    public class SoundSettingsEditor : Editor
     {
-        private SoundManager soundManager;
+        //エディタ拡張の元
+        private SoundSettingsData soundSettingsData;
 
+        //プレビュー用
         private AudioSource previewAudioSource;
         private bool isPreviewing;
         private bool isPausing;
+        private float previewVolume;
+        private float previewPitch;
 
+        //スライダーの定数
         private const float VolumeSliderMin = 0f;
         private const float VolumeSliderMax = 1f;
         private const float PitchSliderMin = 0f;
         private const float PitchSliderMax = 3f;
 
+        //プロパティ
         SerializedProperty debugSoundSourceProperty;
-        SerializedProperty seClipProperty;
-        SerializedProperty bgmClipProperty;
+        SerializedProperty soundDataProperty;
 
-        private float previewVolume;
-        private float previewPitch;
-
+        //以前保存してあったボリューム
         float prebVolume;
         float prebPitch;
 
+        //変更点の有無
         bool hasChanged = false;
 
         SoundSource currentSoundSource;
@@ -298,23 +54,30 @@ public class SoundManager : MonoBehaviour
 
         private void OnEnable()
         {
-            soundManager = (SoundManager)target;
+            soundSettingsData = (SoundSettingsData)target;
 
+            //エディタ上でAudioSourceを作成
             previewAudioSource = EditorUtility.CreateGameObjectWithHideFlags("Sound Preview", HideFlags.HideAndDontSave, typeof(AudioSource)).GetComponent<AudioSource>();
             previewAudioSource.playOnAwake = false;
             previewAudioSource.loop = true;
 
+            //プロパティの取得
             debugSoundSourceProperty = serializedObject.FindProperty("debugSoundSource");
-            seClipProperty = serializedObject.FindProperty("SEClip");
-            bgmClipProperty = serializedObject.FindProperty("BGMClip");
+            soundDataProperty = serializedObject.FindProperty("datas");
+            soundDataProperty.arraySize = (int)SoundSource.Max;
+            serializedObject.ApplyModifiedProperties(); // プロパティの変更を適用
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
+            currentSoundSource = soundSettingsData.debugSoundSource;
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
 
-            currentSoundSource = soundManager.debugSoundSource;
+            //現在のクリップを取得
             SerializedProperty clip = GetClip();
             currentAudioClip = clip.objectReferenceValue as AudioClip;
 
             //現在の設定と同じパラメーターにスライダーを設定
             SliderSetting();
 
+            //リセット用にボリュームを保存
             prebVolume = previewVolume;
             prebPitch = previewPitch;
         }
@@ -421,8 +184,8 @@ public class SoundManager : MonoBehaviour
             if (EditorGUI.EndChangeCheck())
             {
                 currentSoundSource = debugSoundSourceProperty.GetEnumValue<SoundSource>();
-                seClipProperty.arraySize = SoundSource.Max - SoundSource.SE1_SAMPLE;
-                bgmClipProperty.arraySize = (int)SoundSource.SE1_SAMPLE;
+                soundDataProperty.arraySize = (int)SoundSource.Max;
+                serializedObject.ApplyModifiedProperties(); // プロパティの変更を適用
 
                 SerializedProperty clip = GetClip();
 
@@ -439,14 +202,7 @@ public class SoundManager : MonoBehaviour
         private void SliderSetting()
         {
             //選曲
-            if (currentSoundSource < SoundSource.SE1_SAMPLE)
-            {
-                soundManager.ChangeBGM(previewAudioSource, currentSoundSource);
-            }
-            else
-            {
-                soundManager.ChangeSE(previewAudioSource, currentSoundSource);
-            }
+            ChangeSound(previewAudioSource, currentSoundSource);
 
             previewVolume = previewAudioSource.volume;
             previewPitch = previewAudioSource.pitch;
@@ -574,14 +330,10 @@ public class SoundManager : MonoBehaviour
 
             GUILayout.BeginHorizontal();
 
-            //ボタンの表示
+            //ボタンの表示。変更を確定する
             if (GUILayout.Button("SetParameter", GUILayout.Width(160f)))
             {
-                bool isBGM = currentSoundSource < SoundSource.SE1_SAMPLE;
-                int index = isBGM ? (int)currentSoundSource : currentSoundSource - SoundSource.SE1_SAMPLE;
-
-                if (isBGM) soundManager.BGMClip[index].SetParameter(previewVolume, previewPitch);
-                else soundManager.SEClip[index].SetParameter(previewVolume, previewPitch);
+                soundSettingsData.datas[(int)currentSoundSource].SetParameter(previewVolume, previewPitch);
 
                 prebVolume = previewVolume;
                 prebPitch = previewPitch;
@@ -615,14 +367,7 @@ public class SoundManager : MonoBehaviour
             isPreviewing = true;
 
             //選曲
-            if (currentSoundSource < SoundSource.SE1_SAMPLE)
-            {
-                soundManager.ChangeBGM(previewAudioSource, currentSoundSource);
-            }
-            else
-            {
-                soundManager.ChangeSE(previewAudioSource, currentSoundSource);
-            }
+            ChangeSound(previewAudioSource, currentSoundSource);
 
             //音源がセットされていなかったら再生しない
             if (currentAudioClip == null)
@@ -674,11 +419,9 @@ public class SoundManager : MonoBehaviour
 
         private SerializedProperty GetClip()
         {
-            bool isBGM = currentSoundSource < SoundSource.SE1_SAMPLE;
-            SerializedProperty clipProperty = isBGM ? bgmClipProperty : seClipProperty;
-            int index = isBGM ? (int)currentSoundSource : currentSoundSource - SoundSource.SE1_SAMPLE;
+            int index = (int)currentSoundSource;
 
-            SerializedProperty clipPropertyElement = clipProperty.GetArrayElementAtIndex(index);
+            SerializedProperty clipPropertyElement = soundDataProperty.GetArrayElementAtIndex(index);
             SerializedProperty clip = clipPropertyElement.FindPropertyRelative("_clip");
             return clip;
         }
@@ -690,7 +433,16 @@ public class SoundManager : MonoBehaviour
 
             return hasChanged;
         }
+
+        //音源の切り替えを行う
+        private void ChangeSound(AudioSource audioSource, SoundSource sound)
+        {
+            SoundSettings bgm = soundSettingsData.datas[(int)sound];
+            audioSource.clip = bgm.Clip;
+            audioSource.volume = bgm.Volume;
+            audioSource.pitch = bgm.Pitch;
+        }
     }
-#pragma warning restore CS0618 // 型またはメンバーが旧型式です
 #endif
+
 }
