@@ -201,17 +201,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 500685cea44189d45b7049bb4dc022d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugSoundSource: 0
   _BGMLoop: {fileID: 7694764570986770471}
   _BGMIntro: {fileID: 8526329953667502747}
-  BGMClip:
-  - _clip: {fileID: 0}
-    _volume: 0
-    _pitch: 0
-  SEClip:
-  - _clip: {fileID: 0}
-    _volume: 0
-    _pitch: 0
+  _SoundSettingsData: {fileID: 11400000, guid: 6f132532b33a30343806642c81e424cf, type: 2}
 --- !u!1 &7934056765629274788
 GameObject:
   m_ObjectHideFlags: 0

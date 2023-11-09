@@ -19,6 +19,12 @@ public enum SoundSource
     SE005_PlayerBoostDash,
     SE006_PlayerDamaged,
     SE007_PlayerGetsItem,
+    SE010_Hermit_Detection,
+    SE011_Hermit_Chase,
+    SE020_Balloonfish_Floating,
+    SE030_AirVent_Interact,
+    SE032_WaterIntrusion,
+    SE040_EndOfTimeLimit,
 
     [InspectorName("")]
     Max,
