@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
 
 public enum SoundSource
 {
@@ -13,37 +12,16 @@ public enum SoundSource
     BGS001_Sand,
 
     //SE
-    SE001_PlayerWalking,//この項目はSEの先頭固定でお願いします。
+    SE001_PlayerWalking,
     SE002_PlayerJumping,
     SE003_PlayerLanding,
     SE004_PlayerBalloonExpands,
     SE005_PlayerBoostDash,
     SE006_PlayerDamaged,
     SE007_PlayerGetsItem,
-    SE010_,
 
     [InspectorName("")]
     Max,
-}
-
-[Serializable]
-public struct SoundSettings
-{
-    [SerializeField] AudioClip _clip;
-    [SerializeField, Range(0f, 1f)] float _volume;
-    [SerializeField, Range(0f, 3f)] float _pitch;
-
-    public AudioClip Clip => _clip;
-    public float Volume => _volume;
-    public float Pitch => _pitch;
-
-    public void SetParameter(float volume, float pitch)
-    {
-        if (_clip == null) throw new NullReferenceException("クリップがnullです。設定は棄却されました。");
-
-        _volume = volume;
-        _pitch = pitch;
-    }
 }
 
 public class SoundManager : MonoBehaviour
@@ -54,23 +32,23 @@ public class SoundManager : MonoBehaviour
     [SerializeField, Required] AudioSource _BGMIntro;
     [SerializeField, Required] SoundSettingsData _SoundSettingsData;
 
-    SoundSettings[] _soundDatas;
+    SoundList _soundDatas;
 
     private void Awake()
     {
         _soundDatas = _SoundSettingsData.Datas;
         Instance = this;
-
-        PlayBGM(SoundSource.BGM001_Title);
     }
 
     //音源の切り替えを行う
     private void ChangeSound(AudioSource audioSource, SoundSource sound)
     {
-        SoundSettings bgm = _soundDatas[(int)sound];
-        audioSource.clip = bgm.Clip;
-        audioSource.volume = bgm.Volume;
-        audioSource.pitch = bgm.Pitch;
+        if (_soundDatas.TryGetValue(sound, out SoundSettings bgm))
+        {
+            audioSource.clip = bgm.Clip;
+            audioSource.volume = bgm.Volume;
+            audioSource.pitch = bgm.Pitch;
+        }
     }
 
     /// <summary>

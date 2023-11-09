@@ -1,6 +1,7 @@
-#if UNITY_EDITOR
 using System;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 /// <summary>
@@ -10,7 +11,7 @@ using UnityEngine;
 public class RequiredAttribute : PropertyAttribute
 {
 }
-
+#if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(RequiredAttribute))]
 public class RequiredDrawer : PropertyDrawer
 {
