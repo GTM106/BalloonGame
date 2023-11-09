@@ -24,4 +24,4 @@ PCにジョイコンを接続する方法を示します。
 ## サウンドの一元管理に関するマニュアル
 サウンドをUnityに入れる際の注意点や、管理の方法を示します。
 
-[表示](/SoundSettingsDataManual.md)
+[表示](/Manual/SoundSettingsDataManual.md)
