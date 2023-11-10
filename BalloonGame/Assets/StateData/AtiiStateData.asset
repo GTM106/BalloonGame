@@ -13,18 +13,20 @@ MonoBehaviour:
   m_Name: AtiiStateData
   m_EditorClassIdentifier: 
   stateNames:
-  - Idle
-  - AirIn
-  - AirOut
+  - IdleWind
   - BDash
   - BFall
-  - Bink
   - BJump
   - Down
   - Fall
-  - IdleWind
+  - Idle
   - Jump
   - Piyopiyo
   - Retry
   - Run
+  - RunWind
   - Swim
+  - Swiming
+  - AirIn
+  - AirOut
+  - Bink
