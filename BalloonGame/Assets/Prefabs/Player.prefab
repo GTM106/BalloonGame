@@ -34,7 +34,7 @@ Transform:
   m_Children:
   - {fileID: 948196742402556567}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2826682229555106861
 CapsuleCollider:
@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerParameter:
     _rb: {fileID: 3455290170924512164}
+    _skinnedMeshRenderer: {fileID: 786102023468443626}
     _cameraTransform: {fileID: 0}
     _joyconRight: {fileID: 0}
     _joyconLeft: {fileID: 0}
@@ -109,8 +110,8 @@ MonoBehaviour:
     _multiplierNormal: 10.13
     _multiplierExpand: 7
     _boostDashType: 0
-    _boostDashPower: 30
-    _boostFrame: 50
+    _boostDashPower: {x: 0, y: 30}
+    _boostFrame: {x: 0, y: 50}
     _boostDashAngle: 25
     _buoyancyExpand: 1000
     _buoyancyNormal: 15
@@ -226,6 +227,11 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 926d4e53019851b4aa971103657bf6a3, type: 2}
     - target: {fileID: 5866666021909216657, guid: 787b325b82cb63d47bba460309dffd89,
         type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 787b325b82cb63d47bba460309dffd89,
+        type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
@@ -291,4 +297,4 @@ MonoBehaviour:
   _scaleAmountDeflatingPerSecondInWater: 0.1
   _cameraRadiusMax: 3.25
   _smoothnessMax: 1
-  _boostFrame: 50
+  _boostFrames: {x: 0, y: 50}
