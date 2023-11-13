@@ -73,7 +73,10 @@ public class InflatablePlayer : IPlayer
 
         _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BDash);
 
-        for (int i = 0; i < _playerParameter.BoostFrame; i++)
+        //ˆ—’†‚É•ÏX‚³‚ê‚é‚¨‚»‚ê‚ª‚ ‚é‚½‚ß’l‚ð•Û‘¶‚µ‚Ä‚¨‚­
+        int boostFrame = _playerParameter.BoostFrame;
+
+        for (int i = 0; i < boostFrame; i++)
         {
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
             _rigidbody.velocity = velocity;

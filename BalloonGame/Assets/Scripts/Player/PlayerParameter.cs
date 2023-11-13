@@ -11,10 +11,11 @@ public enum BoostDashDirection
 [System.Serializable]
 public class PlayerParameter
 {
-    [SerializeField] Rigidbody _rb = default!;
-    [SerializeField] Transform _cameraTransform = default!;
-    [SerializeField] JoyconHandler _joyconRight = default!;
-    [SerializeField] JoyconHandler _joyconLeft = default!;
+    [SerializeField, Required] Rigidbody _rb = default!;
+    [SerializeField, Required] SkinnedMeshRenderer _skinnedMeshRenderer = default!;
+    [SerializeField, Required] Transform _cameraTransform = default!;
+    [SerializeField, Required] JoyconHandler _joyconRight = default!;
+    [SerializeField, Required] JoyconHandler _joyconLeft = default!;
     [Header("ジャンプ時のパワー")]
     [SerializeField, Min(0f)] float _jumpPower = default!;
     [Header("移動速度")]
@@ -28,8 +29,8 @@ public class PlayerParameter
     [Header("ぶっ飛びジャンプの方向")]
     [SerializeField] BoostDashDirection _boostDashType = default!;
     [Header("ぶっ飛びジャンプの力。frameはBalloonと同じ値にしてください")]
-    [SerializeField, Min(0f)] float _boostDashPower = default!;
-    [SerializeField, Min(0)] int _boostFrame = default!;
+    [SerializeField, Min(0f)] Vector2 _boostDashPower = default!;
+    [SerializeField, Min(0)] Vector2Int _boostFrame = default!;
     [Header("ぶっ飛びダッシュにおいて飛ぶY方向。高いほど高く跳ぶ")]
     [SerializeField, Min(0f)] float _boostDashAngle = default!;
     [Header("膨張時における水に入っているときの浮力")]
@@ -51,8 +52,8 @@ public class PlayerParameter
     public float MultiplierNormal => _multiplierNormal;
     public float MultiplierExpand => _multiplierExpand;
     public BoostDashDirection BoostDashType => _boostDashType;
-    public float BoostDashPower => _boostDashPower;
-    public int BoostFrame => _boostFrame;
+    public float BoostDashPower => _boostDashPower.x + (_boostDashPower.y - _boostDashPower.x) * _skinnedMeshRenderer.GetBlendShapeWeight(0)/100;
+    public int BoostFrame => _boostFrame.x + (int)((_boostFrame.y - _boostFrame.x) * _skinnedMeshRenderer.GetBlendShapeWeight(0)/100);
     public float BoostDashAngle => _boostDashAngle;
     public float BuoyancyExpand => _buoyancyExpand;
     public float BuoyancyNormal => _buoyancyNormal;
