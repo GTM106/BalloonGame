@@ -1,6 +1,7 @@
-#if UNITY_EDITOR
 using System;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 /// <summary>
@@ -10,7 +11,7 @@ using UnityEngine;
 public class RequiredAttribute : PropertyAttribute
 {
 }
-
+#if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(RequiredAttribute))]
 public class RequiredDrawer : PropertyDrawer
 {
@@ -24,7 +25,7 @@ public class RequiredDrawer : PropertyDrawer
             EditorGUI.HelpBox(position, property.displayName + " must be set to a value.", MessageType.Error);
             
             //通常のプロパティフィールドの表示を下に持ってくる
-            position.y = position.height;
+            position.y += position.height;
         }
 
         //通常のプロパティフィールドの表示

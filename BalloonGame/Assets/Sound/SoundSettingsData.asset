@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f509d275859a5944a54efc562273650, type: 3}
+  m_Name: SoundSettingsData
+  m_EditorClassIdentifier: 
+  datas:
+    _soundKVPairs:
+    - _key: BGM001_Title
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: BGM002_Ingame
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: BGM003_Succeed
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: BGS001_Sand
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: SE001_PlayerWalking
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: SE002_PlayerJumping
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: SE003_PlayerLanding
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: SE004_PlayerBalloonExpands
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: SE005_PlayerBoostDash
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: SE006_PlayerDamaged
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+    - _key: SE007_PlayerGetsItem
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
