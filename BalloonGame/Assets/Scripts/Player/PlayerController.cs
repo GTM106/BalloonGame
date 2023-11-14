@@ -416,6 +416,10 @@ public class PlayerController : MonoBehaviour
         _waterEvent.OnStayAction += OnWaterStay;
         _playerGameOverEvent.OnGameOver += OnGameOver;
         _playerGameOverEvent.OnRevive += OnRevive;
+        _playerParameter.JoyconRight.OnDownButtonPressed += RingconPullState;
+        _playerParameter.JoyconRight.OnUpButtonPressed += RingconPullState;
+        _playerParameter.JoyconRight.OnLeftButtonPressed += RingconPullState;
+        _playerParameter.JoyconRight.OnRightButtonPressed += RingconPullState;
 
         _playerPairs.Add(BalloonState.Normal, _deflatablePlayer);
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
@@ -443,6 +447,10 @@ public class PlayerController : MonoBehaviour
         _waterEvent.OnStayAction -= OnWaterStay;
         _playerGameOverEvent.OnGameOver -= OnGameOver;
         _playerGameOverEvent.OnRevive -= OnRevive;
+        _playerParameter.JoyconRight.OnDownButtonPressed -= RingconPullState;
+        _playerParameter.JoyconRight.OnUpButtonPressed -= RingconPullState;
+        _playerParameter.JoyconRight.OnLeftButtonPressed -= RingconPullState;
+        _playerParameter.JoyconRight.OnRightButtonPressed -= RingconPullState;
     }
 
     private void OnTriggerEnter(Collider other)
