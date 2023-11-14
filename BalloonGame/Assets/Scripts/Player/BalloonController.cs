@@ -22,6 +22,7 @@ public class BalloonController : MonoBehaviour
     //下記のInputActionReferenceは、Handlerの役割をもちます
     [SerializeField, Required] InputActionReference _ringPushAction = default!;
     [SerializeField, Required] InputActionReference _ringPullAction = default!;
+    [SerializeField, Required] JoyconHandler _joyconRight = default!;
 
     [SerializeField, Required] WaterEvent _waterEvent = default!;
     [SerializeField, Required] CinemachineTargetGroup _cinemachineTargetGroup = default!;
@@ -77,6 +78,10 @@ public class BalloonController : MonoBehaviour
         _playerGameOverEvent.OnRevive += OnRevive;
         _airVentEvent.OnEnterAirVent += OnEnterAirVent;
         _airVentEvent.OnExitAirVent += OnExitAirVent;
+        _joyconRight.OnRightButtonPressed += OnRingconPull;
+        _joyconRight.OnLeftButtonPressed += OnRingconPull;
+        _joyconRight.OnUpButtonPressed += OnRingconPull;
+        _joyconRight.OnDownButtonPressed += OnRingconPull;
 
         State = Mathf.Approximately(_defaultBlendShapeWeight, 0f) ? BalloonState.Normal : BalloonState.Expands;
         _boostFrame = _boostFrames.x + (int)((_boostFrames.y - _boostFrames.x) * _skinnedMeshRenderer.GetBlendShapeWeight(0));
@@ -122,6 +127,10 @@ public class BalloonController : MonoBehaviour
         _playerGameOverEvent.OnRevive -= OnRevive;
         _airVentEvent.OnEnterAirVent -= OnEnterAirVent;
         _airVentEvent.OnExitAirVent -= OnExitAirVent;
+        _joyconRight.OnRightButtonPressed -= OnRingconPull;
+        _joyconRight.OnLeftButtonPressed -= OnRingconPull;
+        _joyconRight.OnUpButtonPressed -= OnRingconPull;
+        _joyconRight.OnDownButtonPressed -= OnRingconPull;
     }
 
     private void OnRingconPushed(InputAction.CallbackContext obj)
@@ -147,7 +156,7 @@ public class BalloonController : MonoBehaviour
         var token = this.GetCancellationTokenOnDestroy();
 
         State = BalloonState.BoostDash;
-        
+
         //処理中に_boostFrameが変更されるおそれがあるため値を保存しておく
         int boostFrame = _boostFrame;
 
