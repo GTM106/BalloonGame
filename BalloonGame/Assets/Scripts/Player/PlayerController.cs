@@ -22,7 +22,7 @@ public interface IState
     E_State Initialize(PlayerController parent);
     E_State Update(PlayerController parent);
     E_State FixedUpdate(PlayerController parent);
-    E_State RingconPull(PlayerController parent);
+    E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame);
     E_State RingconPush(PlayerController parent);
     E_State JumpButtonPressed(PlayerController parent);
 }
@@ -33,18 +33,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Required] BalloonController _balloonController = default!;
     [SerializeField, Required] GroundCheck _groundCheck = default!;
     [SerializeField, Required] InputActionReference _ringconPushAction = default!;
-    [SerializeField, Required] InputActionReference _ringconPullAction = default!;
     [SerializeField, Required] Collider _playerCollider = default!;
     [SerializeField, Required] WaterEvent _waterEvent = default!;
     [SerializeField, Required] Canvas _gameOverCanvas = default!;
     [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
+    [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
 
     IPlayer _player;
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
 
+    //BoostDashEventから渡されるデータの保存用
+    BoostDashData _boostDashData = default!;
+
     readonly Dictionary<BalloonState, IPlayer> _playerPairs = new();
 
+    #region State
     // 状態管理
     IState.E_State _currentState = IState.E_State.Control;
     static readonly IState[] states = new IState[(int)IState.E_State.MAX]
@@ -85,7 +89,7 @@ public class PlayerController : MonoBehaviour
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.BoostDash;
         }
@@ -124,7 +128,7 @@ public class PlayerController : MonoBehaviour
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.BoostDash;
         }
@@ -162,7 +166,7 @@ public class PlayerController : MonoBehaviour
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.BoostDash;
         }
@@ -184,8 +188,9 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State Initialize(PlayerController parent)
         {
-            _boostDashFrame = 0;
-            parent._player.BoostDash();
+            _boostDashFrame = parent._boostDashData.Value;
+
+            parent._player.BoostDash(parent._boostDashData);
             return IState.E_State.Unchanged;
         }
 
@@ -197,13 +202,13 @@ public class PlayerController : MonoBehaviour
         public IState.E_State FixedUpdate(PlayerController parent)
         {
             //1行にまとめられますが、可読性のために長く書いています
-            _boostDashFrame++;
-            if (_boostDashFrame >= parent._playerParameter.BoostFrame) return IState.E_State.Control;
+            _boostDashFrame--;
+            if (_boostDashFrame <= 0) return IState.E_State.Control;
 
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.Unchanged;
         }
@@ -251,7 +256,7 @@ public class PlayerController : MonoBehaviour
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.Unchanged;
         }
@@ -301,7 +306,7 @@ public class PlayerController : MonoBehaviour
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.Unchanged;
         }
@@ -362,9 +367,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void RingconPullState()
+    private void RingconPushState()
     {
-        var nextState = states[(int)_currentState].RingconPull(this);
+        var nextState = states[(int)_currentState].RingconPush(this);
 
         if (nextState != IState.E_State.Unchanged)
         {
@@ -374,9 +379,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void RingconPushState()
+    private void OnBoostDashEvent(BoostDashData frame)
     {
-        var nextState = states[(int)_currentState].RingconPush(this);
+        _boostDashData = frame;
+        var nextState = states[(int)_currentState].CalledBoostDashEvent(this, frame);
 
         if (nextState != IState.E_State.Unchanged)
         {
@@ -400,6 +406,7 @@ public class PlayerController : MonoBehaviour
             InitializeState();
         }
     }
+    #endregion
 
     private void Awake()
     {
@@ -411,15 +418,11 @@ public class PlayerController : MonoBehaviour
 
         _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
-        _ringconPullAction.action.performed += OnRingconPull;
         _ringconPushAction.action.performed += OnRingconPush;
         _waterEvent.OnStayAction += OnWaterStay;
         _playerGameOverEvent.OnGameOver += OnGameOver;
         _playerGameOverEvent.OnRevive += OnRevive;
-        _playerParameter.JoyconRight.OnDownButtonPressed += RingconPullState;
-        _playerParameter.JoyconRight.OnUpButtonPressed += RingconPullState;
-        _playerParameter.JoyconRight.OnLeftButtonPressed += RingconPullState;
-        _playerParameter.JoyconRight.OnRightButtonPressed += RingconPullState;
+        _boostDashEvent.OnBoostDash += OnBoostDashEvent;
 
         _playerPairs.Add(BalloonState.Normal, _deflatablePlayer);
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
@@ -442,15 +445,10 @@ public class PlayerController : MonoBehaviour
     {
         _balloonController.OnStateChanged -= OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
-        _ringconPullAction.action.performed -= OnRingconPull;
         _ringconPushAction.action.performed -= OnRingconPush;
         _waterEvent.OnStayAction -= OnWaterStay;
         _playerGameOverEvent.OnGameOver -= OnGameOver;
         _playerGameOverEvent.OnRevive -= OnRevive;
-        _playerParameter.JoyconRight.OnDownButtonPressed -= RingconPullState;
-        _playerParameter.JoyconRight.OnUpButtonPressed -= RingconPullState;
-        _playerParameter.JoyconRight.OnLeftButtonPressed -= RingconPullState;
-        _playerParameter.JoyconRight.OnRightButtonPressed -= RingconPullState;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -481,11 +479,6 @@ public class PlayerController : MonoBehaviour
         {
             hitObject.OnExit(_playerCollider, _balloonController.State);
         }
-    }
-
-    private void OnRingconPull(InputAction.CallbackContext obj)
-    {
-        RingconPullState();
     }
 
     private void OnRingconPush(InputAction.CallbackContext obj)
