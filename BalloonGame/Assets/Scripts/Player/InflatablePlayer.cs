@@ -67,19 +67,19 @@ public class InflatablePlayer : IPlayer
             _ => throw new System.NotImplementedException()
         };
 
-        Vector3 velocity = dir.normalized * _playerParameter.BoostDashPower(boostFrame);
+        Vector3 velocity = Vector3.zero;
         velocity.Set(velocity.x, _playerParameter.BoostDashAngle, velocity.z);
-        _rigidbody.velocity = velocity;
 
         _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BDash);
 
         //ˆ—’†‚É•ÏX‚³‚ê‚é‚¨‚»‚ê‚ª‚ ‚é‚½‚ß’l‚ğ•Û‘¶‚µ‚Ä‚¨‚­
-        int frame = boostFrame.Value;
+        int maxFrame = boostFrame.Value;
 
-        for (int i = 0; i < frame; i++)
+        for (int currentFrame = 0; currentFrame < maxFrame; currentFrame++)
         {
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
-            _rigidbody.velocity = velocity;
+
+            _rigidbody.velocity = velocity * _playerParameter.BoostDashSpeed(currentFrame, maxFrame);
         }
 
         _rigidbody.velocity = Vector3.zero;
