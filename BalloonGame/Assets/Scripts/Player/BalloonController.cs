@@ -47,7 +47,8 @@ public class BalloonController : MonoBehaviour
     [SerializeField, Min(1f)] float _cameraRadiusMax = 3.25f;
     [Header("風船のマテリアルのSmoothness値の最大値")]
     [SerializeField, Range(0.4f, 1f)] float _smoothnessMax = 1f;
-    [Header("吹っ飛びダッシュの持続時間。PlayerControllerと同じ値を設定してください")]
+
+    [SerializeField] bool enableBoostDashOnPressedJoyconButton = true;
 
     //風船の膨らみ具合の初期値。Awakeで初期化しています
     float _defaultBlendShapeWeight;
@@ -79,10 +80,13 @@ public class BalloonController : MonoBehaviour
         _playerGameOverEvent.OnRevive += OnRevive;
         _airVentEvent.OnEnterAirVent += OnEnterAirVent;
         _airVentEvent.OnExitAirVent += OnExitAirVent;
-        _joyconRight.OnRightButtonPressed += BoostDash;
-        _joyconRight.OnLeftButtonPressed += BoostDash;
-        _joyconRight.OnUpButtonPressed += BoostDash;
-        _joyconRight.OnDownButtonPressed += BoostDash;
+        if (enableBoostDashOnPressedJoyconButton)
+        {
+            _joyconRight.OnRightButtonPressed += BoostDash;
+            _joyconRight.OnLeftButtonPressed += BoostDash;
+            _joyconRight.OnUpButtonPressed += BoostDash;
+            _joyconRight.OnDownButtonPressed += BoostDash;
+        }
         _boostDashEvent.OnBoostDash += StartBoostDash;
 
         State = Mathf.Approximately(_defaultBlendShapeWeight, 0f) ? BalloonState.Normal : BalloonState.Expands;
@@ -102,10 +106,14 @@ public class BalloonController : MonoBehaviour
         _playerGameOverEvent.OnRevive -= OnRevive;
         _airVentEvent.OnEnterAirVent -= OnEnterAirVent;
         _airVentEvent.OnExitAirVent -= OnExitAirVent;
-        _joyconRight.OnRightButtonPressed -= BoostDash;
-        _joyconRight.OnLeftButtonPressed -= BoostDash;
-        _joyconRight.OnUpButtonPressed -= BoostDash;
-        _joyconRight.OnDownButtonPressed -= BoostDash;
+        if (enableBoostDashOnPressedJoyconButton)
+        {
+            _joyconRight.OnRightButtonPressed -= BoostDash;
+            _joyconRight.OnLeftButtonPressed -= BoostDash;
+            _joyconRight.OnUpButtonPressed -= BoostDash;
+            _joyconRight.OnDownButtonPressed -= BoostDash;
+        }
+        _boostDashEvent.OnBoostDash -= StartBoostDash;
     }
 
     private void OnEnterAirVent()

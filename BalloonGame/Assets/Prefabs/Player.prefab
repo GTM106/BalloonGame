@@ -111,6 +111,39 @@ MonoBehaviour:
     _multiplierExpand: 7
     _boostDashType: 0
     _boostDashPower: {x: 0, y: 30}
+    _boostCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.55466497
+        value: 0.70697284
+        inSlope: -1.1696837
+        outSlope: -1.1696837
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.10545023
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.99505615
+        value: 0.0062332153
+        inSlope: -1.9646186
+        outSlope: -1.9646186
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.3061778
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     _boostDashAngle: 25
     _buoyancyExpand: 1000
     _buoyancyNormal: 15
@@ -310,3 +343,4 @@ MonoBehaviour:
   _scaleAmountDeflatingPerSecondInWater: 0.1
   _cameraRadiusMax: 3.25
   _smoothnessMax: 1
+  enableBoostDashOnPressedJoyconButton: 1
