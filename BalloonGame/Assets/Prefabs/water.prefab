@@ -122,10 +122,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioSource: {fileID: 6581225078426595449}
-  _audioLowPassFilter: {fileID: 0}
+  _audioLowPassFilter:
+  - {fileID: 0}
   _waterEvent: {fileID: 0}
-  _dragValueAfterChange: 3
-  _playerSitesInWaterCountMin: 3
+  _dragValueAfterChange: 30
+  _playerSitesInWaterCountMin: 0
 --- !u!114 &529312530931110226
 MonoBehaviour:
   m_ObjectHideFlags: 0
