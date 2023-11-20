@@ -11,7 +11,7 @@ public class ItemScript : MonoBehaviour, IHittable
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
         //SE700çƒê∂
-        collectibleScript.GetComponent<CollectibleScript>().currentNumber = collectibleScript.GetComponent<CollectibleScript>().currentNumber + itemValue;
+        collectibleScript.Add(itemValue);
         Destroy(this.gameObject);
     }
     public void OnExit(Collider playerCollider, BalloonState balloonState)

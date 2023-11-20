@@ -4,49 +4,44 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CollectibleScript : MonoBehaviour
-{ 
-    [Header("•\¦ãŒÀŒ…”")]
-    [SerializeField] int digitNumber = default!;
+{
     [Header("”š‚ÌImage‚ğ“ü‚ê‚Ä‚­‚¾‚³‚¢")]
     [SerializeField] Sprite[] uiNumber = default!;
     [Header("•\¦êŠ")]
     [SerializeField] Image[] displayPosition = default!;
 
-    public int currentNumber = 0;
+    private int currentNumber = 0;
 
+    public void Add(int value)
+    {
+        currentNumber += value;
+        NumberDisplay();
+    }
     private void Awake()
     {
-        displayPosition[0].sprite = uiNumber[0];
-    }
-
-    private void Update()
-    {
-        NumberDisplay();
+        foreach (var item in displayPosition)
+        {
+            item.sprite = uiNumber[0];
+        }
     }
 
     void NumberDisplay()
     {
-        if (currentNumber < 10)
-        {
-            displayPosition[0].sprite = uiNumber[currentNumber];
-        }
-        else if (10 <= currentNumber && currentNumber < 100)
-        {
-            int two = currentNumber / 10;
-            int one = currentNumber % 10;
-            displayPosition[0].sprite = uiNumber[one];
-            displayPosition[1].sprite = uiNumber[two];
-        }
-        else if (100 <= currentNumber && currentNumber < 1000)
-        {
-            int three = currentNumber / 100;
-            int surplus = currentNumber % 100;
-            int two = surplus / 10;
-            int one = surplus % 10;
+        int hundredsDigit = currentNumber / 100;
+        int tensAndOnes = currentNumber % 100;
+        int tensDigit = tensAndOnes / 10;
+        int onesDigit = tensAndOnes % 10;
 
-            displayPosition[0].sprite = uiNumber[one];
-            displayPosition[1].sprite = uiNumber[two];
-            displayPosition[2].sprite = uiNumber[three];
+        int total = hundredsDigit * 100 + tensDigit * 10 + onesDigit;
+
+        if (total > 999)
+        {
+            hundredsDigit = 9;
+            tensDigit = 9;
+            onesDigit = 9;
         }
+        displayPosition[0].sprite = uiNumber[onesDigit];
+        displayPosition[1].sprite = uiNumber[tensDigit];
+        displayPosition[2].sprite = uiNumber[hundredsDigit];
     }
 }
