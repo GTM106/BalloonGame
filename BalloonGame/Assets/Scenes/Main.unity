@@ -1890,6 +1890,11 @@ PrefabInstance:
       objectReference: {fileID: 661170279}
     - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
+      propertyPath: _joyconRight
+      value: 
+      objectReference: {fileID: 638917205}
+    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
       propertyPath: _airVentEvent
       value: 
       objectReference: {fileID: 1456480350}
@@ -1908,6 +1913,11 @@ PrefabInstance:
       propertyPath: _cinemachineTargetGroup
       value: 
       objectReference: {fileID: 751176631}
+    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: enableBoostDashOnPressedJoyconButton
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

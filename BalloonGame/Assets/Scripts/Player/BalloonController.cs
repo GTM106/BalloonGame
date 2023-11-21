@@ -3,6 +3,8 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -22,6 +24,7 @@ public class BalloonController : MonoBehaviour
     //下記のInputActionReferenceは、Handlerの役割をもちます
     [SerializeField, Required] InputActionReference _ringPushAction = default!;
     [SerializeField, Required] InputActionReference _ringPullAction = default!;
+    [SerializeField, Required] JoyconHandler _joyconRight = default!;
 
     [SerializeField, Required] WaterEvent _waterEvent = default!;
     [SerializeField, Required] CinemachineTargetGroup _cinemachineTargetGroup = default!;
@@ -29,8 +32,8 @@ public class BalloonController : MonoBehaviour
     [SerializeField, Required] AirventEvent _airVentEvent = default!;
     [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
     [SerializeField, Required] Material _MAT_AtiiBalloon = default!;
-
     [SerializeField, Required] SkinnedMeshRenderer _skinnedMeshRenderer = default!;
+    [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
 
     [Header("膨張アニメーションの持続時間")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
@@ -44,9 +47,8 @@ public class BalloonController : MonoBehaviour
     [SerializeField, Min(1f)] float _cameraRadiusMax = 3.25f;
     [Header("風船のマテリアルのSmoothness値の最大値")]
     [SerializeField, Range(0.4f, 1f)] float _smoothnessMax = 1f;
-    [Header("吹っ飛びダッシュの持続時間。PlayerControllerと同じ値を設定してください")]
-    [SerializeField, Min(0)] Vector2Int _boostFrames = default!;
-    int _boostFrame = 0;
+
+    [SerializeField] bool enableBoostDashOnPressedJoyconButton = true;
 
     //風船の膨らみ具合の初期値。Awakeで初期化しています
     float _defaultBlendShapeWeight;
@@ -70,6 +72,7 @@ public class BalloonController : MonoBehaviour
     private void Awake()
     {
         _defaultBlendShapeWeight = _skinnedMeshRenderer.GetBlendShapeWeight(0);
+
         _waterEvent.OnStayAction += OnWaterStay;
         _ringPushAction.action.performed += OnRingconPushed;
         _ringPullAction.action.performed += OnRingconPulled;
@@ -77,35 +80,16 @@ public class BalloonController : MonoBehaviour
         _playerGameOverEvent.OnRevive += OnRevive;
         _airVentEvent.OnEnterAirVent += OnEnterAirVent;
         _airVentEvent.OnExitAirVent += OnExitAirVent;
+        if (enableBoostDashOnPressedJoyconButton)
+        {
+            _joyconRight.OnRightButtonPressed += BoostDash;
+            _joyconRight.OnLeftButtonPressed += BoostDash;
+            _joyconRight.OnUpButtonPressed += BoostDash;
+            _joyconRight.OnDownButtonPressed += BoostDash;
+        }
+        _boostDashEvent.OnBoostDash += StartBoostDash;
 
         State = Mathf.Approximately(_defaultBlendShapeWeight, 0f) ? BalloonState.Normal : BalloonState.Expands;
-        _boostFrame = _boostFrames.x + (int)((_boostFrames.y - _boostFrames.x) * _skinnedMeshRenderer.GetBlendShapeWeight(0));
-    }
-
-    private void OnEnterAirVent()
-    {
-        State = BalloonState.Disabled;
-    }
-
-    private void OnExitAirVent()
-    {
-        State = BalloonState.Normal;
-    }
-
-    private void OnRevive()
-    {
-        State = BalloonState.Normal;
-    }
-
-    private void OnGameOver()
-    {
-        //風船の空気を抜く
-        ChangeScale(_defaultBlendShapeWeight);
-
-        //カメラの視野角を変更
-        _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
-
-        State = BalloonState.GameOver;
     }
 
     private void Update()
@@ -122,6 +106,41 @@ public class BalloonController : MonoBehaviour
         _playerGameOverEvent.OnRevive -= OnRevive;
         _airVentEvent.OnEnterAirVent -= OnEnterAirVent;
         _airVentEvent.OnExitAirVent -= OnExitAirVent;
+        if (enableBoostDashOnPressedJoyconButton)
+        {
+            _joyconRight.OnRightButtonPressed -= BoostDash;
+            _joyconRight.OnLeftButtonPressed -= BoostDash;
+            _joyconRight.OnUpButtonPressed -= BoostDash;
+            _joyconRight.OnDownButtonPressed -= BoostDash;
+        }
+        _boostDashEvent.OnBoostDash -= StartBoostDash;
+    }
+
+    private void OnEnterAirVent()
+    {
+        State = BalloonState.Disabled;
+    }
+
+    private void OnExitAirVent()
+    {
+        bool isExpand = !Mathf.Approximately(_skinnedMeshRenderer.GetBlendShapeWeight(0), 0f);
+        State = isExpand ? BalloonState.Expands : BalloonState.Normal;
+    }
+
+    private void OnRevive()
+    {
+        State = BalloonState.Normal;
+    }
+
+    private void OnGameOver()
+    {
+        //風船の空気を抜く
+        ChangeWeight(_defaultBlendShapeWeight);
+
+        //カメラの視野角を変更
+        _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+
+        State = BalloonState.GameOver;
     }
 
     private void OnRingconPushed(InputAction.CallbackContext obj)
@@ -131,7 +150,7 @@ public class BalloonController : MonoBehaviour
 
     private void OnRingconPulled(InputAction.CallbackContext obj)
     {
-        OnRingconPull();
+        BoostDash();
     }
 
     private void Expand()
@@ -141,21 +160,32 @@ public class BalloonController : MonoBehaviour
         ExpandScaleAnimation().Forget();
     }
 
-    private async void OnRingconPull()
+    private void BoostDash()
     {
         if (State != BalloonState.Expands) return;
+
+        //ブーストダッシュする
+        _boostDashEvent.BoostDash(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+    }
+
+    private async void StartBoostDash(BoostDashData frame)
+    {
         var token = this.GetCancellationTokenOnDestroy();
 
+        int boostFrame = frame.Value;
+
         State = BalloonState.BoostDash;
-        
-        //処理中に_boostFrameが変更されるおそれがあるため値を保存しておく
-        int boostFrame = _boostFrame;
 
         _cinemachineController.OnAfterBoostDash(boostFrame);
 
-        ChangeScale(_defaultBlendShapeWeight);
-
         float startValue = _cinemachineTargetGroup.m_Targets[0].radius;
+
+        //スケールをゼロにする前に1フレーム待機してその他処理を終わらせる
+        await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+
+        //スケールを瞬時にゼロにする
+        ChangeWeight(0f);
+
         int currentFrame = 0;
 
         while (currentFrame <= boostFrame)
@@ -192,7 +222,7 @@ public class BalloonController : MonoBehaviour
             float progress = Mathf.Clamp01(time / _scaleAnimationDuration);
             float scaleValue = Mathf.Min(startValue + _scaleOffset * progress, MaxBrandShapeValue);
 
-            ChangeScale(scaleValue);
+            ChangeWeight(scaleValue);
 
             //カメラの視野角を変更
             _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
@@ -210,7 +240,7 @@ public class BalloonController : MonoBehaviour
 
         float scaleDecrease = scaleAmountDeflatingPerSecond * Time.deltaTime;
         float scaleValue = Mathf.Max(_skinnedMeshRenderer.GetBlendShapeWeight(0) - scaleDecrease, _defaultBlendShapeWeight);
-        ChangeScale(scaleValue);
+        ChangeWeight(scaleValue);
 
         //カメラの視野角を変更
         _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
@@ -228,11 +258,9 @@ public class BalloonController : MonoBehaviour
         BalloonDeflation(_scaleAmountDeflatingPerSecondInWater);
     }
 
-    private void ChangeScale(float newScale)
+    private void ChangeWeight(float weight)
     {
-        _skinnedMeshRenderer.SetBlendShapeWeight(0, newScale);
-
-        float weight = _skinnedMeshRenderer.GetBlendShapeWeight(0);
+        _skinnedMeshRenderer.SetBlendShapeWeight(0, weight);
 
         //スペキュラーを変更
         _MAT_AtiiBalloon.SetFloat("_Smoothness", BlendShapeWeight2Smoothness(weight));
