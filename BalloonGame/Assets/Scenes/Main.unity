@@ -3607,7 +3607,7 @@ PrefabInstance:
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerParameter._boostDashAngle
-      value: 25
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
@@ -3626,6 +3626,16 @@ PrefabInstance:
       objectReference: {fileID: 79850532}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
+      propertyPath: _playerParameter._boostDashPower.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostDashPower.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
       propertyPath: _playerParameter._multiplierExpand
       value: 3
       objectReference: {fileID: 0}
@@ -3633,6 +3643,51 @@ PrefabInstance:
         type: 3}
       propertyPath: _playerParameter._multiplierNormal
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].time
+      value: 0.7546619
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[2].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].value
+      value: 0.7753017
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[2].value
+      value: 0.43979645
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].inSlope
+      value: -0.71870387
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].inWeight
+      value: 0.18837827
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].outSlope
+      value: -0.71870387
+      objectReference: {fileID: 0}
+    - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _boostFrames.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _boostFrames.y
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 4219734522724283064, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
