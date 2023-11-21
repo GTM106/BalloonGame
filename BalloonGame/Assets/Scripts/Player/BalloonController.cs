@@ -236,9 +236,6 @@ public class BalloonController : MonoBehaviour
         {
             await UniTask.Yield(token);
 
-            //膨らみ途中に膨らめない状態になったら処理終了
-            if (!IsBitSet(BalloonBehaviorType.Expands)) return;
-
             time += Time.deltaTime;
             float progress = Mathf.Clamp01(time / _scaleAnimationDuration);
             float scaleValue = Mathf.Min(startValue + _scaleOffset * progress, MaxBrandShapeValue);
@@ -247,6 +244,9 @@ public class BalloonController : MonoBehaviour
 
             //カメラの視野角を変更
             _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+
+            //膨らみ途中に膨らめない状態になったら処理終了
+            if (!IsBitSet(BalloonBehaviorType.Expands)) break;
 
             //最大まで膨らんだら処理膨らみアニメーションを終了
             if (Mathf.Approximately(scaleValue, MaxBrandShapeValue)) break;
