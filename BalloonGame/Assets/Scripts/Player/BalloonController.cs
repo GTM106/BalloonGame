@@ -3,24 +3,28 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public enum BalloonState
 {
     Normal,
     Expands,
-    ScaleAnimation,
     BoostDash,
-    Disabled,
-    GameOver,
 }
 
 public class BalloonController : MonoBehaviour
 {
+    [Flags]
+    public enum BalloonBehaviorType
+    {
+        None = 0,
+        Expands = 1 << 0, //膨らみ可能
+        Deflation = 1 << 1, //萎み可能
+        GameOver = 1 << 2, //ゲームオーバー中
+        InAirVentArea = 1 << 3, //空気栓範囲内
+    }
+
     //下記のInputActionReferenceは、Handlerの役割をもちます
     [SerializeField, Required] InputActionReference _ringPushAction = default!;
     [SerializeField, Required] InputActionReference _ringPullAction = default!;
@@ -53,6 +57,8 @@ public class BalloonController : MonoBehaviour
     //風船の膨らみ具合の初期値。Awakeで初期化しています
     float _defaultBlendShapeWeight;
 
+    bool _isScaleAnimation = false;
+
     //プロパティの方を使用してください
     BalloonState _state;
     public BalloonState State
@@ -64,6 +70,8 @@ public class BalloonController : MonoBehaviour
             _state = value;
         }
     }
+
+    BalloonBehaviorType _behaviorType;
 
     public event Action<BalloonState> OnStateChanged;
 
@@ -90,6 +98,8 @@ public class BalloonController : MonoBehaviour
         _boostDashEvent.OnBoostDash += StartBoostDash;
 
         State = Mathf.Approximately(_defaultBlendShapeWeight, 0f) ? BalloonState.Normal : BalloonState.Expands;
+        BitSet(BalloonBehaviorType.Expands);
+        BitSet(BalloonBehaviorType.Deflation);
     }
 
     private void Update()
@@ -118,18 +128,20 @@ public class BalloonController : MonoBehaviour
 
     private void OnEnterAirVent()
     {
-        State = BalloonState.Disabled;
+        BitClear(BalloonBehaviorType.Expands);
+        BitSet(BalloonBehaviorType.InAirVentArea);
     }
 
     private void OnExitAirVent()
     {
-        bool isExpand = !Mathf.Approximately(_skinnedMeshRenderer.GetBlendShapeWeight(0), 0f);
-        State = isExpand ? BalloonState.Expands : BalloonState.Normal;
+        BitSet(BalloonBehaviorType.Expands);
+        BitClear(BalloonBehaviorType.InAirVentArea);
     }
 
     private void OnRevive()
     {
-        State = BalloonState.Normal;
+        BitSet(BalloonBehaviorType.Expands);
+        BitClear(BalloonBehaviorType.GameOver);
     }
 
     private void OnGameOver()
@@ -140,7 +152,9 @@ public class BalloonController : MonoBehaviour
         //カメラの視野角を変更
         _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
 
-        State = BalloonState.GameOver;
+        State = BalloonState.Normal;
+        BitClear(BalloonBehaviorType.Expands);
+        BitSet(BalloonBehaviorType.GameOver);
     }
 
     private void OnRingconPushed(InputAction.CallbackContext obj)
@@ -155,7 +169,7 @@ public class BalloonController : MonoBehaviour
 
     private void Expand()
     {
-        if (State is not BalloonState.Normal and not BalloonState.Expands) return;
+        if (!IsBitSet(BalloonBehaviorType.Expands)) return;
 
         ExpandScaleAnimation().Forget();
     }
@@ -175,6 +189,7 @@ public class BalloonController : MonoBehaviour
         int boostFrame = frame.Value;
 
         State = BalloonState.BoostDash;
+        BitClear(BalloonBehaviorType.Expands);
 
         _cinemachineController.OnAfterBoostDash(boostFrame);
 
@@ -201,22 +216,28 @@ public class BalloonController : MonoBehaviour
         }
 
         State = BalloonState.Normal;
+
+        //ゲームオーバー中と空気栓範囲内のときは膨らめないのでそれを弾く
+        if (!IsBitSet(BalloonBehaviorType.GameOver) && !IsBitSet(BalloonBehaviorType.InAirVentArea))
+        {
+            BitSet(BalloonBehaviorType.Expands);
+        }
     }
 
     private async UniTask ExpandScaleAnimation()
     {
-        if (State == BalloonState.ScaleAnimation) return;
+        if (_isScaleAnimation) return;
         var token = this.GetCancellationTokenOnDestroy();
         float time = 0f;
         float startValue = _skinnedMeshRenderer.GetBlendShapeWeight(0);
-        State = BalloonState.ScaleAnimation;
+        _isScaleAnimation = true;
 
         while (time < _scaleAnimationDuration)
         {
             await UniTask.Yield(token);
 
-            //膨らみ途中にゲームオーバーになったら処理終了
-            if (State == BalloonState.GameOver) return;
+            //膨らみ途中に膨らめない状態になったら処理終了
+            if (!IsBitSet(BalloonBehaviorType.Expands)) return;
 
             time += Time.deltaTime;
             float progress = Mathf.Clamp01(time / _scaleAnimationDuration);
@@ -231,12 +252,14 @@ public class BalloonController : MonoBehaviour
             if (Mathf.Approximately(scaleValue, MaxBrandShapeValue)) break;
         }
 
+        _isScaleAnimation = false;
         State = BalloonState.Expands;
     }
 
     private void BalloonDeflation(float scaleAmountDeflatingPerSecond)
     {
         if (State != BalloonState.Expands) return;
+        if (!IsBitSet(BalloonBehaviorType.Deflation)) return;
 
         float scaleDecrease = scaleAmountDeflatingPerSecond * Time.deltaTime;
         float scaleValue = Mathf.Max(_skinnedMeshRenderer.GetBlendShapeWeight(0) - scaleDecrease, _defaultBlendShapeWeight);
@@ -253,8 +276,6 @@ public class BalloonController : MonoBehaviour
 
     private void OnWaterStay()
     {
-        if (State is not BalloonState.Expands and not BalloonState.ScaleAnimation) return;
-
         BalloonDeflation(_scaleAmountDeflatingPerSecondInWater);
     }
 
@@ -288,5 +309,20 @@ public class BalloonController : MonoBehaviour
         float progress = blendShapeWeight / MaxBrandShapeValue * (_smoothnessMax - Offset);
 
         return progress + Offset;
+    }
+
+    private void BitSet(BalloonBehaviorType addType)
+    {
+        _behaviorType |= addType;
+    }
+
+    private void BitClear(BalloonBehaviorType delType)
+    {
+        _behaviorType &= ~delType;
+    }
+
+    private bool IsBitSet(BalloonBehaviorType type)
+    {
+        return type == (_behaviorType & type);
     }
 }
