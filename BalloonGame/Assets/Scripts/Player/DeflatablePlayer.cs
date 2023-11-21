@@ -54,7 +54,7 @@ public class DeflatablePlayer : IPlayer
         }
     }
 
-    public void BoostDash()
+    public void BoostDash(BoostDashData boostFrame)
     {
         //ぶっ飛びダッシュ失敗時の処理を記述
         Debug.Log("ぶっ飛びダッシュをするには風船が膨らんでいる必要があります");

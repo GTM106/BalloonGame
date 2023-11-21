@@ -12,7 +12,6 @@ public enum BoostDashDirection
 public class PlayerParameter
 {
     [SerializeField, Required] Rigidbody _rb = default!;
-    [SerializeField, Required] SkinnedMeshRenderer _skinnedMeshRenderer = default!;
     [SerializeField, Required] Transform _cameraTransform = default!;
     [SerializeField, Required] JoyconHandler _joyconRight = default!;
     [SerializeField, Required] JoyconHandler _joyconLeft = default!;
@@ -28,9 +27,9 @@ public class PlayerParameter
     [SerializeField] float _multiplierExpand = default!;
     [Header("ぶっ飛びジャンプの方向")]
     [SerializeField] BoostDashDirection _boostDashType = default!;
-    [Header("ぶっ飛びジャンプの力。frameはBalloonと同じ値にしてください")]
+    [Header("ぶっ飛びジャンプの力")]
     [SerializeField, Min(0f)] Vector2 _boostDashPower = default!;
-    [SerializeField, Min(0)] Vector2Int _boostFrame = default!;
+    [SerializeField, Curve01] AnimationCurve _boostCurve = default!;
     [Header("ぶっ飛びダッシュにおいて飛ぶY方向。高いほど高く跳ぶ")]
     [SerializeField, Min(0f)] float _boostDashAngle = default!;
     [Header("膨張時における水に入っているときの浮力")]
@@ -52,8 +51,8 @@ public class PlayerParameter
     public float MultiplierNormal => _multiplierNormal;
     public float MultiplierExpand => _multiplierExpand;
     public BoostDashDirection BoostDashType => _boostDashType;
-    public float BoostDashPower => _boostDashPower.x + (_boostDashPower.y - _boostDashPower.x) * _skinnedMeshRenderer.GetBlendShapeWeight(0)/100;
-    public int BoostFrame => _boostFrame.x + (int)((_boostFrame.y - _boostFrame.x) * _skinnedMeshRenderer.GetBlendShapeWeight(0)/100);
+    public float BoostDashPower(BoostDashData frame) => _boostDashPower.x + (_boostDashPower.y - _boostDashPower.x) * frame.Value / 100f;
+    public float BoostDashSpeed(int currentFrame, int maxFrame) => _boostCurve.Evaluate((float)currentFrame / maxFrame);
     public float BoostDashAngle => _boostDashAngle;
     public float BuoyancyExpand => _buoyancyExpand;
     public float BuoyancyNormal => _buoyancyNormal;
