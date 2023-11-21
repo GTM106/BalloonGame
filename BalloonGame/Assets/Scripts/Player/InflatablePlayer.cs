@@ -21,7 +21,7 @@ public class InflatablePlayer : IPlayer
         _rigidbody = _playerParameter.Rb;
     }
 
-    public void Dash()
+    public void Dash(IState.E_State state)
     {
         Vector2 axis = _playerParameter.JoyconRight.Stick;
 
@@ -51,17 +51,35 @@ public class InflatablePlayer : IPlayer
         //進行方向を向く
         Vector3 direction = cameraForward * axis.y + cameraRight * axis.x;
         _rigidbody.transform.localRotation = Quaternion.LookRotation(direction);
+
+        if (state is IState.E_State.Control)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Run);
+        }
     }
 
-    public async void BoostDash()
+    public async void BoostDash(BoostDashData boostFrame)
     {
-        Vector3 velocity = _playerParameter.CameraTransform.forward.normalized * _playerParameter.BoostDashPower;
-        _rigidbody.velocity = velocity;
+        Vector3 dir = _playerParameter.BoostDashType switch
+        {
+            BoostDashDirection.CameraForward => _playerParameter.CameraTransform.forward,
+            BoostDashDirection.PlayerForward => _rigidbody.transform.forward,
+            _ => throw new System.NotImplementedException()
+        };
 
-        for (int i = 0; i < _playerParameter.BoostFrame; i++)
+        Vector3 velocity = dir.normalized * _playerParameter.BoostDashPower(boostFrame);
+        velocity.Set(velocity.x, _playerParameter.BoostDashAngle, velocity.z);
+
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BDash);
+
+        //処理中に変更されるおそれがあるため値を保存しておく
+        int maxFrame = boostFrame.Value;
+
+        for (int currentFrame = 0; currentFrame < maxFrame; currentFrame++)
         {
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
-            _rigidbody.velocity = velocity;
+
+            _rigidbody.velocity = velocity * _playerParameter.BoostDashSpeed(currentFrame, maxFrame);
         }
 
         _rigidbody.velocity = Vector3.zero;
@@ -70,6 +88,8 @@ public class InflatablePlayer : IPlayer
     public void Jump(Rigidbody rb)
     {
         rb.AddForce(Vector3.up * _playerParameter.JumpPower, ForceMode.Impulse);
+
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BJump);
     }
 
     public void AdjustingGravity()
@@ -81,5 +101,10 @@ public class InflatablePlayer : IPlayer
     public void OnWaterStay()
     {
         _rigidbody.AddForce(Vector3.up * _playerParameter.BuoyancyExpand, ForceMode.Acceleration);
+    }
+
+    public void Fall()
+    {
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BFall);
     }
 }

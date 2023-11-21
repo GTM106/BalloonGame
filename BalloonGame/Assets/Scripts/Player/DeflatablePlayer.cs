@@ -17,7 +17,7 @@ public class DeflatablePlayer : IPlayer
         _rigidbody = playerParameter.Rb;
     }
 
-    public void Dash()
+    public void Dash(IState.E_State state)
     {
         Vector2 axis = _playerParameter.JoyconRight.Stick;
 
@@ -37,19 +37,24 @@ public class DeflatablePlayer : IPlayer
         {
             //指定したスピードから現在の速度を引いて加速力を求める
             float currentSpeed = _playerParameter.MoveSpeed - currentVelocityIgnoreY.magnitude;
-            
+
             //調整された加速力で力を加える
             _rigidbody.AddForce(force * currentSpeed);
-        }      
+        }
 
         if (axis.magnitude <= 0.02f) return;
 
         //進行方向を向く
         Vector3 direction = cameraForward * axis.y + cameraRight * axis.x;
         _rigidbody.transform.localRotation = Quaternion.LookRotation(direction);
+        
+        if (state is IState.E_State.Control)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Run);
+        }
     }
 
-    public void BoostDash()
+    public void BoostDash(BoostDashData boostFrame)
     {
         //ぶっ飛びダッシュ失敗時の処理を記述
         Debug.Log("ぶっ飛びダッシュをするには風船が膨らんでいる必要があります");
@@ -58,6 +63,8 @@ public class DeflatablePlayer : IPlayer
     public void Jump(Rigidbody rb)
     {
         rb.AddForce(Vector3.up * _playerParameter.JumpPower, ForceMode.Impulse);
+
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Jump);
     }
 
     public void AdjustingGravity()
@@ -69,5 +76,15 @@ public class DeflatablePlayer : IPlayer
     public void OnWaterStay()
     {
         _rigidbody.AddForce(Vector3.up * _playerParameter.BuoyancyNormal, ForceMode.Acceleration);
+
+        if (_rigidbody.velocity.magnitude < 0.01f)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Swim);
+        }
+    }
+
+    public void Fall()
+    {
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Fall);
     }
 }

@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +12,7 @@ public interface IState
         Falling,
         BoostDash,
         GameOver,
+        Revive,
 
         MAX,
 
@@ -22,28 +22,33 @@ public interface IState
     E_State Initialize(PlayerController parent);
     E_State Update(PlayerController parent);
     E_State FixedUpdate(PlayerController parent);
-    E_State RingconPull(PlayerController parent);
+    E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame);
     E_State RingconPush(PlayerController parent);
+    E_State JumpButtonPressed(PlayerController parent);
 }
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] PlayerParameter _playerParameter = default!;
-    [SerializeField] BalloonController _balloonController = default!;
-    [SerializeField] GroundCheck _groundCheck = default!;
-    [SerializeField] InputActionReference _ringconPushAction = default!;
-    [SerializeField] InputActionReference _ringconPullAction = default!;
-    [SerializeField] Collider _playerCollider = default!;
-    [SerializeField] WaterEvent _waterEvent = default!;
-    [SerializeField] Canvas _gameOverCanvas = default!;
-    [SerializeField] PlayerGameOverEvent _playerGameOverEvent = default!;
+    [SerializeField, Required] BalloonController _balloonController = default!;
+    [SerializeField, Required] GroundCheck _groundCheck = default!;
+    [SerializeField, Required] InputActionReference _ringconPushAction = default!;
+    [SerializeField, Required] Collider _playerCollider = default!;
+    [SerializeField, Required] WaterEvent _waterEvent = default!;
+    [SerializeField, Required] Canvas _gameOverCanvas = default!;
+    [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
+    [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
 
     IPlayer _player;
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
 
+    //BoostDashEventから渡されるデータの保存用
+    BoostDashData _boostDashData = default!;
+
     readonly Dictionary<BalloonState, IPlayer> _playerPairs = new();
 
+    #region State
     // 状態管理
     IState.E_State _currentState = IState.E_State.Control;
     static readonly IState[] states = new IState[(int)IState.E_State.MAX]
@@ -53,6 +58,7 @@ public class PlayerController : MonoBehaviour
         new FallingState(),
         new BoostDashState(),
         new GameOverState(),
+        new ReviveState(),
     };
 
     class ControlState : IState
@@ -69,11 +75,21 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
-            parent._player.Dash();
+            parent._player.Dash(parent._currentState);
+            if (parent._playerParameter.Rb.velocity.magnitude <= 0.01f)
+            {
+                parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Idle);
+            }
+
+            if (!parent._groundCheck.IsGround(out _))
+            {
+                return IState.E_State.Falling;
+            }
+
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.BoostDash;
         }
@@ -81,6 +97,11 @@ public class PlayerController : MonoBehaviour
         public IState.E_State RingconPush(PlayerController parent)
         {
             return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
+        {
+            return IState.E_State.Jumping;
         }
     }
 
@@ -99,15 +120,25 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
+            if (parent._playerParameter.Rb.velocity.y <= 0f)
+            {
+                return IState.E_State.Falling;
+            }
+
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.BoostDash;
         }
 
         public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
         {
             return IState.E_State.Unchanged;
         }
@@ -127,15 +158,25 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
+            if (parent._groundCheck.IsGround(out _)) return IState.E_State.Control;
+
+            parent._player.Fall();
+            parent._player.Dash(parent._currentState);
+
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.BoostDash;
         }
 
         public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
         {
             return IState.E_State.Unchanged;
         }
@@ -147,8 +188,9 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State Initialize(PlayerController parent)
         {
-            _boostDashFrame = 0;
-            parent._player.BoostDash();
+            _boostDashFrame = parent._boostDashData.Value;
+
+            parent._player.BoostDash(parent._boostDashData);
             return IState.E_State.Unchanged;
         }
 
@@ -160,18 +202,23 @@ public class PlayerController : MonoBehaviour
         public IState.E_State FixedUpdate(PlayerController parent)
         {
             //1行にまとめられますが、可読性のために長く書いています
-            _boostDashFrame++;
-            if (_boostDashFrame >= parent._playerParameter.BoostFrame) return IState.E_State.Control;
+            _boostDashFrame--;
+            if (_boostDashFrame <= 0) return IState.E_State.Control;
 
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.Unchanged;
         }
 
         public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
         {
             return IState.E_State.Unchanged;
         }
@@ -184,8 +231,7 @@ public class PlayerController : MonoBehaviour
         public IState.E_State Initialize(PlayerController parent)
         {
             _currentPressCount = 0;
-            //TODO:AN500を再生。
-            //TODO:AN501を再生。
+            parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Down);
 
             parent._gameOverCanvas.enabled = true;
 
@@ -204,13 +250,13 @@ public class PlayerController : MonoBehaviour
                 //復活通知を送る
                 parent._playerGameOverEvent.Revive();
 
-                return IState.E_State.Control;
+                return IState.E_State.Revive;
             }
 
             return IState.E_State.Unchanged;
         }
 
-        public IState.E_State RingconPull(PlayerController parent)
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
         {
             return IState.E_State.Unchanged;
         }
@@ -222,6 +268,56 @@ public class PlayerController : MonoBehaviour
             //一度でもプッシュされたら表示する
             parent._gameOverCanvas.enabled = true;
 
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+    }
+
+    class ReviveState : IState
+    {
+        //アニメーションの待機フレーム。
+        const int REVIVE_ANIMATION_WAIT_FRAME = 50;
+        int _reviveFrame;
+
+        public IState.E_State Initialize(PlayerController parent)
+        {
+            _reviveFrame = REVIVE_ANIMATION_WAIT_FRAME;
+            parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Retry);
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State Update(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State FixedUpdate(PlayerController parent)
+        {
+            _reviveFrame--;
+            if (_reviveFrame <= 0)
+            {
+                return IState.E_State.Control;
+            }
+
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State CalledBoostDashEvent(PlayerController parent, BoostDashData boostFrame)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State RingconPush(PlayerController parent)
+        {
+            return IState.E_State.Unchanged;
+        }
+
+        public IState.E_State JumpButtonPressed(PlayerController parent)
+        {
             return IState.E_State.Unchanged;
         }
     }
@@ -271,18 +367,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void RingconPullState()
-    {
-        var nextState = states[(int)_currentState].RingconPull(this);
-
-        if (nextState != IState.E_State.Unchanged)
-        {
-            //次の状態に遷移
-            _currentState = nextState;
-            InitializeState();
-        }
-    }
-
     private void RingconPushState()
     {
         var nextState = states[(int)_currentState].RingconPush(this);
@@ -295,6 +379,35 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnBoostDashEvent(BoostDashData frame)
+    {
+        _boostDashData = frame;
+        var nextState = states[(int)_currentState].CalledBoostDashEvent(this, frame);
+
+        if (nextState != IState.E_State.Unchanged)
+        {
+            //次の状態に遷移
+            _currentState = nextState;
+            InitializeState();
+        }
+    }
+
+    private void JoyconLeft_OnDownButtonPressed()
+    {
+        //接地状態じゃないと作動させない
+        if (!_groundCheck.IsGround(out _)) return;
+
+        var nextState = states[(int)_currentState].JumpButtonPressed(this);
+
+        if (nextState != IState.E_State.Unchanged)
+        {
+            //次の状態に遷移
+            _currentState = nextState;
+            InitializeState();
+        }
+    }
+    #endregion
+
     private void Awake()
     {
         _inflatablePlayer = new InflatablePlayer(_playerParameter);
@@ -305,28 +418,16 @@ public class PlayerController : MonoBehaviour
 
         _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
-        _ringconPullAction.action.performed += OnRingconPull;
         _ringconPushAction.action.performed += OnRingconPush;
         _waterEvent.OnStayAction += OnWaterStay;
         _playerGameOverEvent.OnGameOver += OnGameOver;
         _playerGameOverEvent.OnRevive += OnRevive;
+        _boostDashEvent.OnBoostDash += OnBoostDashEvent;
 
         _playerPairs.Add(BalloonState.Normal, _deflatablePlayer);
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
 
         _gameOverCanvas.enabled = false;
-    }
-
-    private void OnRevive()
-    {                
-        //TODO:AN501からAN502に遷移。
-
-        _gameOverCanvas.enabled = false;
-    }
-
-    private void OnGameOver()
-    {
-        ForceChangeState(IState.E_State.GameOver);
     }
 
     private void Update()
@@ -344,7 +445,6 @@ public class PlayerController : MonoBehaviour
     {
         _balloonController.OnStateChanged -= OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
-        _ringconPullAction.action.performed -= OnRingconPull;
         _ringconPushAction.action.performed -= OnRingconPush;
         _waterEvent.OnStayAction -= OnWaterStay;
         _playerGameOverEvent.OnGameOver -= OnGameOver;
@@ -381,11 +481,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnRingconPull(InputAction.CallbackContext obj)
-    {
-        RingconPullState();
-    }
-
     private void OnRingconPush(InputAction.CallbackContext obj)
     {
         RingconPushState();
@@ -397,6 +492,15 @@ public class PlayerController : MonoBehaviour
         {
             _player = player;
         }
+
+        if (state == BalloonState.Expands)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AirIn);
+        }
+        if (state == BalloonState.Normal)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AirOut);
+        }
     }
 
     private void OnWaterStay()
@@ -404,13 +508,13 @@ public class PlayerController : MonoBehaviour
         _player.OnWaterStay();
     }
 
-    private void JoyconLeft_OnDownButtonPressed()
+    private void OnRevive()
     {
-        //ステート関係なしにひとまず行います。
-        //ステートパターンに当てはめる作業は後ほど行います。
-        if (_groundCheck.IsGround(out _))
-        {
-            _player.Jump(_playerParameter.Rb);
-        }
+        _gameOverCanvas.enabled = false;
+    }
+
+    private void OnGameOver()
+    {
+        ForceChangeState(IState.E_State.GameOver);
     }
 }
