@@ -245,22 +245,22 @@ public class JoyconHandler : MonoBehaviour
 
     public void SetRumble(int low_flg, int high_flg, float amp, int milliseconds = 0)
     {
+        if (joycons.Count <= (int)joyconType) return;
+
         // Rumble for [milliseconds] milliseconds, with low frequency rumble at [low_flg] Hz and high frequency rumble at [high_flg] Hz. For more information check:
         // https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering/blob/master/rumble_data_table.md
-
         joycons[(int)joyconType].SetRumble(low_flg, high_flg, amp, milliseconds);
     }
 
     public void SetRumble(RumbleData rumbleData)
     {
-        // Rumble for [milliseconds] milliseconds, with low frequency rumble at [low_flg] Hz and high frequency rumble at [high_flg] Hz. For more information check:
-        // https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering/blob/master/rumble_data_table.md
-
-        joycons[(int)joyconType].SetRumble(rumbleData.Low_flg, rumbleData.High_flg, rumbleData.Amp, rumbleData.Milliseconds);
+        SetRumble(rumbleData.Low_flg, rumbleData.High_flg, rumbleData.Amp, rumbleData.Milliseconds);
     }
 
     public void StopRumble()
     {
+        if (joycons.Count <= (int)joyconType) return;
+
         joycons[(int)joyconType].SetRumble(0, 0, 0);
     }
 }
