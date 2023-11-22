@@ -24,6 +24,7 @@ public class BalloonController : MonoBehaviour
     //下記のInputActionReferenceは、Handlerの役割をもちます
     [SerializeField, Required] InputActionReference _ringPushAction = default!;
     [SerializeField, Required] InputActionReference _ringPullAction = default!;
+    [SerializeField, Required] JoyconHandler _joyconLeft = default!;
     [SerializeField, Required] JoyconHandler _joyconRight = default!;
 
     [SerializeField, Required] WaterEvent _waterEvent = default!;
@@ -49,6 +50,7 @@ public class BalloonController : MonoBehaviour
     [SerializeField, Range(0.4f, 1f)] float _smoothnessMax = 1f;
 
     [SerializeField] bool enableBoostDashOnPressedJoyconButton = true;
+    [SerializeField] RumbleData _rumbleData = new(160, 320, 0.6f);
 
     //風船の膨らみ具合の初期値。Awakeで初期化しています
     float _defaultBlendShapeWeight;
@@ -153,11 +155,17 @@ public class BalloonController : MonoBehaviour
         BoostDash();
     }
 
-    private void Expand()
+    private async void Expand()
     {
         if (State is not BalloonState.Normal and not BalloonState.Expands) return;
 
-        ExpandScaleAnimation().Forget();
+        _joyconLeft.SetRumble(_rumbleData);
+        _joyconRight.SetRumble(_rumbleData);
+
+        await ExpandScaleAnimation();
+        
+        _joyconLeft.StopRumble();
+        _joyconRight.StopRumble();
     }
 
     private void BoostDash()
@@ -171,6 +179,10 @@ public class BalloonController : MonoBehaviour
     private async void StartBoostDash(BoostDashData frame)
     {
         var token = this.GetCancellationTokenOnDestroy();
+
+        //ジョイコンの振動開始
+        _joyconLeft.SetRumble(_rumbleData);
+        _joyconRight.SetRumble(_rumbleData);
 
         int boostFrame = frame.Value;
 
@@ -201,6 +213,10 @@ public class BalloonController : MonoBehaviour
         }
 
         State = BalloonState.Normal;
+
+        //ジョイコンの振動停止
+        _joyconLeft.StopRumble();
+        _joyconRight.StopRumble();
     }
 
     private async UniTask ExpandScaleAnimation()
