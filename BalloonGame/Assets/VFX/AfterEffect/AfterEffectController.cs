@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BlurControl : MonoBehaviour
+public class AfterEffectController : MonoBehaviour
 {
     public Material shaderMaterial; //Shaderを適用したいマテリアル
     public float blurScaleMultiplier = 2f; //速度に乗算する値
@@ -10,7 +10,7 @@ public class BlurControl : MonoBehaviour
     {
         if (shaderMaterial == null)
         {
-            Debug.LogError("Shader Material is not assigned.");
+            Debug.LogError("マテリアルがありません");
             return;
         }
 
