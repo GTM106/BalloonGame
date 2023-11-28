@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// 風船が膨張している時のプレイヤーの処理
@@ -24,7 +25,17 @@ public class InflatablePlayer : IPlayer
     public void Dash(IState.E_State state)
     {
         Vector2 axis = _playerParameter.JoyconRight.Stick;
-
+#if UNITY_EDITOR
+        if (Gamepad.current != null)
+        {
+            axis += Gamepad.current.leftStick.ReadValue();
+        }
+        if (Keyboard.current != null)
+        {
+            axis += new Vector2(Keyboard.current.aKey.isPressed ? -1f : Keyboard.current.dKey.isPressed ? 1f : 0f
+              , Keyboard.current.sKey.isPressed ? -1f : Keyboard.current.wKey.isPressed ? 1f : 0f);
+        }
+#endif
         //Yを無視
         Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;
         Vector3 cameraRight = Vector3.Scale(_playerParameter.CameraTransform.right, ignoreYCorrection).normalized;
@@ -36,6 +47,9 @@ public class InflatablePlayer : IPlayer
         //最大スピードを超えたら加速等の制御ができないようにする。
         //上昇や落下の速度は最大スピードに含めない。
         Vector3 currentVelocityIgnoreY = Vector3.Scale(_rigidbody.velocity, ignoreYCorrection);
+
+        Vector3 groundNormal = GetGroundNormal();
+        force = Vector3.ProjectOnPlane(force, groundNormal);
 
         if (currentVelocityIgnoreY.magnitude < _playerParameter.MaxMoveSpeed)
         {
@@ -106,5 +120,18 @@ public class InflatablePlayer : IPlayer
     public void Fall()
     {
         _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BFall);
+    }
+
+    private Vector3 GetGroundNormal()
+    {
+        float raycastDistance = 2f;
+
+        if (Physics.Raycast(_rigidbody.position, Vector3.down, out RaycastHit hit, raycastDistance))
+        {
+            return hit.normal;
+        }
+
+        //ヒットしなかった場合、上向きの法線
+        return Vector3.up;
     }
 }
