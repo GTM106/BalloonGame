@@ -7,8 +7,6 @@ public class HermitCrabController : MonoBehaviour, IHittable
 {
     [Header("追跡対象")]
     [SerializeField] private Transform player = default!;
-    //[Header("追跡対象")]
-    //[SerializeField] private GameObject player_ = default!;
     [Header("巡回する地点")]
     [SerializeField] private Transform[] wayPoints = default!;
     [Header("巡回速度")]
@@ -19,8 +17,9 @@ public class HermitCrabController : MonoBehaviour, IHittable
     [SerializeField] private float chaseSpeed = default!;
     [Header("追跡時間")]
     [SerializeField] private float chaseTime = default!;
+    [SerializeField] PlayerGameOverEvent _gameOverEvent = default!;
+    [SerializeField] NavMeshAgent navMeshAgent = default;
 
-    private NavMeshAgent navMeshAgent;
     private int currentPatrolNumber = 0;
     private float currentTime = 0;
     private float distance = 0;
@@ -28,9 +27,9 @@ public class HermitCrabController : MonoBehaviour, IHittable
 
     void Awake()
     {
-        navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.SetDestination(wayPoints[0].position);
     }
+
     void Update()
     {
         Patrol();
@@ -38,8 +37,7 @@ public class HermitCrabController : MonoBehaviour, IHittable
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        //TODO:ゲームオーバー処理に遷移
-        Debug.Log("接触");
+        _gameOverEvent.GameOver();
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
@@ -55,19 +53,13 @@ public class HermitCrabController : MonoBehaviour, IHittable
     void Patrol()
     {
         distance = Vector3.Distance(transform.position, player.transform.position);
-        Debug.Log(distance);
-        if (distance <= chaseRadius)
-        {
-            //SE302 再生
-            //AN303 再生
-            InArea = true;
-            Debug.Log("追跡");
 
-        }
+        ChaseCheack();
 
         if (!InArea)
         {
             navMeshAgent.speed = patrolSpeed;
+
             if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
             {
                 currentPatrolNumber = (currentPatrolNumber + 1) % wayPoints.Length;
@@ -77,17 +69,26 @@ public class HermitCrabController : MonoBehaviour, IHittable
         }
         else
         {
-            Chace();
+            Chase();
         }
     }
 
-    void Chace()
+    void ChaseCheack()
+    {
+        if (distance <= chaseRadius)
+        {
+            //SE302 再生
+            //AN303 再生
+            InArea = true;
+        }
+    }
+    void Chase()
     {
         //AN301　再生
         navMeshAgent.speed = chaseSpeed;
         navMeshAgent.destination = player.position;
-        currentTime = Time.time;
-        Debug.Log(currentTime);
+
+        currentTime += Time.deltaTime;
 
         if (currentTime >= chaseTime)
         {
