@@ -82,7 +82,7 @@ public class InflatablePlayer : IPlayer
             _rigidbody.velocity = velocity * _playerParameter.BoostDashSpeed(currentFrame, maxFrame);
         }
 
-        _rigidbody.velocity = Vector3.zero;
+        //_rigidbody.velocity = Vector3.zero;
     }
 
     public void Jump(Rigidbody rb)
