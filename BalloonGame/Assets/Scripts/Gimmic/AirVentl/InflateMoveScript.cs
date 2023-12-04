@@ -7,8 +7,6 @@ public class InflateMoveScript : AirVentInteractable
 {
     [Header("進行方向の座標")]
     [SerializeField] Transform targetPoint;
-
-    //変数名変えろ
     [Header("ギミックが元の位置に戻るかどうか")]
     [SerializeField] bool rollBack = default!;
     [Header("ギミックが最大移動距離から元の位置に戻るかどうか")]
