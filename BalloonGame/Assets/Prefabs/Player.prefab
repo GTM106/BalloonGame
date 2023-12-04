@@ -35,7 +35,7 @@ Transform:
   m_Children:
   - {fileID: 948196742402556567}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2826682229555106861
 CapsuleCollider:
@@ -44,7 +44,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960072499487829733}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5fe6079e7529a2c48aa7292585637ee1, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -101,16 +101,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerParameter:
     _rb: {fileID: 3455290170924512164}
+    _physicMaterial: {fileID: 13400000, guid: 5fe6079e7529a2c48aa7292585637ee1, type: 2}
     _cameraTransform: {fileID: 0}
     _joyconRight: {fileID: 0}
     _joyconLeft: {fileID: 0}
-    _jumpPower: 70
-    _moveSpeed: 15
-    _maxMoveSpeed: 10
-    _multiplierNormal: 10.13
-    _multiplierExpand: 7
+    _jumpPower: 90
+    _moveSpeed: 20
+    _maxMoveSpeed: 20
+    _multiplierNormal: 25
+    _multiplierExpand: 3
     _boostDashType: 0
-    _boostDashPower: {x: 0, y: 30}
+    _boostDashPower: {x: 40, y: 60}
     _boostCurve:
       serializedVersion: 2
       m_Curve:
@@ -124,17 +125,17 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.55466497
-        value: 0.70697284
-        inSlope: -1.1696837
-        outSlope: -1.1696837
+        time: 0.7546619
+        value: 0.7753017
+        inSlope: -0.71870387
+        outSlope: -0.71870387
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.10545023
+        inWeight: 0.18837827
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.99505615
-        value: 0.0062332153
+        time: 1
+        value: 0.43979645
         inSlope: -1.9646186
         outSlope: -1.9646186
         tangentMode: 0
@@ -144,13 +145,46 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    _boostDashAngle: 25
-    _buoyancyExpand: 1000
-    _buoyancyNormal: 15
+    _boostDashAngle: 35
+    _buoyancyExpand: 3000
+    _buoyancyNormal: 100
     _requiredPushCount: 3
     _animationChanger:
       _animator: {fileID: 6613684750423660781}
       _stateData: {fileID: 11400000, guid: ed26950821b571e44ae9ad2a4e7eb345, type: 2}
+    _slopeSpeed:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -1
+        value: 1
+        inSlope: -1
+        outSlope: -1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: -1
+        outSlope: -1
+        tangentMode: 69
+        weightedMode: 1
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: -1
+        inSlope: -1
+        outSlope: -1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   _balloonController: {fileID: 7604775162392533275}
   _groundCheck: {fileID: 5537941699024868813}
   _ringconPushAction: {fileID: 2269632662786835952, guid: 585a3b88238186a44b1683b16bca7288,
@@ -190,7 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e38d48f16e090440855ac4d49049e65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _boostFrames: {x: 0, y: 50}
+  _boostFrames: {x: 30, y: 55}
 --- !u!1001 &766195316267099516
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -439,6 +439,7 @@ public class PlayerController : MonoBehaviour
     {
         FixedUpdateState();
         _player.AdjustingGravity();
+        FrictionAdjustment();
     }
 
     private void OnDestroy()
@@ -516,5 +517,24 @@ public class PlayerController : MonoBehaviour
     private void OnGameOver()
     {
         ForceChangeState(IState.E_State.GameOver);
+    }
+
+    private void FrictionAdjustment()
+    {
+        //真下にオブジェクトがない場合、摩擦をなくす
+        //壁に張り付く問題の対抗策
+        _playerParameter.PhysicMaterial.dynamicFriction = GetGroundNormal() == Vector3.zero ? 0f : 1f;
+    }
+
+    private Vector3 GetGroundNormal()
+    {
+        float raycastDistance = 1.2f;
+
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, raycastDistance))
+        {
+            return hit.normal;
+        }
+
+        return Vector3.zero;
     }
 }

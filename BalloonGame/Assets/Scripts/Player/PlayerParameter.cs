@@ -12,6 +12,7 @@ public enum BoostDashDirection
 public class PlayerParameter
 {
     [SerializeField, Required] Rigidbody _rb = default!;
+    [SerializeField, Required] PhysicMaterial _physicMaterial = default!;
     [SerializeField, Required] Transform _cameraTransform = default!;
     [SerializeField, Required] JoyconHandler _joyconRight = default!;
     [SerializeField, Required] JoyconHandler _joyconLeft = default!;
@@ -44,6 +45,7 @@ public class PlayerParameter
     [SerializeField] AnimationCurve _slopeSpeed = default!;
 
     public Rigidbody Rb => _rb;
+    public PhysicMaterial PhysicMaterial => _physicMaterial;
     public Transform CameraTransform => _cameraTransform;
     public JoyconHandler JoyconRight => _joyconRight;
     public JoyconHandler JoyconLeft => _joyconLeft;
