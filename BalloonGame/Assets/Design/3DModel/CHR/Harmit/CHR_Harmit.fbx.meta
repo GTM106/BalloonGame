@@ -3,7 +3,17 @@ guid: 56af71fce295076468098c2debfec35c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_HarmitBody
+    second: {fileID: 2100000, guid: a53c096e9cd581c46b1354d50e7518b8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_HarmitSazae
+    second: {fileID: 2100000, guid: 93e11d7859291f4499590c47bb90daf5, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
