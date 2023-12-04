@@ -1,5 +1,47 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-3651417247098941715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: AfterEffect
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    passTag: AfterEffect
+    Event: 150
+    filterSettings:
+      RenderQueueType: 0
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 64
+      PassNames: []
+    overrideMaterial: {fileID: 2100000, guid: 0a68eab6670c4da4bb17a6054772244e, type: 2}
+    overrideMaterialPassIndex: 0
+    overrideShader: {fileID: 0}
+    overrideShaderPassIndex: 0
+    overrideMode: 1
+    overrideDepthState: 0
+    depthCompareFunction: 4
+    enableWrite: 1
+    stencilSettings:
+      overrideStencilState: 0
+      stencilReference: 0
+      stencilCompareFunction: 8
+      passOperation: 0
+      failOperation: 0
+      zFailOperation: 0
+    cameraSettings:
+      overrideCamera: 0
+      restoreCamera: 1
+      offset: {x: 0, y: 0, z: 0, w: 0}
+      cameraFieldOfView: 60
 --- !u!114 &-1941962764375401235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +139,9 @@ MonoBehaviour:
   - {fileID: -1878332245247344467}
   - {fileID: 9067715107810602511}
   - {fileID: -1941962764375401235}
-  m_RendererFeatureMap: adc0de57c6d2eee50f6e7e05d9fed67ded5c5e9e27c30ce5
+  - {fileID: 1368278403467980907}
+  - {fileID: -3651417247098941715}
+  m_RendererFeatureMap: adc0de57c6d2eee50f6e7e05d9fed67ded5c5e9e27c30ce56b308c60f519fd12edceee1b5c8f53cd
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -138,6 +182,23 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &1368278403467980907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
+  m_Name: MotionBlur
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  passMaterial: {fileID: 2100000, guid: 2d8ab9d776b44ac40aa62ee7bc33f292, type: 2}
+  injectionPoint: 600
+  requirements: 12
+  passIndex: 0
 --- !u!114 &9067715107810602511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,7 +209,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
-  m_Name: FullScreenPassRendererFeature
+  m_Name: Line
   m_EditorClassIdentifier: 
   m_Active: 0
   passMaterial: {fileID: 2100000, guid: 9565b8fa051e0014e90f105555d053f3, type: 2}

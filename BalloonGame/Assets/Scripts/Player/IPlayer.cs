@@ -12,7 +12,7 @@ public interface IPlayer : IAdjustGravity
     /// <summary>
     /// ぶっ飛びダッシュ
     /// </summary>
-    public void BoostDash();
+    public void BoostDash(BoostDashData boostFrame);
 
     /// <summary>
     /// ジャンプ

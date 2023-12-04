@@ -20,3 +20,8 @@ Unityのバージョンや、その他必要な設定を列挙しています。
 PCにジョイコンを接続する方法を示します。
 
 [表示](/Manual/JoyconConnectionManual.md)
+
+## サウンドの一元管理に関するマニュアル
+サウンドをUnityに入れる際の注意点や、管理の方法を示します。
+
+[表示](/Manual/SoundSettingsDataManual.md)

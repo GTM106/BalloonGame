@@ -28,7 +28,10 @@ public class FunController : AirVentInteractable, IHittable
         }
 
         //アニメーターのスピードを電源によって等速再生か停止にする。
-        _animator.speed = _isPoweredOn ? 1f : 0f;
+        if (_animator != null)
+        {
+            _animator.speed = _isPoweredOn ? 1f : 0f;
+        }
     }
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
@@ -56,6 +59,9 @@ public class FunController : AirVentInteractable, IHittable
         _isPoweredOn = !_isPoweredOn;
 
         //アニメーターのスピードを電源によって等速再生か停止にする。
-        _animator.speed = _isPoweredOn ? 1f : 0f;        
+        if (_animator != null)
+        {
+            _animator.speed = _isPoweredOn ? 1f : 0f;
+        }
     }
 }
