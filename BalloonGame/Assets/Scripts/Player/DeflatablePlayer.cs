@@ -20,6 +20,7 @@ public class DeflatablePlayer : IPlayer
     public void Dash(IState.E_State state)
     {
         Vector2 axis = _playerParameter.JoyconRight.Stick;
+
 #if UNITY_EDITOR
         if (Gamepad.current != null)
         {
@@ -44,16 +45,29 @@ public class DeflatablePlayer : IPlayer
         //上昇や落下の速度は最大スピードに含めない。
         Vector3 currentVelocityIgnoreY = Vector3.Scale(_rigidbody.velocity, ignoreYCorrection);
 
+        float currentForceMag = force.magnitude;
+
         Vector3 groundNormal = GetGroundNormal();
-        force = Vector3.ProjectOnPlane(force, groundNormal);
+        Vector3 projectOnPlaneForce = Vector3.ProjectOnPlane(force, groundNormal).normalized;
+
+        //地面の法線と進行方向のなす角度
+        float angle = Vector3.Angle(force, groundNormal);
+
+        //調整する重力
+        Vector3 gravity = Multiplier * Physics.gravity;
+
+        //坂道の調整
+        if (Mathf.Approximately(0f, angle)) gravity = Vector3.zero;
+        if (Mathf.Approximately(90f, angle)) gravity = Vector3.zero;
+        float slope = (90f - angle) / 90f;
+        _rigidbody.AddForce(gravity * _playerParameter.SloopSpeed(slope), ForceMode.Acceleration);
 
         if (currentVelocityIgnoreY.magnitude < _playerParameter.MaxMoveSpeed)
         {
             //指定したスピードから現在の速度を引いて加速力を求める
             float currentSpeed = _playerParameter.MoveSpeed - currentVelocityIgnoreY.magnitude;
 
-            //調整された加速力で力を加える
-            _rigidbody.AddForce(force * currentSpeed);
+            _rigidbody.AddForce(currentForceMag * currentSpeed * projectOnPlaneForce, ForceMode.Acceleration);
         }
 
         if (axis.magnitude <= 0.02f) return;
@@ -61,7 +75,7 @@ public class DeflatablePlayer : IPlayer
         //進行方向を向く
         Vector3 direction = cameraForward * axis.y + cameraRight * axis.x;
         _rigidbody.transform.localRotation = Quaternion.LookRotation(direction);
-        
+
         if (state is IState.E_State.Control)
         {
             _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Run);
@@ -104,7 +118,7 @@ public class DeflatablePlayer : IPlayer
 
     private Vector3 GetGroundNormal()
     {
-        float raycastDistance = 2f;
+        float raycastDistance = 1.5f;
 
         if (Physics.Raycast(_rigidbody.position, Vector3.down, out RaycastHit hit, raycastDistance))
         {
