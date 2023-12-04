@@ -41,20 +41,6 @@ public class CinemachineController : MonoBehaviour
     {
         _freeLook.m_XAxis.m_InputAxisValue = _joyconHandler.Stick.x;
         _freeLook.m_YAxis.m_InputAxisValue = _joyconHandler.Stick.y;
-#if UNITY_EDITOR
-        if (Gamepad.current != null)
-        {
-            Vector2 axis = Gamepad.current.leftStick.ReadValue();
-            _freeLook.m_XAxis.m_InputAxisValue += axis.x;
-            _freeLook.m_YAxis.m_InputAxisValue += axis.y;
-        }
-        if (Keyboard.current != null)
-        {
-            Vector2 axis = Mouse.current.delta.ReadValue();
-            _freeLook.m_XAxis.m_InputAxisValue += axis.x;
-            _freeLook.m_YAxis.m_InputAxisValue += axis.y;
-        }
-#endif
 
         Gyro();
     }

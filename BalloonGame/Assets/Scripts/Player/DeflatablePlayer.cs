@@ -21,18 +21,6 @@ public class DeflatablePlayer : IPlayer
     {
         Vector2 axis = _playerParameter.JoyconRight.Stick;
 
-#if UNITY_EDITOR
-        if (Gamepad.current != null)
-        {
-            axis += Gamepad.current.leftStick.ReadValue();
-        }
-        if (Keyboard.current != null)
-        {
-            axis += new Vector2(Keyboard.current.aKey.isPressed ? -1f : Keyboard.current.dKey.isPressed ? 1f : 0f
-              , Keyboard.current.sKey.isPressed ? -1f : Keyboard.current.wKey.isPressed ? 1f : 0f);
-        }
-#endif
-
         //Y‚ð–³Ž‹
         Vector3 cameraForward = Vector3.Scale(_playerParameter.CameraTransform.forward, ignoreYCorrection).normalized;
         Vector3 cameraRight = Vector3.Scale(_playerParameter.CameraTransform.right, ignoreYCorrection).normalized;
