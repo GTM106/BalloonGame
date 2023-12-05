@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using VSCodeEditor;
 
 public class HermitCrabController : MonoBehaviour, IHittable
 {
@@ -17,13 +18,19 @@ public class HermitCrabController : MonoBehaviour, IHittable
     [SerializeField] private float chaseSpeed = default!;
     [Header("í«ê’éûä‘")]
     [SerializeField] private float chaseTime = default!;
+    [Header("í«ê’éûä‘Çí¥Ç¶ÇΩèÍçáÇ…çƒìxí«ê’Ç∑ÇÈÇ‹Ç≈ÇÃéûä‘")]
+    [SerializeField] private float coolTime = default!;
     [SerializeField] PlayerGameOverEvent _gameOverEvent = default!;
-    [SerializeField] NavMeshAgent navMeshAgent = default;
+    [SerializeField] Animator animator = default!;
+    [SerializeField] NavMeshAgent navMeshAgent = default!;
+
 
     private int currentPatrolNumber = 0;
     private float currentTime = 0;
+    private float currentCoolTime = 0;
     private float distance = 0;
-    private bool InArea = false;
+    private bool inArea = false;
+    private bool coolTimeCheck = false;
 
     void Awake()
     {
@@ -54,12 +61,12 @@ public class HermitCrabController : MonoBehaviour, IHittable
     {
         distance = Vector3.Distance(transform.position, player.transform.position);
 
-        ChaseCheack();
+        CoolTimeCheck();
 
-        if (!InArea)
+        if (!inArea)
         {
+            ChaseCheack();
             navMeshAgent.speed = patrolSpeed;
-
             if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
             {
                 currentPatrolNumber = (currentPatrolNumber + 1) % wayPoints.Length;
@@ -75,25 +82,47 @@ public class HermitCrabController : MonoBehaviour, IHittable
 
     void ChaseCheack()
     {
-        if (distance <= chaseRadius)
+        if (distance <= chaseRadius && !coolTimeCheck)
         {
+            Vector3 vector3 = player.transform.position - this.transform.position;
+            vector3.y = 0f;
+            Quaternion quaternion = Quaternion.LookRotation(vector3);
+            transform.rotation = quaternion;
             //SE302 çƒê∂
-            //AN303 çƒê∂
-            InArea = true;
+            animator.Play("AN02_discovery");
+        }
+    }
+    void CoolTimeCheck()
+    {
+        if (coolTimeCheck)
+        {
+            currentCoolTime += Time.deltaTime;
+        }
+
+        if (currentCoolTime > coolTime)
+        {
+            coolTimeCheck = false;
+            currentCoolTime = 0;
         }
     }
     void Chase()
     {
-        //AN301Å@çƒê∂
+        animator.Play("AN02_dash");
         navMeshAgent.speed = chaseSpeed;
         navMeshAgent.destination = player.position;
-
         currentTime += Time.deltaTime;
 
         if (currentTime >= chaseTime)
         {
-            InArea = false;
+            inArea = false;
+            coolTimeCheck = true; ;
             currentTime = 0;
+            animator.Play("AN02_walk");
         }
+    }
+
+    public void DiscoveryEnd()
+    {
+        inArea = true;
     }
 }
