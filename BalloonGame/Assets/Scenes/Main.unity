@@ -3684,16 +3684,6 @@ PrefabInstance:
       objectReference: {fileID: 1452517107}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
-      propertyPath: _playerParameter._jumpPower
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._moveSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
       propertyPath: _playerParameter._joyconLeft
       value: 
       objectReference: {fileID: 1269433273}
@@ -3704,23 +3694,8 @@ PrefabInstance:
       objectReference: {fileID: 638917205}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
-      propertyPath: _playerParameter._maxMoveSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._boostDashAngle
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._buoyancyExpand
-      value: 3000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._buoyancyNormal
-      value: 100
+      propertyPath: _playerParameter._boostDashPowerY
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
@@ -3730,68 +3705,43 @@ PrefabInstance:
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerParameter._boostDashPower.x
-      value: 40
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerParameter._boostDashPower.y
-      value: 60
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
-      propertyPath: _playerParameter._multiplierExpand
-      value: 3
+      propertyPath: _playerParameter._boostDashPowerY.x
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
-      propertyPath: _playerParameter._multiplierNormal
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].time
-      value: 0.7546619
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[2].time
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].value
-      value: 0.7753017
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[2].value
-      value: 0.43979645
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].inSlope
-      value: -0.71870387
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].inWeight
-      value: 0.18837827
-      objectReference: {fileID: 0}
-    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].outSlope
-      value: -0.71870387
+      propertyPath: _playerParameter._boostDashPowerY.y
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _boostFrames.x
-      value: 30
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _boostFrames.y
-      value: 55
+      value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _balloonController
+      value: 
+      objectReference: {fileID: 1021318957}
+    - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _balloonMeshRenderer
+      value: 
+      objectReference: {fileID: 518707138}
     - target: {fileID: 4219734522724283064, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: m_RootOrder
@@ -3847,45 +3797,44 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _waterEvent
       value: 
       objectReference: {fileID: 661170279}
-    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _joyconRight
       value: 
       objectReference: {fileID: 638917205}
-    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _airVentEvent
       value: 
       objectReference: {fileID: 1456480350}
-    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerGameOverEvent
       value: 
       objectReference: {fileID: 1452517107}
-    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _cinemachineController
       value: 
       objectReference: {fileID: 1081264634}
-    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _cinemachineTargetGroup
       value: 
       objectReference: {fileID: 751176631}
-    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: enableBoostDashOnPressedJoyconButton
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1960072499487829733, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      insertIndex: 6
+      addedObject: {fileID: 1021318958}
   m_SourcePrefab: {fileID: 100100000, guid: 151285aef4bd2e740998ee2111a79809, type: 3}
 --- !u!4 &162464559 stripped
 Transform:
@@ -11689,6 +11638,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 430780533}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &518707138 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 786102023468443626, guid: 151285aef4bd2e740998ee2111a79809,
+    type: 3}
+  m_PrefabInstance: {fileID: 161932610}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &521748348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17801,7 +17756,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815182734}
-  m_LocalRotation: {x: 0.06967662, y: -0.7036655, z: 0.069676615, w: 0.70366555}
+  m_LocalRotation: {x: 0.069676615, y: -0.70366555, z: 0.06967662, w: 0.7036655}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -17986,7 +17941,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 821707930}
-  m_LocalRotation: {x: 0.06967662, y: -0.7036655, z: 0.069676615, w: 0.70366555}
+  m_LocalRotation: {x: 0.069676615, y: -0.70366555, z: 0.06967662, w: 0.7036655}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -22375,6 +22330,57 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d19a8df2e1f5c034bae04fc6d8276926, type: 3}
+--- !u!1 &1021318950 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1960072499487829733, guid: 151285aef4bd2e740998ee2111a79809,
+    type: 3}
+  m_PrefabInstance: {fileID: 161932610}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1021318952 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
+    type: 3}
+  m_PrefabInstance: {fileID: 161932610}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021318950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e38d48f16e090440855ac4d49049e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1021318957 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
+    type: 3}
+  m_PrefabInstance: {fileID: 161932610}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021318950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92dd7ae3cfe7b8f4996090afa0bacce9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1021318958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021318950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c577b476154e4f2419d3360b42e46f4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _boostDashEvent: {fileID: 1021318952}
+  _joyconRight: {fileID: 638917205}
+  _ringconPullAction: {fileID: 8623513572866432721, guid: 585a3b88238186a44b1683b16bca7288,
+    type: 3}
+  _ringconPushHoldAction: {fileID: 7952120154682903202, guid: 585a3b88238186a44b1683b16bca7288,
+    type: 3}
+  enableOnPressedJoyconButton: 1
+  enableOnRingconPull: 1
+  enableOnRingconPushHold: 1
 --- !u!4 &1023800846 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7664113908096428910, guid: d19a8df2e1f5c034bae04fc6d8276926,

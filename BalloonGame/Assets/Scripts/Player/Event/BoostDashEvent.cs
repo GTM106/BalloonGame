@@ -25,14 +25,21 @@ public struct BoostDashData
 /// </summary>
 public class BoostDashEvent : MonoBehaviour
 {
+    [SerializeField, Required] BalloonController _balloonController = default!;
+    [SerializeField, Required] SkinnedMeshRenderer _balloonMeshRenderer = default!;
     [Header("x‚ªMinAy‚ªMax‚ğ•\‚µ‚Ü‚·")]
     [SerializeField] Vector2Int _boostFrames;
 
     public event Action<BoostDashData> OnBoostDash;
     BoostDashData frame = new();
 
-    public void BoostDash(float blendShapeWeight)
+    public void BoostDash()
     {
+        //•—‘D‚ª–c‚ç‚ñ‚Å‚¢‚é‚±‚Æ‚ªğŒ
+        if (_balloonController.State != BalloonState.Expands) return;
+
+        float blendShapeWeight = _balloonMeshRenderer.GetBlendShapeWeight(0);
+
         frame.Set(CalcBoostFrame(blendShapeWeight), blendShapeWeight);
         OnBoostDash?.Invoke(frame);
     }

@@ -25,13 +25,8 @@ public class PlayerParameter
     [SerializeField] float _multiplierNormal = default!;
     [Header("膨張時の重力")]
     [SerializeField] float _multiplierExpand = default!;
-    [Header("ぶっ飛びジャンプの方向")]
-    [SerializeField] BoostDashDirection _boostDashType = default!;
-    [Header("ぶっ飛びジャンプの力")]
-    [SerializeField, Min(0f)] Vector2 _boostDashPower = default!;
-    [SerializeField, Curve01] AnimationCurve _boostCurve = default!;
-    [Header("ぶっ飛びダッシュにおいて飛ぶY方向。高いほど高く跳ぶ")]
-    [SerializeField, Min(0f)] float _boostDashAngle = default!;
+    [Header("ぶっ飛びダッシュのY軸の力。高いほど高く跳ぶ")]
+    [SerializeField, Min(0f)] float _boostDashPowerY = default!;
     [Header("膨張時における水に入っているときの浮力")]
     [SerializeField] float _buoyancyExpand = default!;
     [Header("通常時における水に入っているときの浮力")]
@@ -50,10 +45,7 @@ public class PlayerParameter
     public float MaxMoveSpeed => _maxMoveSpeed;
     public float MultiplierNormal => _multiplierNormal;
     public float MultiplierExpand => _multiplierExpand;
-    public BoostDashDirection BoostDashType => _boostDashType;
-    public float BoostDashPower(BoostDashData frame) => _boostDashPower.x + (_boostDashPower.y - _boostDashPower.x) * frame.Value / 100f;
-    public float BoostDashSpeed(int currentFrame, int maxFrame) => _boostCurve.Evaluate((float)currentFrame / maxFrame);
-    public float BoostDashAngle => _boostDashAngle;
+    public float BoostDashPowerY => _boostDashPowerY;
     public float BuoyancyExpand => _buoyancyExpand;
     public float BuoyancyNormal => _buoyancyNormal;
     public int RequiredPushCount => _requiredPushCount;

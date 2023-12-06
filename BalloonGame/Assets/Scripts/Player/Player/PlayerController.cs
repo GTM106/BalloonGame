@@ -201,6 +201,8 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
+            parent._player.Dash(parent._currentState);
+
             //1s‚É‚Ü‚Æ‚ß‚ç‚ê‚Ü‚·‚ªA‰Â“Ç«‚Ì‚½‚ß‚É’·‚­‘‚¢‚Ä‚¢‚Ü‚·
             _boostDashFrame--;
             if (_boostDashFrame <= 0) return IState.E_State.Control;

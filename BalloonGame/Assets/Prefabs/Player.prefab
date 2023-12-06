@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 2536173338194225955}
   - component: {fileID: 5537941699024868813}
   - component: {fileID: 3109628912347324760}
+  - component: {fileID: 2510545858266644820}
+  - component: {fileID: 7393417574364545360}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -35,7 +37,7 @@ Transform:
   m_Children:
   - {fileID: 948196742402556567}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2826682229555106861
 CapsuleCollider:
@@ -104,54 +106,19 @@ MonoBehaviour:
     _cameraTransform: {fileID: 0}
     _joyconRight: {fileID: 0}
     _joyconLeft: {fileID: 0}
-    _jumpPower: 70
-    _moveSpeed: 15
-    _maxMoveSpeed: 10
-    _multiplierNormal: 10.13
-    _multiplierExpand: 7
-    _boostDashType: 0
-    _boostDashPower: {x: 0, y: 30}
-    _boostCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.55466497
-        value: 0.70697284
-        inSlope: -1.1696837
-        outSlope: -1.1696837
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.10545023
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.99505615
-        value: 0.0062332153
-        inSlope: -1.9646186
-        outSlope: -1.9646186
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.3061778
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    _boostDashAngle: 25
-    _buoyancyExpand: 1000
-    _buoyancyNormal: 15
+    _jumpPower: 90
+    _moveSpeed: 20
+    _maxMoveSpeed: 20
+    _multiplierNormal: 25
+    _multiplierExpand: 3
+    _boostDashPowerY: 200
+    _buoyancyExpand: 3000
+    _buoyancyNormal: 100
     _requiredPushCount: 3
     _animationChanger:
       _animator: {fileID: 6613684750423660781}
       _stateData: {fileID: 11400000, guid: ed26950821b571e44ae9ad2a4e7eb345, type: 2}
-  _balloonController: {fileID: 7604775162392533275}
+  _balloonController: {fileID: 7393417574364545360}
   _groundCheck: {fileID: 5537941699024868813}
   _ringconPushAction: {fileID: 2269632662786835952, guid: 585a3b88238186a44b1683b16bca7288,
     type: 3}
@@ -190,7 +157,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e38d48f16e090440855ac4d49049e65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _boostFrames: {x: 0, y: 50}
+  _balloonController: {fileID: 7393417574364545360}
+  _balloonMeshRenderer: {fileID: 786102023468443626}
+  _boostFrames: {x: 10, y: 10}
+--- !u!114 &2510545858266644820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960072499487829733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c577b476154e4f2419d3360b42e46f4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _boostDashEvent: {fileID: 3109628912347324760}
+  _joyconRight: {fileID: 0}
+  _ringconPullAction: {fileID: 8623513572866432721, guid: 585a3b88238186a44b1683b16bca7288,
+    type: 3}
+  _ringconPushHoldAction: {fileID: 7952120154682903202, guid: 585a3b88238186a44b1683b16bca7288,
+    type: 3}
+  enableOnPressedJoyconButton: 1
+  enableOnRingconPull: 1
+  enableOnRingconPushHold: 1
+--- !u!114 &7393417574364545360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960072499487829733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92dd7ae3cfe7b8f4996090afa0bacce9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ringPushAction: {fileID: 2269632662786835952, guid: 585a3b88238186a44b1683b16bca7288,
+    type: 3}
+  _waterEvent: {fileID: 0}
+  _cinemachineTargetGroup: {fileID: 0}
+  _cinemachineController: {fileID: 0}
+  _airVentEvent: {fileID: 0}
+  _playerGameOverEvent: {fileID: 0}
+  _MAT_AtiiBalloon: {fileID: 2100000, guid: 8f32f5504106cd74784d5eb01dbac4ae, type: 2}
+  _skinnedMeshRenderer: {fileID: 786102023468443626}
+  _boostDashEvent: {fileID: 3109628912347324760}
+  _scaleAnimationDuration: 0.1
+  _scaleOffset: 30
+  _scaleAmountDeflatingPerSecond: 15
+  _scaleAmountDeflatingPerSecondInWater: 0.1
+  _cameraRadiusMax: 3.25
+  _smoothnessMax: 1
 --- !u!1001 &766195316267099516
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -282,11 +300,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -2919193347614608991, guid: 787b325b82cb63d47bba460309dffd89,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7604775162392533275}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 787b325b82cb63d47bba460309dffd89, type: 3}
 --- !u!137 &786102023468443626 stripped
 SkinnedMeshRenderer:
@@ -306,41 +320,3 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 766195316267099516}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6764093869149934813 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -2919193347614608991, guid: 787b325b82cb63d47bba460309dffd89,
-    type: 3}
-  m_PrefabInstance: {fileID: 766195316267099516}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7604775162392533275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6764093869149934813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92dd7ae3cfe7b8f4996090afa0bacce9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _ringPushAction: {fileID: 2269632662786835952, guid: 585a3b88238186a44b1683b16bca7288,
-    type: 3}
-  _ringPullAction: {fileID: 8623513572866432721, guid: 585a3b88238186a44b1683b16bca7288,
-    type: 3}
-  _joyconRight: {fileID: 0}
-  _waterEvent: {fileID: 0}
-  _cinemachineTargetGroup: {fileID: 0}
-  _cinemachineController: {fileID: 0}
-  _airVentEvent: {fileID: 0}
-  _playerGameOverEvent: {fileID: 0}
-  _MAT_AtiiBalloon: {fileID: 2100000, guid: 8f32f5504106cd74784d5eb01dbac4ae, type: 2}
-  _skinnedMeshRenderer: {fileID: 786102023468443626}
-  _boostDashEvent: {fileID: 3109628912347324760}
-  _scaleAnimationDuration: 0.1
-  _scaleOffset: 30
-  _scaleAmountDeflatingPerSecond: 15
-  _scaleAmountDeflatingPerSecondInWater: 0.1
-  _cameraRadiusMax: 3.25
-  _smoothnessMax: 1
-  enableBoostDashOnPressedJoyconButton: 1
