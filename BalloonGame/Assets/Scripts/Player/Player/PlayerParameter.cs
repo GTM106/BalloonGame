@@ -12,6 +12,7 @@ public enum BoostDashDirection
 public class PlayerParameter
 {
     [SerializeField, Required] Rigidbody _rb = default!;
+    [SerializeField, Required] PhysicMaterial _physicMaterial = default!;
     [SerializeField, Required] Transform _cameraTransform = default!;
     [SerializeField, Required] JoyconHandler _joyconRight = default!;
     [SerializeField, Required] JoyconHandler _joyconLeft = default!;
@@ -35,8 +36,11 @@ public class PlayerParameter
     [SerializeField, Min(0)] int _requiredPushCount = default!;
     [Header("アニメーション")]
     [SerializeField] AnimationChanger<E_Atii> _animationChanger = default!;
+    [Header("坂道の速度を調整します。-1から1の間で")]
+    [SerializeField] AnimationCurve _slopeSpeed = default!;
 
     public Rigidbody Rb => _rb;
+    public PhysicMaterial PhysicMaterial => _physicMaterial;
     public Transform CameraTransform => _cameraTransform;
     public JoyconHandler JoyconRight => _joyconRight;
     public JoyconHandler JoyconLeft => _joyconLeft;
@@ -50,4 +54,5 @@ public class PlayerParameter
     public float BuoyancyNormal => _buoyancyNormal;
     public int RequiredPushCount => _requiredPushCount;
     public AnimationChanger<E_Atii> AnimationChanger => _animationChanger;
+    public float SloopSpeed(float angle) => _slopeSpeed.Evaluate(angle);
 }

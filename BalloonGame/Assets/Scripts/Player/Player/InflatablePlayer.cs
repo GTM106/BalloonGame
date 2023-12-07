@@ -48,13 +48,31 @@ public class InflatablePlayer : IPlayer
         //上昇や落下の速度は最大スピードに含めない。
         Vector3 currentVelocityIgnoreY = Vector3.Scale(_rigidbody.velocity, ignoreYCorrection);
 
+        Vector3 groundNormal = GetGroundNormal();
+
+        //進行方向を地面に投影したベクトル
+        Vector3 projectOnPlaneForce = Vector3.ProjectOnPlane(force, groundNormal).normalized;
+
+        //地面の法線と進行方向のなす角度
+        float angle = Vector3.Angle(force, groundNormal);
+
+        //調整する重力
+        Vector3 gravity = Multiplier * Physics.gravity;
+
+        //坂道の調整
+        if (Mathf.Approximately(0f, angle)) gravity = Vector3.zero;
+        if (Mathf.Approximately(90f, angle)) gravity = Vector3.zero;
+        float slope = (90f - angle) / 90f;
+        _rigidbody.AddForce(gravity * _playerParameter.SloopSpeed(slope), ForceMode.Acceleration);
+
+        float currentForceMag = force.magnitude;
+
         if (currentVelocityIgnoreY.magnitude < _playerParameter.MaxMoveSpeed)
         {
             //指定したスピードから現在の速度を引いて加速力を求める
             float currentSpeed = _playerParameter.MoveSpeed - currentVelocityIgnoreY.magnitude;
 
-            //調整された加速力で力を加える
-            _rigidbody.AddForce(force * currentSpeed);
+            _rigidbody.AddForce(currentForceMag * currentSpeed * projectOnPlaneForce, ForceMode.Acceleration);
         }
 
         if (axis.magnitude <= 0.02f) return;
@@ -100,5 +118,18 @@ public class InflatablePlayer : IPlayer
     public void Fall()
     {
         _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BFall);
+    }
+
+    private Vector3 GetGroundNormal()
+    {
+        float raycastDistance = 1.5f;
+
+        if (Physics.Raycast(_rigidbody.position, Vector3.down, out RaycastHit hit, raycastDistance))
+        {
+            return hit.normal;
+        }
+
+        //ヒットしなかった場合、上向きの法線
+        return Vector3.up;
     }
 }
