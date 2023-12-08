@@ -20,10 +20,13 @@ public class JoyconHandler : MonoBehaviour
     }
 
     [SerializeField] JoyconType joyconType;
+    [SerializeField] InputSystemManager.ActionMaps maps;
 
     List<Joycon> joycons;
 
     Vector2 _stick = Vector2.zero;
+
+    public InputSystemManager.ActionMaps Maps => maps;
 
     /// <summary>
     /// ÉWÉÉÉCÉç
@@ -101,6 +104,8 @@ public class JoyconHandler : MonoBehaviour
     readonly Dictionary<Joycon.Button, Action> onButtonHeld = new();
     readonly ActionPhase[] actionPhase = new ActionPhase[(int)Joycon.Button.SHOULDER_2 + 1];
 
+    uint _keyPressed = 0;
+
     private void Start()
     {
         joycons = JoyconManager.Instance.j;
@@ -157,6 +162,7 @@ public class JoyconHandler : MonoBehaviour
     {
         if (joycons.Count <= 0) return;
         Joycon j = joycons[(int)joyconType];
+        _keyPressed = 0;
 
         OnStickInput(j);
         for (Joycon.Button button = 0; button <= Joycon.Button.SHOULDER_2; button++)
@@ -166,6 +172,8 @@ public class JoyconHandler : MonoBehaviour
         GetGyro(j);
         GetAccel(j);
         GetOrientation(j);
+
+        print(_keyPressed);
     }
 
     private void OnStickInput(Joycon j)
@@ -207,6 +215,8 @@ public class JoyconHandler : MonoBehaviour
             if (actionPhase[(int)button] == ActionPhase.Performed) return;
             actionPhase[(int)button] = ActionPhase.Performed;
 
+            _keyPressed |= 1u << (int)button;
+
             if (onButtonPressed.TryGetValue(button, out Action action))
             {
                 action?.Invoke();
@@ -220,4 +230,6 @@ public class JoyconHandler : MonoBehaviour
             }
         }
     }
+
+    public bool WasPressedAnyKeyThisFrame => _keyPressed != 0;
 }
