@@ -174,6 +174,14 @@ public class JoyconHandler : MonoBehaviour
         GetOrientation(j);
     }
 
+    private void OnDisable()
+    {
+        _stick = Vector2.zero;
+        Gyro = Vector3.zero;
+        Accel = Vector3.zero;
+        Orientation = Quaternion.identity;
+    }
+
     private void OnStickInput(Joycon j)
     {
         float[] stick = j.GetStick();

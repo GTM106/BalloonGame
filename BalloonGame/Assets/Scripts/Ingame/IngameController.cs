@@ -12,11 +12,16 @@ public class IngameController : MonoBehaviour
     [SerializeField, Required] AudioSource _endOfTimeLimitAudioSource = default!;
     [SerializeField, Required] TutorialUIContoller _tutorialUIContoller = default!;
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
+    [SerializeField, Required] GameFinishController _gameFinishController = default!;
+    [SerializeField, Required] ImageTransitionController _imageTransitionController = default!;
 
     //Input系
     [SerializeField, Required] InputActionReference _UIAnykeyAction = default;
     [SerializeField, Required] JoyconHandler _JoyconLeftUI = default!;
     [SerializeField, Required] JoyconHandler _JoyconRightUI = default!;
+
+    [SerializeField, Min(0)] int waitingFrameForGameFinish = 50;
+    [SerializeField] TrantisionData _trantisionData = default!;
 
     private void Awake()
     {
@@ -64,19 +69,32 @@ public class IngameController : MonoBehaviour
         }
     }
 
-    private void OnGameFinish()
+    private async void OnGameFinish()
     {
+        var token = this.GetCancellationTokenOnDestroy();
+
         //制限時間終了SE
         SoundManager.Instance.PlaySE(_endOfTimeLimitAudioSource, SoundSource.SE040_EndOfTimeLimit);
 
         //入力受付終了
+        _inputSystemManager.ChangeMaps(InputSystemManager.ActionMaps.UI);
 
         //ゲーム終了UIの表示
+        _gameFinishController.EnableUI();
 
         //一定フレーム待機
+        await UniTask.DelayFrame(waitingFrameForGameFinish, PlayerLoopTiming.FixedUpdate, token);
 
         //全サウンドのフェードアウト
+        //重め処理なので対策考え中
+        var audioSources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
+        foreach (var audioSource in audioSources)
+        {
+            //SEとしているが全部のオーディオソースを検索しているためBGMもフェードアウトされる
+            SoundManager.Instance.StopSE(audioSource, 0.5f);
+        }
 
         //クリア画面に遷移
+        _imageTransitionController.StartTransition(_trantisionData);
     }
 }
