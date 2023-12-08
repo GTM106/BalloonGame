@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameStarter : MonoBehaviour, IHittable
 {
-    [SerializeField] TimeLimitController _timeLimitController = default!;
+    [SerializeField, Required] TimeLimitController _timeLimitController = default!;
+    [SerializeField, Required] GameStartUIController _gameStartUIController = default!;
 
     bool _canStartGame = false;
 
@@ -16,6 +17,9 @@ public class GameStarter : MonoBehaviour, IHittable
     void IHittable.OnEnter(Collider playerCollider, BalloonState balloonState)
     {
         _canStartGame = true;
+
+        //TODO:Issue92の項目により変更する
+        OnStartGame();
     }
 
     void IHittable.OnExit(Collider playerCollider, BalloonState balloonState)
@@ -26,16 +30,22 @@ public class GameStarter : MonoBehaviour, IHittable
     {
     }
 
-    private void OnStartGame()
+    private async void OnStartGame()
     {
         if (!_canStartGame) return;
         _canStartGame = false;
 
-        //制限時間の開始
-        _timeLimitController.Play();
-
         //ゲーム開始UIの表示
+        await _gameStartUIController.EnableUI();
+        _gameStartUIController.DisableUI();
 
-        //制限時間UIの表示
+        if (_timeLimitController != null)
+        {
+            //制限時間の開始
+            _timeLimitController.Play();
+
+            //制限時間UIの表示
+            _timeLimitController.EnableUI();
+        }
     }
 }

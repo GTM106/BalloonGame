@@ -12,7 +12,9 @@ public class TimeLimitController : MonoBehaviour
         Stopped,
     }
 
-    [SerializeField, Min(0)] int _initTimeLimit;
+    [SerializeField, Required] TimeLimitView _timeLimitView = default!;
+    [Header("èâä˙êßå¿éûä‘[sec]")]
+    [SerializeField, Min(0)] float _initTimeLimit;
 
     TimeLimit _timeLimit = null;
 
@@ -23,6 +25,11 @@ public class TimeLimitController : MonoBehaviour
     private void Update()
     {
         Reduce();
+
+        if(_timeLimit != null)
+        {
+            _timeLimitView.UpdateText(_timeLimit.CurrentTimeLimitValue.ToString("F1"));
+        }
     }
 
     private void FixedUpdate()
@@ -113,5 +120,15 @@ public class TimeLimitController : MonoBehaviour
     {
         _state = State.Stopped;
         _timeLimit = null;
+    }
+
+    public void EnableUI()
+    {
+        _timeLimitView.Enable();
+    }
+
+    public void DisableUI()
+    {
+        _timeLimitView.Disable();
     }
 }

@@ -11,14 +11,26 @@ public class IngameController : MonoBehaviour
 
     [SerializeField, Required] AudioSource _endOfTimeLimitAudioSource = default!;
     [SerializeField, Required] TutorialUIContoller _tutorialUIContoller = default!;
+    [SerializeField, Required] TimeLimitController _timeLimitController = default!;
 
     //Inputån
     [SerializeField, Required] InputActionReference _UIAnykeyAction = default;
     [SerializeField, Required] JoyconHandler _JoyconLeftUI = default!;
     [SerializeField, Required] JoyconHandler _JoyconRightUI = default!;
+
+    private void Awake()
+    {
+        _timeLimitController.OnTimeLimit += OnGameFinish;
+    }
+
     private void Start()
     {
         OnGameStart();
+    }
+
+    private void OnDestroy()
+    {
+        _timeLimitController.OnTimeLimit -= OnGameFinish;
     }
 
     private async void OnGameStart()

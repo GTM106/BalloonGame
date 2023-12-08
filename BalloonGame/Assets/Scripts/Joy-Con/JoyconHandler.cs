@@ -172,8 +172,6 @@ public class JoyconHandler : MonoBehaviour
         GetGyro(j);
         GetAccel(j);
         GetOrientation(j);
-
-        print(_keyPressed);
     }
 
     private void OnStickInput(Joycon j)
