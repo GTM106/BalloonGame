@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
+using UnityEngine.VFX;
 
 public interface IHermitCrabState
 {
@@ -63,6 +64,8 @@ public class HermitCrabController : MonoBehaviour, IHittable
 
     //キャッシュしたTransform
     Transform _transform = default!;
+
+    [SerializeField]VisualEffect FindPlayerEff;
 
     #region State
     // 状態管理
@@ -302,6 +305,9 @@ public class HermitCrabController : MonoBehaviour, IHittable
 
         //発見時アニメーションの再生。再生後自動でダッシュモーションになります
         _animationChanger.ChangeAnimation(E_Harmit.AN02_discovery);
+
+        //発見時のエフェクトを再生
+        FindPlayerEff.Play();
 
         //その場でアニメーションを再生させる
         _navMeshAgent.destination = _transform.position;
