@@ -6,8 +6,14 @@ public class GameStarter : MonoBehaviour, IHittable
 {
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
     [SerializeField, Required] GameStartUIController _gameStartUIController = default!;
+    [SerializeField, Required] BeatEvent _beatEvent = default!;
 
     bool _canStartGame = false;
+
+    private void Awake()
+    {
+        _beatEvent.OnBeat += OnStartGame;
+    }
 
     private void Reset()
     {
@@ -17,9 +23,6 @@ public class GameStarter : MonoBehaviour, IHittable
     void IHittable.OnEnter(Collider playerCollider, BalloonState balloonState)
     {
         _canStartGame = true;
-
-        //TODO:Issue92ÇÃçÄñ⁄Ç…ÇÊÇËïœçXÇ∑ÇÈ
-        OnStartGame();
     }
 
     void IHittable.OnExit(Collider playerCollider, BalloonState balloonState)
