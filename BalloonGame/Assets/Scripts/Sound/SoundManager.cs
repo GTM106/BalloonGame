@@ -25,6 +25,7 @@ public enum SoundSource
     SE030_AirVent_Interact,
     SE032_WaterIntrusion,
     SE040_EndOfTimeLimit,
+    SE302_HarmitDiscovery,
 
     [InspectorName("")]
     Max,

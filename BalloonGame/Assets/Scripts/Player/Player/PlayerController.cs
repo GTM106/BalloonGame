@@ -454,6 +454,36 @@ public class PlayerController : MonoBehaviour
         _playerGameOverEvent.OnRevive -= OnRevive;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        //Player接触処理のインターフェースを継承しているオブジェクトの処理を呼ぶ
+        //何が実行されるかはインターフェースの継承先を参照してください。
+        if (collision.gameObject.TryGetComponent(out IHittable hitObject))
+        {
+            hitObject.OnEnter(_playerCollider, _balloonController.State);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        //Player接触処理のインターフェースを継承しているオブジェクトの処理を呼ぶ
+        //何が実行されるかはインターフェースの継承先を参照してください。
+        if (collision.gameObject.TryGetComponent(out IHittable hitObject))
+        {
+            hitObject.OnStay(_playerCollider, _balloonController.State);
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        //Player接触処理のインターフェースを継承しているオブジェクトの処理を呼ぶ
+        //何が実行されるかはインターフェースの継承先を参照してください。
+        if (collision.gameObject.TryGetComponent(out IHittable hitObject))
+        {
+            hitObject.OnExit(_playerCollider, _balloonController.State);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         //Player接触処理のインターフェースを継承しているオブジェクトの処理を呼ぶ

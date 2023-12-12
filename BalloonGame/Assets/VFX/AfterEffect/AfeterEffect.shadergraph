@@ -122,6 +122,9 @@
         },
         {
             "m_Id": "fa5dedfa7dae4866a7b085aaa22e3e0d"
+        },
+        {
+            "m_Id": "117393e3221b4936800e796c964ac258"
         }
     ],
     "m_GroupDatas": [
@@ -674,6 +677,67 @@
     "m_SupportsLODCrossFade": false,
     "m_CustomEditorGUI": "",
     "m_SupportVFX": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.GradientNode",
+    "m_ObjectId": "117393e3221b4936800e796c964ac258",
+    "m_Group": {
+        "m_Id": "d71abfd0b0b0411899e62362ca195dcb"
+    },
+    "m_Name": "Gradient",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 228.80001831054688,
+            "y": 396.0,
+            "width": 207.99996948242188,
+            "height": 103.20001220703125
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "6ace4faf12e247d58f12272e3d424eae"
+        }
+    ],
+    "synonyms": [
+        "ramp"
+    ],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Value": 0.0,
+    "m_SerializableColorKeys": [
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+        },
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+        }
+    ],
+    "m_SerializableAlphaKeys": [
+        {
+            "x": 1.0,
+            "y": 0.0
+        },
+        {
+            "x": 1.0,
+            "y": 1.0
+        }
+    ],
+    "m_SerializableMode": 0
 }
 
 {
@@ -1484,6 +1548,18 @@
         "e32": 0.0,
         "e33": 1.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.GradientMaterialSlot",
+    "m_ObjectId": "6ace4faf12e247d58f12272e3d424eae",
+    "m_Id": 0,
+    "m_DisplayName": "Out",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3
 }
 
 {
@@ -3405,10 +3481,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -455.1675720214844,
-            "y": -27.167518615722658,
-            "width": 208.0,
-            "height": 301.6000061035156
+            "x": -455.20001220703127,
+            "y": -28.0000057220459,
+            "width": 130.39996337890626,
+            "height": 117.60000610351563
         }
     },
     "m_Slots": [

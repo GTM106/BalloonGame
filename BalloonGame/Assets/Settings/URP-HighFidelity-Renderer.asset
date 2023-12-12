@@ -139,9 +139,8 @@ MonoBehaviour:
   - {fileID: -1878332245247344467}
   - {fileID: 9067715107810602511}
   - {fileID: -1941962764375401235}
-  - {fileID: 1368278403467980907}
-  - {fileID: -3651417247098941715}
-  m_RendererFeatureMap: adc0de57c6d2eee50f6e7e05d9fed67ded5c5e9e27c30ce56b308c60f519fd12edceee1b5c8f53cd
+  - {fileID: 1735705114598774044}
+  m_RendererFeatureMap: adc0de57c6d2eee50f6e7e05d9fed67ded5c5e9e27c30ce51c157d069b761618
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -177,12 +176,12 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
-  m_RenderingMode: 0
+  m_RenderingMode: 1
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
---- !u!114 &1368278403467980907
+--- !u!114 &1735705114598774044
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -191,13 +190,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
-  m_Name: MotionBlur
+  m_Script: {fileID: 11500000, guid: 5028f2f00df2eb2418e473937e9ae556, type: 3}
+  m_Name: ReflectRenderPass
   m_EditorClassIdentifier: 
-  m_Active: 0
-  passMaterial: {fileID: 2100000, guid: 2d8ab9d776b44ac40aa62ee7bc33f292, type: 2}
-  injectionPoint: 600
-  requirements: 12
+  m_Active: 1
+  renderPass: 550
   passIndex: 0
 --- !u!114 &9067715107810602511
 MonoBehaviour:

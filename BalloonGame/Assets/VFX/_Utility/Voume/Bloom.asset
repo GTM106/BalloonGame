@@ -21,7 +21,7 @@ MonoBehaviour:
     m_Value: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 96.25
+    m_Value: 0.1
   scatter:
     m_OverrideState: 1
     m_Value: 0.7
@@ -47,6 +47,37 @@ MonoBehaviour:
   dirtIntensity:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &-970771963769174926
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3df4e1e32f0469e42859a646219b6408, type: 3}
+  m_Name: SSR
+  m_EditorClassIdentifier: 
+  active: 1
+  downsample:
+    m_OverrideState: 1
+    m_Value: 1
+  samples:
+    m_OverrideState: 1
+    m_Value: 8
+  steps:
+    m_OverrideState: 1
+    m_Value: 170
+  stepSize:
+    m_OverrideState: 1
+    m_Value: 0.1
+  thickness:
+    m_OverrideState: 1
+    m_Value: 0.79
+  minSmoothness:
+    m_OverrideState: 1
+    m_Value: 0.1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,3 +92,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   components:
   - {fileID: -5034541067323118379}
+  - {fileID: -970771963769174926}
