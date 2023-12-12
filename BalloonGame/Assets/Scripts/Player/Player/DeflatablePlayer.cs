@@ -112,6 +112,7 @@ public class DeflatablePlayer : IPlayer
     public void Fall()
     {
         _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Fall);
+        _rigidbody.AddForce(Vector3.down * _playerParameter._downDe);
     }
 
     private Vector3 GetGroundNormal()

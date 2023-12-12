@@ -38,6 +38,8 @@ public class PlayerParameter
     [SerializeField] AnimationChanger<E_Atii> _animationChanger = default!;
     [Header("â“¹‚Ì‘¬“x‚ð’²®‚µ‚Ü‚·B-1‚©‚ç1‚ÌŠÔ‚Å")]
     [SerializeField] AnimationCurve _slopeSpeed = default!;
+    [SerializeField]public float _downDe;
+    [SerializeField] public float _downIn;
 
     public Rigidbody Rb => _rb;
     public PhysicMaterial PhysicMaterial => _physicMaterial;
