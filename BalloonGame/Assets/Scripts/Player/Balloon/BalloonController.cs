@@ -51,8 +51,6 @@ public class BalloonController : MonoBehaviour
     [SerializeField, Min(1f)] float _cameraRadiusMax = 3.25f;
     [Header("風船のマテリアルのSmoothness値の最大値")]
     [SerializeField, Range(0.4f, 1f)] float _smoothnessMax = 1f;
-
-    [SerializeField] bool enableBoostDashOnPressedJoyconButton = true;
     [SerializeField] RumbleData _rumbleData = new(160, 320, 0.6f);
 
     //風船の膨らみ具合の初期値。Awakeで初期化しています
