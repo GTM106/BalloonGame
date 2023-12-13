@@ -438,6 +438,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "RingconPush",
+                    "type": "Button",
+                    "id": "d2696c11-cc93-4552-8874-d93492726030",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Submit",
                     "type": "Button",
                     "id": "faaeb4c0-c115-4de3-aad3-752c5187edc3",
@@ -966,6 +975,39 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "AnyKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cb6074ab-8095-4570-9fc4-ef085b1fa032",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RingconPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a09e69ce-018d-412e-882d-2d3c8811a2b8",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RingconPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e7ee66c5-012e-441d-98c0-a2a1b5c693bd",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RingconPush",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

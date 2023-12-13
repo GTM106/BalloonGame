@@ -38,15 +38,15 @@ public class ImageTransitionController : MonoBehaviour, ITransition
         _material.SetFloat("_Alpha", 0f);
     }
 
-    public void StartTransition(TrantisionData trantisionData)
+    public async UniTask StartTransition(TrantisionData trantisionData)
     {
         InitializeTransition(trantisionData);
-        UpdateTransition();
+        await UpdateTransition();
     }
 
-    public void StartTransition()
+    public async UniTask StartTransition()
     {
-        StartTransition(_defaultTransitionData);
+        await StartTransition(_defaultTransitionData);
     }
 
     private void InitializeTransition(TrantisionData trantisionData)
@@ -58,7 +58,7 @@ public class ImageTransitionController : MonoBehaviour, ITransition
         _type = trantisionData.type;
     }
 
-    private async void UpdateTransition()
+    private async UniTask UpdateTransition()
     {
         var token = this.GetCancellationTokenOnDestroy();
 

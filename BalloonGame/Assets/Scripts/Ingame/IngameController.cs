@@ -20,8 +20,11 @@ public class IngameController : MonoBehaviour
     [SerializeField, Required] JoyconHandler _JoyconLeftUI = default!;
     [SerializeField, Required] JoyconHandler _JoyconRightUI = default!;
 
+    [Header("ƒQ[ƒ€I—¹ˆ—Œn")]
+    [SerializeField, Required] SuccessSceneController _successSceneController = default!;
     [SerializeField, Min(0)] int waitingFrameForGameFinish = 50;
-    [SerializeField] TrantisionData _trantisionData = default!;
+    [SerializeField] TrantisionData _toSuccessSceneTransition = default!;
+
 
     private void Awake()
     {
@@ -95,6 +98,7 @@ public class IngameController : MonoBehaviour
         }
 
         //ƒNƒŠƒA‰æ–Ê‚É‘JˆÚ
-        _imageTransitionController.StartTransition(_trantisionData);
+        await _imageTransitionController.StartTransition(_toSuccessSceneTransition);
+        _successSceneController.Enable();
     }
 }
