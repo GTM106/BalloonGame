@@ -37,6 +37,7 @@ public class BeatDetector : MonoBehaviour
             return Instance._bgmAudioSource.clip.frequency;
         }
     }
+
     private void Awake()
     {
         Instance = this;
