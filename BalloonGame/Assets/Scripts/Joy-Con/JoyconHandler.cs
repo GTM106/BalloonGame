@@ -3,28 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public struct RumbleData
-{
-    [SerializeField, Min(0)] int _low_flg;
-    [SerializeField, Min(0)] int _high_flg;
-    [SerializeField, Min(0f)] float _amp;
-    [SerializeField, Min(0)] int _milliseconds;
-
-    public RumbleData(int low_flg, int high_flg, float amp, int milliseconds = 0)
-    {
-        _low_flg = low_flg;
-        _high_flg = high_flg;
-        _amp = amp;
-        _milliseconds = milliseconds;
-    }
-
-    public int Low_flg => _low_flg;
-    public int High_flg => _high_flg;
-    public float Amp => _amp;
-    public int Milliseconds => _milliseconds;
-}
-
 public class JoyconHandler : MonoBehaviour
 {
     enum JoyconType
@@ -42,10 +20,13 @@ public class JoyconHandler : MonoBehaviour
     }
 
     [SerializeField] JoyconType joyconType;
+    [SerializeField] InputSystemManager.ActionMaps maps;
 
     List<Joycon> joycons;
 
     Vector2 _stick = Vector2.zero;
+
+    public InputSystemManager.ActionMaps Maps => maps;
 
     /// <summary>
     /// ÉWÉÉÉCÉç
@@ -123,6 +104,8 @@ public class JoyconHandler : MonoBehaviour
     readonly Dictionary<Joycon.Button, Action> onButtonHeld = new();
     readonly ActionPhase[] actionPhase = new ActionPhase[(int)Joycon.Button.SHOULDER_2 + 1];
 
+    uint _keyPressed = 0;
+
     private void Start()
     {
         joycons = JoyconManager.Instance.j;
@@ -179,6 +162,7 @@ public class JoyconHandler : MonoBehaviour
     {
         if (joycons.Count <= 0) return;
         Joycon j = joycons[(int)joyconType];
+        _keyPressed = 0;
 
         OnStickInput(j);
         for (Joycon.Button button = 0; button <= Joycon.Button.SHOULDER_2; button++)
@@ -188,6 +172,14 @@ public class JoyconHandler : MonoBehaviour
         GetGyro(j);
         GetAccel(j);
         GetOrientation(j);
+    }
+
+    private void OnDisable()
+    {
+        _stick = Vector2.zero;
+        Gyro = Vector3.zero;
+        Accel = Vector3.zero;
+        Orientation = Quaternion.identity;
     }
 
     private void OnStickInput(Joycon j)
@@ -229,6 +221,8 @@ public class JoyconHandler : MonoBehaviour
             if (actionPhase[(int)button] == ActionPhase.Performed) return;
             actionPhase[(int)button] = ActionPhase.Performed;
 
+            _keyPressed |= 1u << (int)button;
+
             if (onButtonPressed.TryGetValue(button, out Action action))
             {
                 action?.Invoke();
@@ -243,24 +237,5 @@ public class JoyconHandler : MonoBehaviour
         }
     }
 
-    public void SetRumble(int low_flg, int high_flg, float amp, int milliseconds = 0)
-    {
-        if (joycons.Count <= (int)joyconType) return;
-
-        // Rumble for [milliseconds] milliseconds, with low frequency rumble at [low_flg] Hz and high frequency rumble at [high_flg] Hz. For more information check:
-        // https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering/blob/master/rumble_data_table.md
-        joycons[(int)joyconType].SetRumble(low_flg, high_flg, amp, milliseconds);
-    }
-
-    public void SetRumble(RumbleData rumbleData)
-    {
-        SetRumble(rumbleData.Low_flg, rumbleData.High_flg, rumbleData.Amp, rumbleData.Milliseconds);
-    }
-
-    public void StopRumble()
-    {
-        if (joycons.Count <= (int)joyconType) return;
-
-        joycons[(int)joyconType].SetRumble(0, 0, 0);
-    }
+    public bool WasPressedAnyKeyThisFrame => _keyPressed != 0;
 }

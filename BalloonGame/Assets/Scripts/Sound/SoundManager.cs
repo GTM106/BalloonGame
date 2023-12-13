@@ -8,6 +8,8 @@ public enum SoundSource
     //BGM
     BGM001_Title,
     BGM002_Ingame,
+    BGM002_Tutorial,
+    BGM002_A,
     BGM003_Succeed,
     BGS001_Sand,
 
