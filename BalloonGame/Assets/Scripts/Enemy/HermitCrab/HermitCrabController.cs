@@ -301,7 +301,7 @@ public class HermitCrabController : MonoBehaviour, IHittable
         _transform.rotation = targetRotation;
 
         //発見時SEの再生
-        SoundManager.Instance.PlaySE(_discoveryAudioSource, SoundSource.SE302_HarmitDiscovery);
+        SoundManager.Instance.PlaySE(_discoveryAudioSource, SoundSource.SE010_Hermit_Detection);
 
         //発見時アニメーションの再生。再生後自動でダッシュモーションになります
         _animationChanger.ChangeAnimation(E_Harmit.AN02_discovery);
