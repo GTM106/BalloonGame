@@ -5,8 +5,9 @@ using UnityEngine;
 public class FunController : AirVentInteractable, IHittable
 {
     //キャッシュ
-    [SerializeField] Transform _transform;
-    [SerializeField] Animator _animator;
+    [SerializeField, Required] Transform _transform = default!;
+    [SerializeField, Required] Animator _animator = default!;
+    [SerializeField, Required] AudioSource _audioSource = default!;
 
     [Header("電源の初期状態")]
     [SerializeField] bool _isPoweredOn = false;
@@ -31,6 +32,14 @@ public class FunController : AirVentInteractable, IHittable
         if (_animator != null)
         {
             _animator.speed = _isPoweredOn ? 1f : 0f;
+        }
+    }
+
+    private void Start()
+    {
+        if (_audioSource != null)
+        {
+            SoundManager.Instance.PlaySE(_audioSource, SoundSource.SE031_FunRunning);
         }
     }
 

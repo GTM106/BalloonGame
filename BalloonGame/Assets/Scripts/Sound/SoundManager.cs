@@ -25,6 +25,7 @@ public enum SoundSource
     SE011_Hermit_Chase,
     SE020_Balloonfish_Floating,
     SE030_AirVent_Interact,
+    SE031_FunRunning,
     SE032_WaterIntrusion,
     SE040_EndOfTimeLimit,
     SE302_HarmitDiscovery,
