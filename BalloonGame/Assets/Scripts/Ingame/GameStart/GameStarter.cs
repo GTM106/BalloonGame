@@ -6,23 +6,19 @@ public class GameStarter : MonoBehaviour, IHittable
 {
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
     [SerializeField, Required] GameStartUIController _gameStartUIController = default!;
-    [SerializeField, Required] BeatEvent _beatEvent = default!;
+    [SerializeField, Required] BPMEvent _bpmEvent = default!;
 
-    bool _canStartGame = false;
-
-    private void Awake()
-    {
-        _beatEvent.OnBeat += OnStartGame;
-    }
+    bool _isStartGame = false;
 
     private void Reset()
     {
         _timeLimitController = FindAnyObjectByType<TimeLimitController>();
     }
 
-    void IHittable.OnEnter(Collider playerCollider, BalloonState balloonState)
+    async void IHittable.OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        _canStartGame = true;
+        await _bpmEvent.WaitForBeat();
+        OnStartGame();
     }
 
     void IHittable.OnExit(Collider playerCollider, BalloonState balloonState)
@@ -35,8 +31,8 @@ public class GameStarter : MonoBehaviour, IHittable
 
     private async void OnStartGame()
     {
-        if (!_canStartGame) return;
-        _canStartGame = false;
+        if (_isStartGame) return;
+        _isStartGame = true;
 
         //ゲーム開始UIの表示
         await _gameStartUIController.EnableUI();

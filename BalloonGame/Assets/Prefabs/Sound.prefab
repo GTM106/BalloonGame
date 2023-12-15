@@ -165,6 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8752167814845831740}
   - component: {fileID: 6193048331216081440}
+  - component: {fileID: 1176173012683582373}
   m_Layer: 0
   m_Name: Sound
   m_TagString: Untagged
@@ -187,7 +188,7 @@ Transform:
   - {fileID: 7897875329393500387}
   - {fileID: 1589075725426190569}
   m_Father: {fileID: 0}
-  m_RootOrder: 29
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6193048331216081440
 MonoBehaviour:
@@ -204,6 +205,21 @@ MonoBehaviour:
   _BGMLoop: {fileID: 7694764570986770471}
   _BGMIntro: {fileID: 8526329953667502747}
   _SoundSettingsData: {fileID: 11400000, guid: 6f132532b33a30343806642c81e424cf, type: 2}
+--- !u!114 &1176173012683582373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3043955274744978917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c4f1984c2e55df418a5a5549b6a0931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transitionSource: 0300000002000000
+  _audioSource: {fileID: 7694764570986770471}
+  _bpmEvent: {fileID: 0}
 --- !u!1 &7934056765629274788
 GameObject:
   m_ObjectHideFlags: 0
