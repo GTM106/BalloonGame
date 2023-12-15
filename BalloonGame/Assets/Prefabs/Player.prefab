@@ -37,7 +37,7 @@ Transform:
   m_Children:
   - {fileID: 948196742402556567}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2826682229555106861
 CapsuleCollider:
@@ -107,14 +107,14 @@ MonoBehaviour:
     _cameraTransform: {fileID: 0}
     _joyconRight: {fileID: 0}
     _joyconLeft: {fileID: 0}
-    _jumpPower: 90
-    _moveSpeed: 20
+    _jumpPower: 60
+    _moveSpeed: 15
     _maxMoveSpeed: 20
-    _multiplierNormal: 25
-    _multiplierExpand: 3
-    _boostDashPowerY: 200
+    _multiplierNormal: 1
+    _multiplierExpand: 0.5
+    _boostDashPowerY: 270
     _buoyancyExpand: 3000
-    _buoyancyNormal: 100
+    _buoyancyNormal: 3000
     _requiredPushCount: 3
     _animationChanger:
       _animator: {fileID: 6613684750423660781}
@@ -132,7 +132,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0
+        time: -0.004854462
         value: 0
         inSlope: -1
         outSlope: -1
@@ -141,7 +141,7 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 1
+        time: 0
         value: -1
         inSlope: -1
         outSlope: -1
@@ -149,9 +149,20 @@ MonoBehaviour:
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    _inflatedFallSpeed: 55
+    _deflatedFallSpeed: 300
   _balloonController: {fileID: 7393417574364545360}
   _groundCheck: {fileID: 5537941699024868813}
   _ringconPushAction: {fileID: 2269632662786835952, guid: 585a3b88238186a44b1683b16bca7288,
@@ -315,6 +326,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Atii
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123131603538705132, guid: 787b325b82cb63d47bba460309dffd89,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.00000023841858
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123131603538705132, guid: 787b325b82cb63d47bba460309dffd89,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43444037
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123131603538705132, guid: 787b325b82cb63d47bba460309dffd89,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.9594223
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 787b325b82cb63d47bba460309dffd89,
         type: 3}
