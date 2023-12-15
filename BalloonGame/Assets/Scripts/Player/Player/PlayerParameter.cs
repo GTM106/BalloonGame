@@ -38,6 +38,9 @@ public class PlayerParameter
     [SerializeField] AnimationChanger<E_Atii> _animationChanger = default!;
     [Header("â“¹‚Ì‘¬“x‚ð’²®‚µ‚Ü‚·B-1‚©‚ç1‚ÌŠÔ‚Å")]
     [SerializeField] AnimationCurve _slopeSpeed = default!;
+    [Header("—Ž‰ºŽž‚Ì‰Á‘¬Binflated‚ªPlayer–c‚ç‚ÝŽž")]
+    [SerializeField, Min(0)] float _inflatedFallSpeed = default!;
+    [SerializeField, Min(0)] float _deflatedFallSpeed = default!;
 
     public Rigidbody Rb => _rb;
     public PhysicMaterial PhysicMaterial => _physicMaterial;
@@ -55,4 +58,6 @@ public class PlayerParameter
     public int RequiredPushCount => _requiredPushCount;
     public AnimationChanger<E_Atii> AnimationChanger => _animationChanger;
     public float SloopSpeed(float angle) => _slopeSpeed.Evaluate(angle);
+    public float InflatedFallSpeed => _inflatedFallSpeed;
+    public float DeflatedFallSpeed => _deflatedFallSpeed;
 }
