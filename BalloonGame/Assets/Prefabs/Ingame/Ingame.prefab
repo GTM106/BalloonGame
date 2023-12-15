@@ -55,10 +55,11 @@ MonoBehaviour:
     type: 3}
   _JoyconLeftUI: {fileID: 0}
   _JoyconRightUI: {fileID: 0}
+  _successSceneController: {fileID: 0}
   waitingFrameForGameFinish: 50
-  _trantisionData:
+  _toSuccessSceneTransition:
     duration: 2
-    backgroundColor: {r: 0.3254717, g: 0.66560423, b: 1, a: 0}
+    backgroundColor: {r: 0, g: 1, b: 0.9424863, a: 0}
     type: 0
 --- !u!82 &7453220264301256219
 AudioSource:
