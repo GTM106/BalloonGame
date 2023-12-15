@@ -5,9 +5,9 @@ using UnityEngine.Serialization;
 
 public class Water : MonoBehaviour, IHittable
 {
-    [SerializeField] AudioSource _audioSource = default!;
+    [SerializeField, Required] AudioSource _audioSource = default!;
     [SerializeField] List<AudioLowPassFilter> _audioLowPassFilter = default!;
-    [SerializeField] WaterEvent _waterEvent = default!;
+    [SerializeField, Required] WaterEvent _waterEvent = default!;
 
     //レベルデザイン確定でこの値はconst値に変えてもいいかもしれません。
     [Header("プレイヤーが水に入ったとき空気抵抗を変更する値")]
@@ -87,6 +87,6 @@ public class Water : MonoBehaviour, IHittable
 
     private void PlaySE()
     {
-        _audioSource.Play();
+        SoundManager.Instance.PlaySE(_audioSource, SoundSource.SE032_WaterIntrusion);
     }
 }
