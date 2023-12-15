@@ -80,6 +80,23 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// BGMを再生する。
     /// </summary>
+    /// <param name="sound">再生したいBGM</param>
+    /// <param name="timeSample">再生位置</param>
+    public void PlayBGM(SoundSource sound, int timeSample)
+    {
+        if (_BGMLoop.outputAudioMixerGroup == null)
+        {
+            Debug.LogWarning(_BGMLoop.name + " の Output を null にすることは非推奨です。");
+        }
+
+        ChangeSound(_BGMLoop, sound);
+        _BGMLoop.timeSamples = timeSample;
+        _BGMLoop.Play();
+    }
+
+    /// <summary>
+    /// BGMを再生する。
+    /// </summary>
     /// <param name="intro">再生したいイントロ</param>
     /// <param name="loop">再生したいループBGM</param>
     public void PlayBGM(SoundSource intro, SoundSource loop)

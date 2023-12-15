@@ -24,7 +24,7 @@ public class SoundKVPair
     //文字列で管理することでenumが変更されても対応可能にする
     [SerializeField, HideInInspector] string _key;
     [SerializeField] SoundSettings _value;
-    readonly SoundSource _source;
+    [SerializeField, HideInInspector] SoundSource _source;
 
     public SoundKVPair(SoundSource key, SoundSettings value)
     {
