@@ -716,7 +716,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 79850529}
-  m_LocalRotation: {x: 4.238689e-10, y: 0.99513334, z: -0.09853762, w: 0.0000000042806616}
+  m_LocalRotation: {x: -4.238689e-10, y: 0.99513334, z: -0.098537624, w: -0.000000004280661}
   m_LocalPosition: {x: 1.02754645e-33, y: 2.6416392, z: -243}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1368,6 +1368,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2510545858266644820, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _joyconRight
+      value: 
+      objectReference: {fileID: 638917205}
+    - target: {fileID: 2510545858266644820, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: enableOnPressedJoyconButton
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _waterEvent
@@ -1386,12 +1396,12 @@ PrefabInstance:
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerParameter._jumpPower
-      value: 90
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerParameter._moveSpeed
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
@@ -1425,6 +1435,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
+      propertyPath: _playerParameter._boostDashPowerY
+      value: 270
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
       propertyPath: _playerParameter._cameraTransform
       value: 
       objectReference: {fileID: 79850532}
@@ -1441,12 +1456,27 @@ PrefabInstance:
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerParameter._multiplierExpand
-      value: 3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerParameter._multiplierNormal
-      value: 25
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._deflatedFallSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._inflatedFallSpeed
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._slopeSpeed.m_Curve.Array.size
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
@@ -1456,6 +1486,21 @@ PrefabInstance:
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[2].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._slopeSpeed.m_Curve.Array.data[1].time
+      value: -0.004854462
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._slopeSpeed.m_Curve.Array.data[2].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._slopeSpeed.m_Curve.Array.data[3].time
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
@@ -1486,12 +1531,17 @@ PrefabInstance:
     - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _boostFrames.x
-      value: 30
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _boostFrames.y
-      value: 55
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3455290170924512164, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_Drag
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3718386481001619344, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
@@ -1563,6 +1613,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _waterEvent
+      value: 
+      objectReference: {fileID: 661170279}
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _airVentEvent
+      value: 
+      objectReference: {fileID: 1456480350}
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerGameOverEvent
+      value: 
+      objectReference: {fileID: 1452517107}
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _cinemachineController
+      value: 
+      objectReference: {fileID: 1081264634}
+    - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _cinemachineTargetGroup
+      value: 
+      objectReference: {fileID: 751176631}
     - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _waterEvent
@@ -11223,7 +11298,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684436267}
-  m_LocalRotation: {x: 4.238689e-10, y: 0.99513334, z: -0.09853762, w: 0.000000004280661}
+  m_LocalRotation: {x: -4.238689e-10, y: 0.99513334, z: -0.098537624, w: -0.0000000042806607}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12212,7 +12287,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815182734}
-  m_LocalRotation: {x: -4.238689e-10, y: 0.99513334, z: -0.098537624, w: -0.0000000042806607}
+  m_LocalRotation: {x: 4.238689e-10, y: 0.99513334, z: -0.09853762, w: 0.000000004280661}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12364,7 +12439,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 821707930}
-  m_LocalRotation: {x: -4.238689e-10, y: 0.99513334, z: -0.098537624, w: -0.0000000042806607}
+  m_LocalRotation: {x: 4.238689e-10, y: 0.99513334, z: -0.09853762, w: 0.000000004280661}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
