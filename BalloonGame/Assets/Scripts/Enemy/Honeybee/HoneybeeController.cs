@@ -5,8 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class HoneybeeController : MonoBehaviour, IHittable
 {
-    [SerializeField] Rigidbody _rigidbody = default!;
-    [SerializeField] PlayerGameOverEvent _gameOverEvent = default!;
+    [SerializeField, Required] Rigidbody _rigidbody = default!;
+    [SerializeField, Required] AudioSource _audioSource = default!;
+    [SerializeField, Required] PlayerGameOverEvent _gameOverEvent = default!;
 
     [SerializeField] List<Transform> _wayPoints = default!;
     [SerializeField, Min(0f)] float _moveSpeed = 0.5f;
@@ -22,10 +23,16 @@ public class HoneybeeController : MonoBehaviour, IHittable
         _transform = transform;
     }
 
+    private void Start()
+    {
+        SoundManager.Instance.PlaySE(_audioSource, SoundSource.SE020_Balloonfish_Floating);
+    }
+
     private void Reset()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _gameOverEvent = FindAnyObjectByType<PlayerGameOverEvent>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()

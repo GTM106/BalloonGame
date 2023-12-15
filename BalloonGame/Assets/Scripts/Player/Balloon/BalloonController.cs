@@ -38,6 +38,8 @@ public class BalloonController : MonoBehaviour
     [SerializeField, Required] Material _MAT_AtiiBalloon = default!;
     [SerializeField, Required] SkinnedMeshRenderer _skinnedMeshRenderer = default!;
     [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
+    [SerializeField, Required] AudioSource _balloonExpandsAudioSource = default!;
+    [SerializeField, Required] AudioSource _boostDashAudioSource = default!;
 
     [Header("膨張アニメーションの持続時間")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
@@ -148,6 +150,7 @@ public class BalloonController : MonoBehaviour
     private async void Expand()
     {
         if (!IsBitSet(BalloonBehaviorType.Expands)) return;
+        SoundManager.Instance.PlaySE(_balloonExpandsAudioSource, SoundSource.SE004_PlayerBalloonExpands);
 
         _joyconLeft.SetRumble(_rumbleData);
         _joyconRight.SetRumble(_rumbleData);
@@ -167,6 +170,8 @@ public class BalloonController : MonoBehaviour
         _joyconRight.SetRumble(_rumbleData);
 
         int boostFrame = frame.Value;
+
+        SoundManager.Instance.PlaySE(_boostDashAudioSource, SoundSource.SE005_PlayerBoostDash);
 
         State = BalloonState.BoostDash;
         BitClear(BalloonBehaviorType.Expands);

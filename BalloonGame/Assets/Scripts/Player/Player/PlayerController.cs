@@ -38,6 +38,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Required] Canvas _gameOverCanvas = default!;
     [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
     [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
+    [SerializeField, Required] AudioSource _jumpingAudioSource = default!;
+    [SerializeField, Required] AudioSource _landingAudioSource = default!;
+    [SerializeField, Required] AudioSource _gameoverAudioSource = default!;
 
     IPlayer _player;
     IPlayer _inflatablePlayer;
@@ -109,6 +112,7 @@ public class PlayerController : MonoBehaviour
     {
         public IState.E_State Initialize(PlayerController parent)
         {
+            SoundManager.Instance.PlaySE(parent._jumpingAudioSource, SoundSource.SE002_PlayerJumping);
             parent._player.Jump(parent._playerParameter.Rb);
             return IState.E_State.Unchanged;
         }
@@ -158,7 +162,11 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
-            if (parent._groundCheck.IsGround(out _)) return IState.E_State.Control;
+            if (parent._groundCheck.IsGround(out _))
+            {
+                SoundManager.Instance.PlaySE(parent._landingAudioSource, SoundSource.SE003_PlayerLanding);
+                return IState.E_State.Control;
+            }
 
             parent._player.Fall();
             parent._player.Dash(parent._currentState);
@@ -233,6 +241,9 @@ public class PlayerController : MonoBehaviour
         public IState.E_State Initialize(PlayerController parent)
         {
             _currentPressCount = 0;
+
+            SoundManager.Instance.PlaySE(parent._gameoverAudioSource, SoundSource.SE006_PlayerDamaged);
+
             parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Down);
 
             parent._gameOverCanvas.enabled = true;
