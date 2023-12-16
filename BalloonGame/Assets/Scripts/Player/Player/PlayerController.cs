@@ -478,6 +478,9 @@ public class PlayerController : MonoBehaviour
         _waterEvent.OnEnterAction -= OnWaterEnter;
         _waterEvent.OnStayAction -= OnWaterStay;
         _waterEvent.OnExitAction -= OnWaterExit;
+        _funEvent.OnEnterAction -= OnFunEnter;
+        _funEvent.OnStayAction -= OnFunStay;
+        _funEvent.OnExitAction -= OnFunExit;
         _playerGameOverEvent.OnGameOver -= OnGameOver;
         _playerGameOverEvent.OnRevive -= OnRevive;
     }
