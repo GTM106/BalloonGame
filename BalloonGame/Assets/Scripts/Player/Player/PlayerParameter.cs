@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public enum BoostDashDirection
 {
@@ -41,6 +42,8 @@ public class PlayerParameter
     [Header("落下時の加速。inflatedがPlayer膨らみ時")]
     [SerializeField, Min(0)] float _inflatedFallSpeed = default!;
     [SerializeField, Min(0)] float _deflatedFallSpeed = default!;
+    [Header("ダッシュエフェクト")]
+    [SerializeField, Required] VisualEffect _dashEffect = default!;
 
     public Rigidbody Rb => _rb;
     public PhysicMaterial PhysicMaterial => _physicMaterial;
@@ -60,4 +63,5 @@ public class PlayerParameter
     public float SloopSpeed(float angle) => _slopeSpeed.Evaluate(angle);
     public float InflatedFallSpeed => _inflatedFallSpeed;
     public float DeflatedFallSpeed => _deflatedFallSpeed;
+    public VisualEffect DashEffect => _dashEffect;
 }

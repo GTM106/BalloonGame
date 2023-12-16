@@ -7,6 +7,7 @@ public class DeflatablePlayer : IPlayer
 {
     readonly PlayerParameter _playerParameter;
     readonly Rigidbody _rigidbody;
+    bool _isPlayDashEffect = false;
     static readonly Vector3 ignoreYCorrection = new(1f, 0f, 1f);
 
     public float Multiplier => _playerParameter.MultiplierNormal;
@@ -68,7 +69,13 @@ public class DeflatablePlayer : IPlayer
             _rigidbody.AddForce(currentForceMag * currentSpeed * projectOnPlaneForce, ForceMode.Acceleration);
         }
 
-        if (axis.magnitude <= 0.02f) return;
+        if (axis.magnitude <= 0.02f)
+        {
+            StopDashEffect();
+            return;
+        }
+
+        PlayDashEffect();
 
         //is•ûŒü‚ðŒü‚­
         Vector3 direction = cameraForward * axis.y + cameraRight * axis.x;
@@ -78,6 +85,22 @@ public class DeflatablePlayer : IPlayer
         {
             _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Run);
         }
+    }
+
+    private void StopDashEffect()
+    {
+        if (!_isPlayDashEffect) return;
+        _isPlayDashEffect = false;
+
+        _playerParameter.DashEffect.SendEvent("StopPlay");
+    }
+
+    private void PlayDashEffect()
+    {
+        if (_isPlayDashEffect) return;
+        _isPlayDashEffect = true;
+
+        _playerParameter.DashEffect.Play();
     }
 
     public void BoostDash(BoostDashData boostFrame)
