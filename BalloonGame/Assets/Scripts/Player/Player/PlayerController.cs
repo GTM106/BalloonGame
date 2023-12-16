@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public interface IState
 {
@@ -41,7 +42,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Required] AudioSource _jumpingAudioSource = default!;
     [SerializeField, Required] AudioSource _landingAudioSource = default!;
     [SerializeField, Required] AudioSource _gameoverAudioSource = default!;
-
+    [SerializeField, Required] VisualEffect _piyopiyoeff = default!;
     IPlayer _player;
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
@@ -248,6 +249,9 @@ public class PlayerController : MonoBehaviour
 
             parent._gameOverCanvas.enabled = true;
 
+            parent._piyopiyoeff.enabled = true;
+            parent._piyopiyoeff.SendEvent("OnPlay");
+
             return IState.E_State.Unchanged;
         }
 
@@ -300,6 +304,10 @@ public class PlayerController : MonoBehaviour
         {
             _reviveFrame = REVIVE_ANIMATION_WAIT_FRAME;
             parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Retry);
+
+            parent._piyopiyoeff.enabled = false;
+            parent._piyopiyoeff.SendEvent("StopPlay");
+
             return IState.E_State.Unchanged;
         }
 
