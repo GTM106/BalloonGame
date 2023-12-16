@@ -43,8 +43,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Required] AudioSource _landingAudioSource = default!;
     [SerializeField, Required] AudioSource _gameoverAudioSource = default!;
     [SerializeField, Required] VisualEffect _piyopiyoeff = default!;
-    [SerializeField, Required] TrailRenderer _rigthTrailRenderer = default!;
-    [SerializeField, Required] TrailRenderer _leftTrailRenderer = default!;
 
     IPlayer _player;
     IPlayer _inflatablePlayer;
@@ -156,8 +154,6 @@ public class PlayerController : MonoBehaviour
     {
         public IState.E_State Initialize(PlayerController parent)
         {
-            parent._rigthTrailRenderer.time = 0f;
-            parent._leftTrailRenderer.time = 0f;
             return IState.E_State.Unchanged;
         }
 
@@ -202,9 +198,6 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State Initialize(PlayerController parent)
         {
-            parent._rigthTrailRenderer.time = 0.2f;
-            parent._leftTrailRenderer.time = 0.2f;
-
             _boostDashFrame = parent._boostDashData.Value;
 
             parent._player.BoostDash(parent._boostDashData);
@@ -213,11 +206,6 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State Update(PlayerController parent)
         {
-            if(parent._rigthTrailRenderer.time >0)
-            {
-                parent._rigthTrailRenderer.time -= 0.001f;
-                parent._leftTrailRenderer.time -= 0.001f;
-            }
             return IState.E_State.Unchanged;
         }
 
