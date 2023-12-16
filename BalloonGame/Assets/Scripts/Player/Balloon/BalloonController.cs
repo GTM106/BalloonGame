@@ -78,7 +78,7 @@ public class BalloonController : MonoBehaviour
 
     private void Awake()
     {
-        _defaultBlendShapeWeight = _skinnedMeshRenderer.GetBlendShapeWeight(0);
+        _defaultBlendShapeWeight = GetBalloonBlendShapesValue();
 
         _waterEvent.OnStayAction += OnWaterStay;
         _ringPushAction.action.performed += OnRingconPushed;
@@ -133,7 +133,7 @@ public class BalloonController : MonoBehaviour
         ChangeWeight(_defaultBlendShapeWeight);
 
         //カメラの視野角を変更
-        _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+        _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(GetBalloonBlendShapesValue());
 
         State = BalloonState.Normal;
         BitClear(BalloonBehaviorType.Expands);
@@ -204,7 +204,7 @@ public class BalloonController : MonoBehaviour
         if (_isScaleAnimation) return;
         var token = this.GetCancellationTokenOnDestroy();
         float time = 0f;
-        float startValue = _skinnedMeshRenderer.GetBlendShapeWeight(0);
+        float startValue = GetBalloonBlendShapesValue();
         _isScaleAnimation = true;
 
         while (time < _scaleAnimationDuration)
@@ -218,7 +218,7 @@ public class BalloonController : MonoBehaviour
             ChangeWeight(scaleValue);
 
             //カメラの視野角を変更
-            _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+            _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(GetBalloonBlendShapesValue());
 
             //膨らみ途中に膨らめない状態になったら処理終了
             if (!IsBitSet(BalloonBehaviorType.Expands)) break;
@@ -237,11 +237,11 @@ public class BalloonController : MonoBehaviour
         if (!IsBitSet(BalloonBehaviorType.Deflation)) return;
 
         float scaleDecrease = scaleAmountDeflatingPerSecond * Time.deltaTime;
-        float scaleValue = Mathf.Max(_skinnedMeshRenderer.GetBlendShapeWeight(0) - scaleDecrease, _defaultBlendShapeWeight);
+        float scaleValue = Mathf.Max(GetBalloonBlendShapesValue() - scaleDecrease, _defaultBlendShapeWeight);
         ChangeWeight(scaleValue);
 
         //カメラの視野角を変更
-        _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+        _cinemachineTargetGroup.m_Targets[0].radius = BlendShapeWeight2CameraRadius(GetBalloonBlendShapesValue());
 
         if (Mathf.Approximately(scaleValue, _defaultBlendShapeWeight))
         {
@@ -256,7 +256,7 @@ public class BalloonController : MonoBehaviour
 
     private void ChangeWeight(float weight)
     {
-        _skinnedMeshRenderer.SetBlendShapeWeight(0, weight);
+        SetBalloonBlendShapesValue(weight);
 
         //スペキュラーを変更
         _MAT_AtiiBalloon.SetFloat("_Smoothness", BlendShapeWeight2Smoothness(weight));
@@ -299,5 +299,15 @@ public class BalloonController : MonoBehaviour
     private bool IsBitSet(BalloonBehaviorType type)
     {
         return type == (_behaviorType & type);
+    }
+
+    private float GetBalloonBlendShapesValue()
+    {
+        return _skinnedMeshRenderer.GetBlendShapeWeight(1);
+    }
+
+    private void SetBalloonBlendShapesValue(float value)
+    {
+        _skinnedMeshRenderer.SetBlendShapeWeight(1, value);
     }
 }
