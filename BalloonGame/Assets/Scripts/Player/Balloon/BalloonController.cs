@@ -175,6 +175,9 @@ public class BalloonController : MonoBehaviour
         //スケールを瞬時にゼロにする
         ChangeWeight(0f);
 
+        State = BalloonState.Normal;
+
+
         int currentFrame = 0;
 
         while (currentFrame <= boostFrame)
@@ -188,8 +191,6 @@ public class BalloonController : MonoBehaviour
 
             currentFrame++;
         }
-
-        State = BalloonState.Normal;
 
         //ゲームオーバー中と空気栓範囲内のときは膨らめないのでそれを弾く
         if (!IsBitSet(BalloonBehaviorType.GameOver) && !IsBitSet(BalloonBehaviorType.InAirVentArea))

@@ -138,4 +138,9 @@ public class InflatablePlayer : IPlayer
         //ヒットしなかった場合、上向きの法線
         return Vector3.up;
     }
+
+    public void OnWindStay(Vector3 windVec)
+    {
+        _rigidbody.AddForce(windVec);
+    }
 }

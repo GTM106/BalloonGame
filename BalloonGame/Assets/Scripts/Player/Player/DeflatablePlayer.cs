@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class DeflatablePlayer : IPlayer
 {
@@ -126,5 +127,10 @@ public class DeflatablePlayer : IPlayer
 
         //ヒットしなかった場合、上向きの法線
         return Vector3.up;
+    }
+
+    public void OnWindStay(Vector3 windVec)
+    {
+        _rigidbody.AddForce(windVec);
     }
 }

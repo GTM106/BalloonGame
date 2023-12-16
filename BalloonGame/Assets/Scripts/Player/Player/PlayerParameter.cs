@@ -12,6 +12,7 @@ public enum GroundStatus
 {
     OnGround,
     UnderWater,
+    Wind,
 }
 
 [System.Serializable]
@@ -80,6 +81,7 @@ public class PlayerParameter
         {
             GroundStatus.OnGround => E_Atii.Run,
             GroundStatus.UnderWater => E_Atii.Swimming,
+            GroundStatus.Wind => E_Atii.Run,
             _ => throw new System.NotImplementedException(),
         };
 
@@ -92,6 +94,7 @@ public class PlayerParameter
         {
             GroundStatus.OnGround => E_Atii.Idle,
             GroundStatus.UnderWater => E_Atii.Swim,
+            GroundStatus.Wind => E_Atii.IdleWind,
             _ => throw new System.NotImplementedException(),
         };
 

@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Required] InputActionReference _ringconPushAction = default!;
     [SerializeField, Required] Collider _playerCollider = default!;
     [SerializeField, Required] WaterEvent _waterEvent = default!;
+    [SerializeField, Required] FunEvent _funEvent = default!;
     [SerializeField, Required] Canvas _gameOverCanvas = default!;
     [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
     [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
@@ -444,6 +445,9 @@ public class PlayerController : MonoBehaviour
         _waterEvent.OnEnterAction += OnWaterEnter;
         _waterEvent.OnStayAction += OnWaterStay;
         _waterEvent.OnExitAction += OnWaterExit;
+        _funEvent.OnEnterAction += OnFunEnter;
+        _funEvent.OnStayAction += OnFunStay;
+        _funEvent.OnExitAction += OnFunExit;
         _playerGameOverEvent.OnGameOver += OnGameOver;
         _playerGameOverEvent.OnRevive += OnRevive;
         _boostDashEvent.OnBoostDash += OnBoostDashEvent;
@@ -573,6 +577,23 @@ public class PlayerController : MonoBehaviour
     private void OnWaterExit()
     {
         _playerParameter.GroundStatus = GroundStatus.OnGround;
+    }    
+    
+    private void OnFunEnter(Vector3 windVec)
+    {
+        _playerParameter.GroundStatus = GroundStatus.Wind;
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AN01_Wind);
+    }
+
+    private void OnFunStay(Vector3 windVec)
+    {
+        _player.OnWindStay(windVec);
+    }
+
+    private void OnFunExit(Vector3 windVec)
+    {
+        _playerParameter.GroundStatus = GroundStatus.OnGround;
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AN01_Wind_default);
     }
 
     private void OnRevive()

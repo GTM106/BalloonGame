@@ -8,6 +8,7 @@ public class FunController : AirVentInteractable, IHittable
     [SerializeField, Required] Transform _transform = default!;
     [SerializeField, Required] Animator _animator = default!;
     [SerializeField, Required] AudioSource _audioSource = default!;
+    [SerializeField, Required] FunEvent _funEvent = default!;
 
     [Header("ìdåπÇÃèâä˙èÛë‘")]
     [SerializeField] bool _isPoweredOn = false;
@@ -45,21 +46,20 @@ public class FunController : AirVentInteractable, IHittable
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        //if (!_isPoweredOn) return;
-        //DoNothing
+        if (!_isPoweredOn) return;
+        _funEvent.OnEnter(GetWindVector());
     }
 
     public void OnStay(Collider playerCollider, BalloonState balloonState)
     {
         if (!_isPoweredOn) return;
-
-        playerCollider.attachedRigidbody.AddForce(_funPower * _transform.forward);
+        _funEvent.OnStay(GetWindVector());
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
     {
-        //if (!_isPoweredOn) return;
-        //DoNothing
+        if (!_isPoweredOn) return;
+        _funEvent.OnExit(GetWindVector());
     }
 
     public override void Interact()
@@ -72,5 +72,10 @@ public class FunController : AirVentInteractable, IHittable
         {
             _animator.speed = _isPoweredOn ? 1f : 0f;
         }
+    }
+
+    private Vector3 GetWindVector()
+    {
+        return _funPower * _transform.forward;
     }
 }
