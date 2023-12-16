@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Required] InputActionReference _ringconPushAction = default!;
     [SerializeField, Required] Collider _playerCollider = default!;
     [SerializeField, Required] WaterEvent _waterEvent = default!;
+    [SerializeField, Required] FunEvent _funEvent = default!;
     [SerializeField, Required] Canvas _gameOverCanvas = default!;
     [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
     [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
@@ -83,7 +84,7 @@ public class PlayerController : MonoBehaviour
             parent._player.Dash(parent._currentState);
             if (parent._playerParameter.Rb.velocity.magnitude <= 0.01f)
             {
-                parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Idle);
+                parent._playerParameter.ChangeIdleAnimation();
             }
 
             if (!parent._groundCheck.IsGround(out _))
@@ -441,7 +442,12 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
         _ringconPushAction.action.performed += OnRingconPush;
+        _waterEvent.OnEnterAction += OnWaterEnter;
         _waterEvent.OnStayAction += OnWaterStay;
+        _waterEvent.OnExitAction += OnWaterExit;
+        _funEvent.OnEnterAction += OnFunEnter;
+        _funEvent.OnStayAction += OnFunStay;
+        _funEvent.OnExitAction += OnFunExit;
         _playerGameOverEvent.OnGameOver += OnGameOver;
         _playerGameOverEvent.OnRevive += OnRevive;
         _boostDashEvent.OnBoostDash += OnBoostDashEvent;
@@ -469,7 +475,12 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged -= OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
         _ringconPushAction.action.performed -= OnRingconPush;
+        _waterEvent.OnEnterAction -= OnWaterEnter;
         _waterEvent.OnStayAction -= OnWaterStay;
+        _waterEvent.OnExitAction -= OnWaterExit;
+        _funEvent.OnEnterAction -= OnFunEnter;
+        _funEvent.OnStayAction -= OnFunStay;
+        _funEvent.OnExitAction -= OnFunExit;
         _playerGameOverEvent.OnGameOver -= OnGameOver;
         _playerGameOverEvent.OnRevive -= OnRevive;
     }
@@ -556,9 +567,36 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnWaterEnter()
+    {
+        _playerParameter.GroundStatus = GroundStatus.UnderWater;
+    }
+
     private void OnWaterStay()
     {
         _player.OnWaterStay();
+    }
+
+    private void OnWaterExit()
+    {
+        _playerParameter.GroundStatus = GroundStatus.OnGround;
+    }    
+    
+    private void OnFunEnter(Vector3 windVec)
+    {
+        _playerParameter.GroundStatus = GroundStatus.Wind;
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AN01_Wind);
+    }
+
+    private void OnFunStay(Vector3 windVec)
+    {
+        _player.OnWindStay(windVec);
+    }
+
+    private void OnFunExit(Vector3 windVec)
+    {
+        _playerParameter.GroundStatus = GroundStatus.OnGround;
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AN01_Wind_default);
     }
 
     private void OnRevive()

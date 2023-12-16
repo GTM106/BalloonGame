@@ -1,54 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &215111555896500720
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6760412716058009834}
-  - component: {fileID: 7557710770452318314}
-  m_Layer: 0
-  m_Name: Right
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6760412716058009834
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 215111555896500720}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 961052875743644130}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7557710770452318314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 215111555896500720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5dbea1f9438fd7448f71a8d0d838c8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _trailRenderer: {fileID: 524884113850046296}
-  _boostDashEvent: {fileID: 3109628912347324760}
-  _duration: 0.9
-  _length: 0.2
-  _easeType: 1
 --- !u!1 &958555543226503382
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,7 +475,6 @@ Transform:
   - {fileID: 948196742402556567}
   - {fileID: 4822792673449178016}
   - {fileID: 9023815240710468628}
-  - {fileID: 961052875743644130}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -603,7 +553,7 @@ MonoBehaviour:
     _multiplierExpand: 0.5
     _boostDashPowerY: 100
     _buoyancyExpand: 3000
-    _buoyancyNormal: 3000
+    _buoyancyNormal: 10
     _requiredPushCount: 3
     _animationChanger:
       _animator: {fileID: 6613684750423660781}
@@ -658,6 +608,7 @@ MonoBehaviour:
     type: 3}
   _playerCollider: {fileID: 2826682229555106861}
   _waterEvent: {fileID: 0}
+  _funEvent: {fileID: 0}
   _gameOverCanvas: {fileID: 0}
   _playerGameOverEvent: {fileID: 0}
   _boostDashEvent: {fileID: 3109628912347324760}
@@ -697,7 +648,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _balloonController: {fileID: 7393417574364545360}
   _balloonMeshRenderer: {fileID: 786102023468443626}
-  _boostFrames: {x: 60, y: 60}
+  _boostFrames: {x: 35, y: 35}
 --- !u!114 &2510545858266644820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -743,6 +694,9 @@ MonoBehaviour:
   _boostDashEvent: {fileID: 3109628912347324760}
   _balloonExpandsAudioSource: {fileID: 3614387368651763543}
   _boostDashAudioSource: {fileID: 2649645137589434403}
+  _animationChanger:
+    _animator: {fileID: 6613684750423660781}
+    _stateData: {fileID: 11400000, guid: ed26950821b571e44ae9ad2a4e7eb345, type: 2}
   _scaleAnimationDuration: 0.1
   _scaleOffset: 30
   _scaleAmountDeflatingPerSecond: 15
@@ -1143,88 +1097,6 @@ Transform:
   m_Father: {fileID: 4219734522724283064}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6684449639918633806
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 961052875743644130}
-  m_Layer: 0
-  m_Name: TrailRenderer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &961052875743644130
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6684449639918633806}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5700947856545598342}
-  - {fileID: 6760412716058009834}
-  m_Father: {fileID: 4219734522724283064}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7380640473145671191
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5700947856545598342}
-  - component: {fileID: 7811111583499597892}
-  m_Layer: 0
-  m_Name: Left
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5700947856545598342
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7380640473145671191}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 961052875743644130}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7811111583499597892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7380640473145671191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5dbea1f9438fd7448f71a8d0d838c8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _trailRenderer: {fileID: 8937148788963259152}
-  _boostDashEvent: {fileID: 3109628912347324760}
-  _duration: 0.9
-  _length: 0.2
-  _easeType: 1
 --- !u!1 &8667750672267092793
 GameObject:
   m_ObjectHideFlags: 0
