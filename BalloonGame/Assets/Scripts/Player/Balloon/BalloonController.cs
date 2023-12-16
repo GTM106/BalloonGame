@@ -38,6 +38,7 @@ public class BalloonController : MonoBehaviour
     [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
     [SerializeField, Required] AudioSource _balloonExpandsAudioSource = default!;
     [SerializeField, Required] AudioSource _boostDashAudioSource = default!;
+    [SerializeField] AnimationChanger<E_Atii> _animationChanger = default!;
 
     [Header("膨張アニメーションの持続時間")]
     [SerializeField, Min(0f)] float _scaleAnimationDuration = 0.1f;
@@ -148,6 +149,7 @@ public class BalloonController : MonoBehaviour
     {
         if (!IsBitSet(BalloonBehaviorType.Expands)) return;
 
+        _animationChanger.ChangeAnimation(E_Atii.AN01_Push, true);
         SoundManager.Instance.PlaySE(_balloonExpandsAudioSource, SoundSource.SE004_PlayerBalloonExpands);
         ExpandScaleAnimation().Forget();
     }

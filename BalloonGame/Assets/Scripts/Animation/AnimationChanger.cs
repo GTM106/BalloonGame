@@ -11,10 +11,10 @@ public class AnimationChanger<T> where T : Enum
 
     T _currentState;
 
-    public void ChangeAnimation(T state, float fadeTime = 0.2f)
+    public void ChangeAnimation(T state, bool resetAnimation = false, float fadeTime = 0.2f)
     {
         //現在のステートが前回のステートと一致していたら変更しない
-        if (_currentState.Equals(state)) return;
+        if (_currentState.Equals(state) && !resetAnimation) return;
 
         _currentState = state;
         _animator.CrossFadeInFixedTime(_stateData.stateNames[(int)(object)state], fadeTime);
