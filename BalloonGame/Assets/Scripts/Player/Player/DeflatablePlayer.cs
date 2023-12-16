@@ -76,7 +76,7 @@ public class DeflatablePlayer : IPlayer
 
         if (state is IState.E_State.Control)
         {
-            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Run);
+            _playerParameter.ChangeRunAnimation();
         }
     }
 
@@ -102,16 +102,14 @@ public class DeflatablePlayer : IPlayer
     public void OnWaterStay()
     {
         _rigidbody.AddForce(Vector3.up * _playerParameter.BuoyancyNormal, ForceMode.Acceleration);
-
-        if (_rigidbody.velocity.magnitude < 0.01f)
-        {
-            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Swim);
-        }
     }
 
     public void Fall()
     {
-        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Fall);
+        if (_playerParameter.GroundStatus == GroundStatus.OnGround)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Fall);
+        }
 
         //—Ž‰ºŽž‚Ì‚Ý’Ç‰Á‚Å‰Á‘¬‚³‚¹‚é
         _rigidbody.AddForce(Vector3.down * _playerParameter.DeflatedFallSpeed, ForceMode.Acceleration);

@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
             parent._player.Dash(parent._currentState);
             if (parent._playerParameter.Rb.velocity.magnitude <= 0.01f)
             {
-                parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Idle);
+                parent._playerParameter.ChangeIdleAnimation();
             }
 
             if (!parent._groundCheck.IsGround(out _))
@@ -441,7 +441,9 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
         _ringconPushAction.action.performed += OnRingconPush;
+        _waterEvent.OnEnterAction += OnWaterEnter;
         _waterEvent.OnStayAction += OnWaterStay;
+        _waterEvent.OnExitAction += OnWaterExit;
         _playerGameOverEvent.OnGameOver += OnGameOver;
         _playerGameOverEvent.OnRevive += OnRevive;
         _boostDashEvent.OnBoostDash += OnBoostDashEvent;
@@ -469,7 +471,9 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged -= OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
         _ringconPushAction.action.performed -= OnRingconPush;
+        _waterEvent.OnEnterAction -= OnWaterEnter;
         _waterEvent.OnStayAction -= OnWaterStay;
+        _waterEvent.OnExitAction -= OnWaterExit;
         _playerGameOverEvent.OnGameOver -= OnGameOver;
         _playerGameOverEvent.OnRevive -= OnRevive;
     }
@@ -556,9 +560,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnWaterEnter()
+    {
+        _playerParameter.GroundStatus = GroundStatus.UnderWater;
+    }
+
     private void OnWaterStay()
     {
         _player.OnWaterStay();
+    }
+
+    private void OnWaterExit()
+    {
+        _playerParameter.GroundStatus = GroundStatus.OnGround;
     }
 
     private void OnRevive()

@@ -8,6 +8,12 @@ public enum BoostDashDirection
     PlayerForward
 }
 
+public enum GroundStatus
+{
+    OnGround,
+    UnderWater,
+}
+
 [System.Serializable]
 public class PlayerParameter
 {
@@ -41,6 +47,13 @@ public class PlayerParameter
     [Header("—Ž‰ºŽž‚Ì‰Á‘¬Binflated‚ªPlayer–c‚ç‚ÝŽž")]
     [SerializeField, Min(0)] float _inflatedFallSpeed = default!;
     [SerializeField, Min(0)] float _deflatedFallSpeed = default!;
+    GroundStatus _groundStatus;
+
+    public GroundStatus GroundStatus
+    {
+        get { return _groundStatus; }
+        set { _groundStatus = value; }
+    }
 
     public Rigidbody Rb => _rb;
     public PhysicMaterial PhysicMaterial => _physicMaterial;
@@ -60,4 +73,28 @@ public class PlayerParameter
     public float SloopSpeed(float angle) => _slopeSpeed.Evaluate(angle);
     public float InflatedFallSpeed => _inflatedFallSpeed;
     public float DeflatedFallSpeed => _deflatedFallSpeed;
+
+    public void ChangeRunAnimation()
+    {
+        E_Atii runAnimation = GroundStatus switch
+        {
+            GroundStatus.OnGround => E_Atii.Run,
+            GroundStatus.UnderWater => E_Atii.Swimming,
+            _ => throw new System.NotImplementedException(),
+        };
+
+        _animationChanger.ChangeAnimation(runAnimation);
+    }
+
+    public void ChangeIdleAnimation()
+    {
+        E_Atii idleAnimation = GroundStatus switch
+        {
+            GroundStatus.OnGround => E_Atii.Idle,
+            GroundStatus.UnderWater => E_Atii.Swim,
+            _ => throw new System.NotImplementedException(),
+        };
+
+        _animationChanger.ChangeAnimation(idleAnimation);
+    }
 }

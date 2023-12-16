@@ -83,7 +83,7 @@ public class InflatablePlayer : IPlayer
 
         if (state is IState.E_State.Control)
         {
-            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Run);
+            _playerParameter.ChangeRunAnimation();
         }
     }
 
@@ -117,7 +117,10 @@ public class InflatablePlayer : IPlayer
 
     public void Fall()
     {
-        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BFall);
+        if (_playerParameter.GroundStatus == GroundStatus.OnGround)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Fall);
+        }
 
         //—Ž‰ºŽž‚Ì‚Ý’Ç‰Á‚Å‰Á‘¬‚³‚¹‚é
         _rigidbody.AddForce(Vector3.down * _playerParameter.InflatedFallSpeed, ForceMode.Acceleration);
