@@ -750,7 +750,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 79850529}
-  m_LocalRotation: {x: 4.238689e-10, y: 0.99513334, z: -0.09853762, w: 0.000000004280661}
+  m_LocalRotation: {x: -4.238689e-10, y: 0.99513334, z: -0.098537624, w: -0.0000000042806607}
   m_LocalPosition: {x: 1.02754645e-33, y: 2.6416392, z: -243}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1397,6 +1397,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 786102023468443626, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 786102023468443626, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1960072499487829733, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: m_Name
@@ -1407,6 +1417,11 @@ PrefabInstance:
       propertyPath: _joyconRight
       value: 
       objectReference: {fileID: 638917205}
+    - target: {fileID: 2510545858266644820, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: enableOnPressedJoyconButton
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _waterEvent
@@ -1424,6 +1439,16 @@ PrefabInstance:
       objectReference: {fileID: 1452517107}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
+      propertyPath: _playerParameter._jumpPower
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._moveSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
       propertyPath: _playerParameter._joyconLeft
       value: 
       objectReference: {fileID: 1269433273}
@@ -1434,9 +1459,149 @@ PrefabInstance:
       objectReference: {fileID: 638917205}
     - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
+      propertyPath: _playerParameter._maxMoveSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostDashAngle
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._buoyancyExpand
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._buoyancyNormal
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostDashPowerY
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
       propertyPath: _playerParameter._cameraTransform
       value: 
       objectReference: {fileID: 79850532}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostDashPower.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostDashPower.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._multiplierExpand
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._multiplierNormal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._deflatedFallSpeed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._inflatedFallSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._slopeSpeed.m_Curve.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].time
+      value: 0.7546619
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[2].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._slopeSpeed.m_Curve.Array.data[1].time
+      value: -0.004854462
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._slopeSpeed.m_Curve.Array.data[2].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._slopeSpeed.m_Curve.Array.data[3].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].value
+      value: 0.7753017
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[2].value
+      value: 0.43979645
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].inSlope
+      value: -0.71870387
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].inWeight
+      value: 0.18837827
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536173338194225955, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerParameter._boostCurve.m_Curve.Array.data[1].outSlope
+      value: -0.71870387
+      objectReference: {fileID: 0}
+    - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _boostFrames.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3109628912347324760, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _boostFrames.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3455290170924512164, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_Drag
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3718386481001619344, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.00000023841858
+      objectReference: {fileID: 0}
+    - target: {fileID: 3718386481001619344, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43444037
+      objectReference: {fileID: 0}
+    - target: {fileID: 3718386481001619344, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.9594223
+      objectReference: {fileID: 0}
     - target: {fileID: 4219734522724283064, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: m_RootOrder
@@ -1517,6 +1682,41 @@ PrefabInstance:
       propertyPath: _cinemachineTargetGroup
       value: 
       objectReference: {fileID: 751176631}
+    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _waterEvent
+      value: 
+      objectReference: {fileID: 661170279}
+    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _joyconRight
+      value: 
+      objectReference: {fileID: 638917205}
+    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _airVentEvent
+      value: 
+      objectReference: {fileID: 1456480350}
+    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _playerGameOverEvent
+      value: 
+      objectReference: {fileID: 1452517107}
+    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _cinemachineController
+      value: 
+      objectReference: {fileID: 1081264634}
+    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: _cinemachineTargetGroup
+      value: 
+      objectReference: {fileID: 751176631}
+    - target: {fileID: 7604775162392533275, guid: 151285aef4bd2e740998ee2111a79809,
+        type: 3}
+      propertyPath: enableBoostDashOnPressedJoyconButton
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11142,7 +11342,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684436267}
-  m_LocalRotation: {x: 4.238689e-10, y: 0.99513334, z: -0.09853762, w: 0.000000004280661}
+  m_LocalRotation: {x: -4.238689e-10, y: 0.99513334, z: -0.098537624, w: -0.0000000042806607}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12131,7 +12331,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815182734}
-  m_LocalRotation: {x: 4.238689e-10, y: 0.99513334, z: -0.09853762, w: 0.000000004280661}
+  m_LocalRotation: {x: -4.238689e-10, y: 0.99513334, z: -0.098537624, w: -0.0000000042806607}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
