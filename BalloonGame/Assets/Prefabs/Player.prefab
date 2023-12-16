@@ -553,7 +553,7 @@ MonoBehaviour:
     _multiplierExpand: 0.5
     _boostDashPowerY: 100
     _buoyancyExpand: 3000
-    _buoyancyNormal: 100
+    _buoyancyNormal: 10
     _requiredPushCount: 3
     _animationChanger:
       _animator: {fileID: 6613684750423660781}
@@ -608,6 +608,7 @@ MonoBehaviour:
     type: 3}
   _playerCollider: {fileID: 2826682229555106861}
   _waterEvent: {fileID: 0}
+  _funEvent: {fileID: 0}
   _gameOverCanvas: {fileID: 0}
   _playerGameOverEvent: {fileID: 0}
   _boostDashEvent: {fileID: 3109628912347324760}
@@ -647,7 +648,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _balloonController: {fileID: 7393417574364545360}
   _balloonMeshRenderer: {fileID: 786102023468443626}
-  _boostFrames: {x: 60, y: 60}
+  _boostFrames: {x: 35, y: 35}
 --- !u!114 &2510545858266644820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -694,8 +695,8 @@ MonoBehaviour:
   _balloonExpandsAudioSource: {fileID: 3614387368651763543}
   _boostDashAudioSource: {fileID: 2649645137589434403}
   _animationChanger:
-    _animator: {fileID: 0}
-    _stateData: {fileID: 0}
+    _animator: {fileID: 6613684750423660781}
+    _stateData: {fileID: 11400000, guid: ed26950821b571e44ae9ad2a4e7eb345, type: 2}
   _scaleAnimationDuration: 0.1
   _scaleOffset: 30
   _scaleAmountDeflatingPerSecond: 15
