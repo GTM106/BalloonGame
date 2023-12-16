@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Required] AudioSource _landingAudioSource = default!;
     [SerializeField, Required] AudioSource _gameoverAudioSource = default!;
     [SerializeField, Required] VisualEffect _piyopiyoeff = default!;
+
     IPlayer _player;
     IPlayer _inflatablePlayer;
     IPlayer _deflatablePlayer;
