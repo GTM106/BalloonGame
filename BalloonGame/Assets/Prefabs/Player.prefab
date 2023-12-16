@@ -426,7 +426,7 @@ Transform:
   - {fileID: 948196742402556567}
   - {fileID: 4822792673449178016}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2826682229555106861
 CapsuleCollider:
@@ -460,7 +460,7 @@ Rigidbody:
   m_GameObject: {fileID: 1960072499487829733}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 10
+  m_Drag: 5
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -496,14 +496,14 @@ MonoBehaviour:
     _cameraTransform: {fileID: 0}
     _joyconRight: {fileID: 0}
     _joyconLeft: {fileID: 0}
-    _jumpPower: 90
-    _moveSpeed: 20
-    _maxMoveSpeed: 20
-    _multiplierNormal: 25
-    _multiplierExpand: 3
-    _boostDashPowerY: 270
+    _jumpPower: 60
+    _moveSpeed: 10
+    _maxMoveSpeed: 15
+    _multiplierNormal: 1
+    _multiplierExpand: 0.5
+    _boostDashPowerY: 100
     _buoyancyExpand: 3000
-    _buoyancyNormal: 100
+    _buoyancyNormal: 3000
     _requiredPushCount: 3
     _animationChanger:
       _animator: {fileID: 6613684750423660781}
@@ -550,8 +550,8 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    _inflatedFallSpeed: 55
-    _deflatedFallSpeed: 300
+    _inflatedFallSpeed: 20
+    _deflatedFallSpeed: 100
   _balloonController: {fileID: 7393417574364545360}
   _groundCheck: {fileID: 5537941699024868813}
   _ringconPushAction: {fileID: 2269632662786835952, guid: 585a3b88238186a44b1683b16bca7288,
@@ -597,7 +597,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _balloonController: {fileID: 7393417574364545360}
   _balloonMeshRenderer: {fileID: 786102023468443626}
-  _boostFrames: {x: 30, y: 55}
+  _boostFrames: {x: 60, y: 60}
 --- !u!114 &2510545858266644820
 MonoBehaviour:
   m_ObjectHideFlags: 0
