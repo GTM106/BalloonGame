@@ -7,7 +7,7 @@ public class SuccessSceneController : MonoBehaviour
 {
     [SerializeField, Required] SuccessSceneView _successSceneView = default!;
 
-    [SerializeField, Required] ImageTransitionController _imageTransitionController = default!;
+    [SerializeField, Required] VideoTransitionController _videoTransitionController = default!;
     [SerializeField, Required] InputSystemManager _inputSystemManager = default!;
     [SerializeField, Required] InputActionReference _ui_RingconPushAction = default!;
     [SerializeField, Required] ScoreManager _scoreManager = default!;
@@ -36,7 +36,7 @@ public class SuccessSceneController : MonoBehaviour
     private async void BackToTitle(InputAction.CallbackContext obj)
     {
         if (!_enableBackToTitle) return;
-        await _imageTransitionController.StartTransition(_toTitleTransition);
+        await _videoTransitionController.StartTransition(_toTitleTransition);
     }
 
     private async void Init()
@@ -56,6 +56,6 @@ public class SuccessSceneController : MonoBehaviour
         //‰æ–Ê•\Ž¦
         _successSceneView.Enable();
 
-        await _imageTransitionController.StartTransition(_initTransition);
+        await _videoTransitionController.StartTransition(_initTransition);
     }
 }
