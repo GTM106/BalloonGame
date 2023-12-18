@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class SuccessSceneController : MonoBehaviour
 {
     [SerializeField, Required] SuccessSceneView _successSceneView = default!;
 
-    [SerializeField, Required] VideoTransitionController _videoTransitionController = default!;
+    [SerializeField, Required] ImageTransitionController _imageTransitionController = default!;
     [SerializeField, Required] InputSystemManager _inputSystemManager = default!;
     [SerializeField, Required] InputActionReference _ui_RingconPushAction = default!;
     [SerializeField, Required] ScoreManager _scoreManager = default!;
@@ -25,7 +24,6 @@ public class SuccessSceneController : MonoBehaviour
     {
         _ui_RingconPushAction.action.performed += BackToTitle;
         _enableBackToTitle = false;
-        _successSceneView.Disable();
     }
 
     public void Enable()
@@ -37,9 +35,7 @@ public class SuccessSceneController : MonoBehaviour
     private async void BackToTitle(InputAction.CallbackContext obj)
     {
         if (!_enableBackToTitle) return;
-        await _videoTransitionController.StartTransition(_toTitleTransition);
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        await _imageTransitionController.StartTransition(_toTitleTransition);
     }
 
     private async void Init()
@@ -59,8 +55,6 @@ public class SuccessSceneController : MonoBehaviour
         //‰æ–Ê•\Ž¦
         _successSceneView.Enable();
 
-        await _videoTransitionController.StartTransition(_initTransition);
-
-        _enableBackToTitle = true;
+        await _imageTransitionController.StartTransition(_initTransition);
     }
 }

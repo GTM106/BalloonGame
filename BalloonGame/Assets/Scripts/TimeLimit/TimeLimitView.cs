@@ -10,7 +10,7 @@ public class TimeLimitView : MonoBehaviour
     [SerializeField, Required] Image _timeLimitBar = default!;
     [SerializeField, Required] Image _timeLimitClockHand = default!;
 
-    readonly float positionOffset = -1850f * Screen.width / 3820f;
+    const float positionOffset = -1850f;
     const float rotationOffset = 360f;
 
     Vector3 _firstTimeLimitBarPos;

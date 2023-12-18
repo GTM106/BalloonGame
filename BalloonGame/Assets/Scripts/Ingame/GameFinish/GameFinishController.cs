@@ -6,11 +6,6 @@ public class GameFinishController : MonoBehaviour
 {
     [SerializeField, Required] GameFinishView _gameFinishView = default!;
 
-    private void Awake()
-    {
-        DisableUI();
-    }
-
     public void EnableUI()
     {
         _gameFinishView.Enable();

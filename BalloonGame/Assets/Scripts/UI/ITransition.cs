@@ -3,5 +3,6 @@
 internal interface ITransition
 {
     UniTask StartTransition(TrantisionData trantisionData);
+    UniTask StartTransition();
     bool IsTransitionComplete();
 }

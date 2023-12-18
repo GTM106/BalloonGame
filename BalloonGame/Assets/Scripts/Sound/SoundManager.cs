@@ -28,7 +28,6 @@ public enum SoundSource
     SE031_FunRunning,
     SE032_WaterIntrusion,
     SE040_EndOfTimeLimit,
-    SE050_Select,
 
     [InspectorName("")]
     Max,
