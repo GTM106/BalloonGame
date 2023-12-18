@@ -13,7 +13,7 @@ public class IngameController : MonoBehaviour
     [SerializeField, Required] TutorialUIContoller _tutorialUIContoller = default!;
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
     [SerializeField, Required] GameFinishController _gameFinishController = default!;
-    [SerializeField, Required] ImageTransitionController _imageTransitionController = default!;
+    [SerializeField, Required] VideoTransitionController _videoTransitionController = default!;
     [SerializeField, Required] IngameStartEvent _ingameStartEvent = default!;
 
     //InputŒn
@@ -94,7 +94,7 @@ public class IngameController : MonoBehaviour
         }
 
         //ƒNƒŠƒA‰æ–Ê‚É‘JˆÚ
-        await _imageTransitionController.StartTransition(_toSuccessSceneTransition);
+        await _videoTransitionController.StartTransition(_toSuccessSceneTransition);
         _successSceneController.Enable();
     }
 }
