@@ -26,9 +26,9 @@ public class TimeLimitController : MonoBehaviour
     {
         Reduce();
 
-        if(_timeLimit != null)
+        if (_timeLimit != null)
         {
-            _timeLimitView.UpdateText(_timeLimit.CurrentTimeLimitValue.ToString("F1"));
+            _timeLimitView.UpdateView(_timeLimit.CurrentTimeLimitValue / _initTimeLimit);
         }
     }
 

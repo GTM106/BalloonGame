@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class DeflatablePlayer : IPlayer
 {
@@ -76,7 +77,7 @@ public class DeflatablePlayer : IPlayer
 
         if (state is IState.E_State.Control)
         {
-            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Run);
+            _playerParameter.ChangeRunAnimation();
         }
     }
 
@@ -102,16 +103,14 @@ public class DeflatablePlayer : IPlayer
     public void OnWaterStay()
     {
         _rigidbody.AddForce(Vector3.up * _playerParameter.BuoyancyNormal, ForceMode.Acceleration);
-
-        if (_rigidbody.velocity.magnitude < 0.01f)
-        {
-            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Swim);
-        }
     }
 
     public void Fall()
     {
-        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Fall);
+        if (_playerParameter.GroundStatus == GroundStatus.OnGround)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Fall);
+        }
 
         //落下時のみ追加で加速させる
         _rigidbody.AddForce(Vector3.down * _playerParameter.DeflatedFallSpeed, ForceMode.Acceleration);
@@ -128,5 +127,10 @@ public class DeflatablePlayer : IPlayer
 
         //ヒットしなかった場合、上向きの法線
         return Vector3.up;
+    }
+
+    public void OnWindStay(Vector3 windVec)
+    {
+        _rigidbody.AddForce(windVec);
     }
 }
