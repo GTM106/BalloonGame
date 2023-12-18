@@ -119,7 +119,7 @@ public class InflatablePlayer : IPlayer
     {
         if (_playerParameter.GroundStatus == GroundStatus.OnGround)
         {
-            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Fall);
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BFall);
         }
 
         //—Ž‰ºŽž‚Ì‚Ý’Ç‰Á‚Å‰Á‘¬‚³‚¹‚é

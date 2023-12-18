@@ -20,8 +20,8 @@ public struct TrantisionData
 
 public class ImageTransitionController : MonoBehaviour, ITransition
 {
+    [SerializeField, Required] Canvas _canvas = default!;
     [SerializeField] Material _material = default!;
-    [SerializeField] TrantisionData _defaultTransitionData = default!;
 
     float _duration;
     float _elapsedTime;
@@ -31,6 +31,7 @@ public class ImageTransitionController : MonoBehaviour, ITransition
     private void Awake()
     {
         _material.SetFloat("_Alpha", 0f);
+        _canvas.enabled = false;
     }
 
     private void OnApplicationQuit()
@@ -44,13 +45,10 @@ public class ImageTransitionController : MonoBehaviour, ITransition
         await UpdateTransition();
     }
 
-    public async UniTask StartTransition()
-    {
-        await StartTransition(_defaultTransitionData);
-    }
-
     private void InitializeTransition(TrantisionData trantisionData)
     {
+        _canvas.enabled = true;
+
         _elapsedTime = 0f;
         _backgroundColor = trantisionData.backgroundColor;
         _duration = trantisionData.duration;
