@@ -6993,7 +6993,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 172112882}
-  m_LocalRotation: {x: -4.238689e-10, y: 0.99513334, z: -0.098537624, w: -0.0000000042806607}
+  m_LocalRotation: {x: 4.238689e-10, y: 0.99513334, z: -0.09853762, w: 0.000000004280661}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14504,7 +14504,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1157127786}
-  m_LocalRotation: {x: 4.238689e-10, y: 0.99513334, z: -0.09853762, w: 0.000000004280661}
+  m_LocalRotation: {x: -4.238689e-10, y: 0.99513334, z: -0.098537624, w: -0.0000000042806607}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -22771,6 +22771,11 @@ PrefabInstance:
       propertyPath: _inputSystemManager
       value: 
       objectReference: {fileID: 143624572}
+    - target: {fileID: 663531731782740792, guid: 2eb28631199873a42bef901cc2e2c035,
+        type: 3}
+      propertyPath: _gameStartButtonImageFlashTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2911792606633626187, guid: 2eb28631199873a42bef901cc2e2c035,
         type: 3}
       propertyPath: m_Name
