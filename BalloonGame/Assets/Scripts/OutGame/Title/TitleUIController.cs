@@ -24,16 +24,19 @@ public class TitleUIController : MonoBehaviour
     [SerializeField, Min(0f)] float _titleBGMFadeoutTime = 1f;
     [Header("タイトルUIのフェードアウト時間[sec]")]
     [SerializeField, Min(0f)] float _titleUIFadeoutTime = 1f;
+    [Header("ゲーム開始ボタンUIのフラッシュ時間[sec]")]
+    [SerializeField, Min(0f)] float _gameStartButtonImageFlashTime = 1f;
 
     bool _isPlayedIngame;
 
     private void Awake()
     {
         _ringconPushUIAction.action.performed += OnRingconPushed;
-        _titleCamera.enabled = true; 
+        _titleCamera.enabled = true;
         _isPlayedIngame = false;
 
         _inputSystemManager.ChangeMaps(InputSystemManager.ActionMaps.UI);
+        _titleUIView.StartFlashAlphaStartButtonImage(_gameStartButtonImageFlashTime, this.GetCancellationTokenOnDestroy());
     }
 
     private void Start()
@@ -69,8 +72,11 @@ public class TitleUIController : MonoBehaviour
         //BGMフェードアウトの待機
         UniTask.Delay(TimeSpan.FromSeconds(_titleBGMFadeoutTime), false, PlayerLoopTiming.FixedUpdate, token),
         //タイトルUIのフェードアウト
-        _titleUIView.FadeOut(_titleUIFadeoutTime)
+        _titleUIView.FadeOut(_titleUIFadeoutTime, this.GetCancellationTokenOnDestroy())
         );
+
+        //フラッシュの停止
+        _titleUIView.StopFlashAlphaStartButtonImage();
 
         //固定カメラをインゲームのカメラの位置に移動
         //優先度を最下位にすることで再現
