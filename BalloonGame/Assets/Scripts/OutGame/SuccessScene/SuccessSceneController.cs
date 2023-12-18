@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class SuccessSceneController : MonoBehaviour
 {
@@ -37,6 +38,8 @@ public class SuccessSceneController : MonoBehaviour
     {
         if (!_enableBackToTitle) return;
         await _videoTransitionController.StartTransition(_toTitleTransition);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private async void Init()
@@ -57,5 +60,7 @@ public class SuccessSceneController : MonoBehaviour
         _successSceneView.Enable();
 
         await _videoTransitionController.StartTransition(_initTransition);
+
+        _enableBackToTitle = true;
     }
 }
