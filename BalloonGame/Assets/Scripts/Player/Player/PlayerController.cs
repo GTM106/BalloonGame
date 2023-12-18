@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Required] Collider _playerCollider = default!;
     [SerializeField, Required] WaterEvent _waterEvent = default!;
     [SerializeField, Required] FunEvent _funEvent = default!;
-    [SerializeField, Required] Canvas _gameOverCanvas = default!;
+    [SerializeField, Required] GameOverUIController _gameOverUIController = default!;
     [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
     [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
     [SerializeField, Required] AudioSource _jumpingAudioSource = default!;
@@ -249,7 +249,7 @@ public class PlayerController : MonoBehaviour
 
             parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Down);
 
-            parent._gameOverCanvas.enabled = true;
+            parent._gameOverUIController.Enable();
 
             parent._piyopiyoeff.enabled = true;
             parent._piyopiyoeff.SendEvent("OnPlay");
@@ -285,7 +285,7 @@ public class PlayerController : MonoBehaviour
             _currentPressCount++;
 
             //一度でもプッシュされたら表示する
-            parent._gameOverCanvas.enabled = true;
+            parent._gameOverUIController.Enable();
 
             return IState.E_State.Unchanged;
         }
@@ -454,8 +454,6 @@ public class PlayerController : MonoBehaviour
 
         _playerPairs.Add(BalloonState.Normal, _deflatablePlayer);
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
-
-        _gameOverCanvas.enabled = false;
     }
 
     private void Update()
@@ -601,7 +599,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnRevive()
     {
-        _gameOverCanvas.enabled = false;
+        _gameOverUIController.Disable();
     }
 
     private void OnGameOver()
