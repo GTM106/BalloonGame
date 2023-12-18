@@ -22,6 +22,11 @@ public class TimeLimitController : MonoBehaviour
 
     public event Action OnTimeLimit;
 
+    private void Awake()
+    {
+        DisableUI();
+    }
+
     private void Update()
     {
         Reduce();

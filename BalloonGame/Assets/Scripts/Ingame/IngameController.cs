@@ -14,6 +14,7 @@ public class IngameController : MonoBehaviour
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
     [SerializeField, Required] GameFinishController _gameFinishController = default!;
     [SerializeField, Required] ImageTransitionController _imageTransitionController = default!;
+    [SerializeField, Required] IngameStartEvent _ingameStartEvent = default!;
 
     //Inputån
     [SerializeField, Required] InputActionReference _UIAnykeyAction = default;
@@ -25,15 +26,10 @@ public class IngameController : MonoBehaviour
     [SerializeField, Min(0)] int waitingFrameForGameFinish = 50;
     [SerializeField] TrantisionData _toSuccessSceneTransition = default!;
 
-
     private void Awake()
     {
         _timeLimitController.OnTimeLimit += OnGameFinish;
-    }
-
-    private void Start()
-    {
-        OnGameStart();
+        _ingameStartEvent.OnStart += OnGameStart;
     }
 
     private void OnDestroy()

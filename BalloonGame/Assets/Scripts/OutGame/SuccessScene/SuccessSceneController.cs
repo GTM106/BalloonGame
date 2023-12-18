@@ -24,6 +24,7 @@ public class SuccessSceneController : MonoBehaviour
     {
         _ui_RingconPushAction.action.performed += BackToTitle;
         _enableBackToTitle = false;
+        _successSceneView.Disable();
     }
 
     public void Enable()
