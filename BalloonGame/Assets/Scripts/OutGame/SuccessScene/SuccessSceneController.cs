@@ -28,6 +28,11 @@ public class SuccessSceneController : MonoBehaviour
         _successSceneView.Disable();
     }
 
+    private void OnDestroy()
+    {
+        _ui_RingconPushAction.action.performed -= BackToTitle;
+    }
+
     public void Enable()
     {
         //ŠJn‚Ì‰Šú‰»
