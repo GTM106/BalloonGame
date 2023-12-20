@@ -15,7 +15,6 @@ public class VideoTransitionController : MonoBehaviour, ITransition
     [SerializeField, Required] RawImage _transitionOutImage = default!;
     [SerializeField, Required] VideoPlayer _transitionIn = default!;
     [SerializeField, Required] VideoPlayer _transitionOut = default!;
-    [SerializeField, Required] Image _blackImage = default!;
     
     private void Awake()
     {
@@ -45,27 +44,8 @@ public class VideoTransitionController : MonoBehaviour, ITransition
         video.targetTexture.Release();
         video.Play();
 
-        BlackDisable(isTransitionTypeIn, token);
-
         await UniTask.Delay(TimeSpan.FromSeconds(video.length), false, PlayerLoopTiming.FixedUpdate, token);
 
         rawImage.enabled = false;
-
-        if (!isTransitionTypeIn)
-        {
-            _blackImage.enabled = true;
-        }
-    }
-
-    private async void BlackDisable(bool isTransitionTypeIn, CancellationToken token)
-    {
-        token.ThrowIfCancellationRequested();
-
-        if (isTransitionTypeIn)
-        {
-            //Å‰‚Ì”ƒtƒŒ[ƒ€‚ª“rØ‚ê‚é‚½‚ßA“®‰æ”wŒiF‚Å–„‚ß‚é
-            await UniTask.DelayFrame(10, PlayerLoopTiming.FixedUpdate, token);
-            _blackImage.enabled = false;
-        }
     }
 }
