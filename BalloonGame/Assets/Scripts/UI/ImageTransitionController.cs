@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct TrantisionData
+public struct TransitionData
 {
     public enum TransitionType
     {
@@ -26,7 +26,7 @@ public class ImageTransitionController : MonoBehaviour, ITransition
     float _duration;
     float _elapsedTime;
     Color _backgroundColor;
-    TrantisionData.TransitionType _type;
+    TransitionData.TransitionType _type;
 
     private void Awake()
     {
@@ -39,13 +39,13 @@ public class ImageTransitionController : MonoBehaviour, ITransition
         _material.SetFloat("_Alpha", 0f);
     }
 
-    public async UniTask StartTransition(TrantisionData trantisionData)
+    public async UniTask StartTransition(TransitionData trantisionData)
     {
         InitializeTransition(trantisionData);
         await UpdateTransition();
     }
 
-    private void InitializeTransition(TrantisionData trantisionData)
+    private void InitializeTransition(TransitionData trantisionData)
     {
         _canvas.enabled = true;
 
@@ -69,8 +69,8 @@ public class ImageTransitionController : MonoBehaviour, ITransition
 
             float alpha = _type switch
             {
-                TrantisionData.TransitionType.In => progress,
-                TrantisionData.TransitionType.Out => 1f - progress,
+                TransitionData.TransitionType.In => progress,
+                TransitionData.TransitionType.Out => 1f - progress,
                 _ => throw new NotImplementedException()
             };
 

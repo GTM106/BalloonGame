@@ -29,12 +29,12 @@ public class VideoTransitionController : MonoBehaviour, ITransition
         return _transitionIn.isPlaying || _transitionOut.isPlaying;
     }
 
-    public async UniTask StartTransition(TrantisionData trantisionData)
+    public async UniTask StartTransition(TransitionData trantisionData)
     {
         var token = this.GetCancellationTokenOnDestroy();
         _canvas.enabled = true;
 
-        bool isTransitionTypeIn = trantisionData.type == TrantisionData.TransitionType.In;
+        bool isTransitionTypeIn = trantisionData.type == TransitionData.TransitionType.In;
 
         RawImage rawImage = isTransitionTypeIn ? _transitionInImage : _transitionOutImage;
         rawImage.enabled = true;

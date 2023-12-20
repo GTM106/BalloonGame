@@ -19,6 +19,8 @@ public class TitleUIController : MonoBehaviour
     [SerializeField, Required] CinemachineFreeLook _freeLookCamera = default!;
     [SerializeField, Required] CinemachineBrain _cinemachineBrain = default!;
     [SerializeField, Required] InputSystemManager _inputSystemManager = default!;
+    [SerializeField,Required] VideoTransitionController _videoTransitionController = default!;
+    [SerializeField] TransitionData _transitionData;
 
     [Header("タイトルBGMのフェードアウト時間[sec]")]
     [SerializeField, Min(0f)] float _titleBGMFadeoutTime = 1f;
@@ -36,11 +38,14 @@ public class TitleUIController : MonoBehaviour
         _isPlayedIngame = false;
 
         _inputSystemManager.ChangeMaps(InputSystemManager.ActionMaps.UI);
+
         _titleUIView.StartFlashAlphaStartButtonImage(_gameStartButtonImageFlashTime, this.GetCancellationTokenOnDestroy());
     }
 
     private void Start()
     {
+        _videoTransitionController.StartTransition(_transitionData).Forget();
+
         SoundManager.Instance.PlaySE(_beachBGSAudioSorce, SoundSource.BGS001_Sand);
     }
 
