@@ -35,10 +35,11 @@ public class GameStarter : MonoBehaviour, IHittable
         if (_isStartGame) return;
         _isStartGame = true;
 
-        //ゲーム開始UIの表示
-        _collectibleScript.Enable();
         await _gameStartUIController.EnableUI();
         _gameStartUIController.DisableUI();
+
+        //ゲーム開始UIの表示
+        _collectibleScript.Enable();
 
         if (_timeLimitController != null)
         {
