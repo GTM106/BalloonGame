@@ -24,7 +24,7 @@ public class IngameController : MonoBehaviour
     [Header("ƒQ[ƒ€I—¹ˆ—Œn")]
     [SerializeField, Required] SuccessSceneController _successSceneController = default!;
     [SerializeField, Min(0)] int waitingFrameForGameFinish = 50;
-    [SerializeField] TrantisionData _toSuccessSceneTransition = default!;
+    [SerializeField] TransitionData _toSuccessSceneTransition = default!;
 
     private void Awake()
     {

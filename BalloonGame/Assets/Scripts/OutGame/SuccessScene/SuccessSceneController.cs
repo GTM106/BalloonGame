@@ -14,10 +14,10 @@ public class SuccessSceneController : MonoBehaviour
     [SerializeField, Required] ScoreManager _scoreManager = default!;
 
     [Header("開始時のトランジション")]
-    [SerializeField] TrantisionData _initTransition = default!;
+    [SerializeField] TransitionData _initTransition = default!;
 
     [Header("タイトル遷移時のトランジション")]
-    [SerializeField] TrantisionData _toTitleTransition = default!;
+    [SerializeField] TransitionData _toTitleTransition = default!;
 
     bool _enableBackToTitle;
 
@@ -26,6 +26,11 @@ public class SuccessSceneController : MonoBehaviour
         _ui_RingconPushAction.action.performed += BackToTitle;
         _enableBackToTitle = false;
         _successSceneView.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        _ui_RingconPushAction.action.performed -= BackToTitle;
     }
 
     public void Enable()

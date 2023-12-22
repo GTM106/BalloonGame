@@ -7,6 +7,7 @@ public class GameStarter : MonoBehaviour, IHittable
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
     [SerializeField, Required] GameStartUIController _gameStartUIController = default!;
     [SerializeField, Required] BPMEvent _bpmEvent = default!;
+    [SerializeField, Required] CollectibleScript _collectibleScript = default!;
 
     bool _isStartGame = false;
 
@@ -34,9 +35,11 @@ public class GameStarter : MonoBehaviour, IHittable
         if (_isStartGame) return;
         _isStartGame = true;
 
-        //ゲーム開始UIの表示
         await _gameStartUIController.EnableUI();
         _gameStartUIController.DisableUI();
+
+        //ゲーム開始UIの表示
+        _collectibleScript.Enable();
 
         if (_timeLimitController != null)
         {
