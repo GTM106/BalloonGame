@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +9,13 @@ public enum BoostDashDirection
     PlayerForward
 }
 
-public enum GroundStatus
+[Flags]
+public enum EnvironmentStatus
 {
-    OnGround,
-    UnderWater,
-    Wind,
+    None = 0,
+
+    Underwater = 1 << 0,//水中にいる
+    WindAffected = 1 << 1,//風の影響を受けている
 }
 
 [System.Serializable]
@@ -48,13 +51,7 @@ public class PlayerParameter
     [Header("落下時の加速。inflatedがPlayer膨らみ時")]
     [SerializeField, Min(0)] float _inflatedFallSpeed = default!;
     [SerializeField, Min(0)] float _deflatedFallSpeed = default!;
-    GroundStatus _groundStatus;
-
-    public GroundStatus GroundStatus
-    {
-        get { return _groundStatus; }
-        set { _groundStatus = value; }
-    }
+    EnvironmentStatus _environmentStatus;
 
     public Rigidbody Rb => _rb;
     public PhysicMaterial PhysicMaterial => _physicMaterial;
@@ -77,27 +74,87 @@ public class PlayerParameter
 
     public void ChangeRunAnimation()
     {
-        E_Atii runAnimation = GroundStatus switch
+        //デフォルトのモーション
+        E_Atii runAnimation = E_Atii.Run;
+
+        //水中なら水中用モーション
+        //最優先
+        if (IsBitSetEnvironmentStatus(EnvironmentStatus.Underwater))
         {
-            GroundStatus.OnGround => E_Atii.Run,
-            GroundStatus.UnderWater => E_Atii.Swimming,
-            GroundStatus.Wind => E_Atii.Run,
-            _ => throw new System.NotImplementedException(),
-        };
+            runAnimation = E_Atii.Swimming;
+        }
+
+        //風は変更なし
 
         _animationChanger.ChangeAnimation(runAnimation);
     }
 
     public void ChangeIdleAnimation()
     {
-        E_Atii idleAnimation = GroundStatus switch
+        //デフォルトのモーション
+        E_Atii idleAnimation = E_Atii.Idle;
+
+        //水中なら水中用モーション
+        //最優先
+        if (IsBitSetEnvironmentStatus(EnvironmentStatus.Underwater))
         {
-            GroundStatus.OnGround => E_Atii.Idle,
-            GroundStatus.UnderWater => E_Atii.Swim,
-            GroundStatus.Wind => E_Atii.IdleWind,
-            _ => throw new System.NotImplementedException(),
-        };
+            idleAnimation = E_Atii.Swim;
+        }
+        //風影響下なら風影響下用モーション
+        else if (IsBitSetEnvironmentStatus(EnvironmentStatus.WindAffected))
+        {
+            idleAnimation = E_Atii.IdleWind;
+        }
 
         _animationChanger.ChangeAnimation(idleAnimation);
+    }
+
+    public void ChangeFallAnimation()
+    {
+        //デフォルトのモーション
+        E_Atii animation = E_Atii.Fall;
+
+        //水中なら落下時モーションなし
+        //最優先
+        if (IsBitSetEnvironmentStatus(EnvironmentStatus.Underwater))
+        {
+            return;
+        }
+
+        //風は変更なし
+
+        _animationChanger.ChangeAnimation(animation);
+    }
+
+    public void ChangeBFallAnimation()
+    {
+        //デフォルトのモーション
+        E_Atii animation = E_Atii.BFall;
+
+        //水中なら落下時モーションなし
+        //最優先
+        if (IsBitSetEnvironmentStatus(EnvironmentStatus.Underwater))
+        {
+            return;
+        }
+
+        //風は変更なし
+
+        _animationChanger.ChangeAnimation(animation);
+    }
+
+    public void BitSetEnvironmentStatus(EnvironmentStatus addType)
+    {
+        _environmentStatus |= addType;
+    }
+
+    public void BitClearEnvironmentStatus(EnvironmentStatus delType)
+    {
+        _environmentStatus &= ~delType;
+    }
+
+    public bool IsBitSetEnvironmentStatus(EnvironmentStatus type)
+    {
+        return type == (_environmentStatus & type);
     }
 }
