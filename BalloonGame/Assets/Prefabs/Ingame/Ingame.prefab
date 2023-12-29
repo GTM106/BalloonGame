@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2386130987892399376}
   - component: {fileID: 9011882201552506572}
   - component: {fileID: 7453220264301256219}
+  - component: {fileID: 4527777502046988735}
   m_Layer: 0
   m_Name: Ingame
   m_TagString: Untagged
@@ -51,7 +52,7 @@ MonoBehaviour:
   _timeLimitController: {fileID: 0}
   _gameFinishController: {fileID: 0}
   _videoTransitionController: {fileID: 0}
-  _ingameStartEvent: {fileID: 0}
+  _ingameStartEvent: {fileID: 4527777502046988735}
   _UIAnykeyAction: {fileID: -1073992759468367325, guid: 585a3b88238186a44b1683b16bca7288,
     type: 3}
   _JoyconLeftUI: {fileID: 0}
@@ -159,3 +160,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4527777502046988735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1880974787574634629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58565dacfd513d04e8ac51e9fb1e6689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
