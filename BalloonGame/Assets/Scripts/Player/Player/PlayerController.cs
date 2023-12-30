@@ -254,6 +254,8 @@ public class PlayerController : MonoBehaviour
             parent._piyopiyoeff.enabled = true;
             parent._piyopiyoeff.SendEvent("OnPlay");
 
+            parent._playerParameter.BitSetEnvironmentStatus(EnvironmentStatus.GameOver);
+
             return IState.E_State.Unchanged;
         }
 
@@ -264,6 +266,8 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
+            parent._player.Fall();
+
             if (_currentPressCount >= parent._playerParameter.RequiredPushCount)
             {
                 //•œŠˆ’Ê’m‚ð‘—‚é
@@ -309,6 +313,8 @@ public class PlayerController : MonoBehaviour
 
             parent._piyopiyoeff.enabled = false;
             parent._piyopiyoeff.SendEvent("StopPlay");
+
+            parent._playerParameter.BitClearEnvironmentStatus(EnvironmentStatus.GameOver);
 
             return IState.E_State.Unchanged;
         }
