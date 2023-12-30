@@ -5344,11 +5344,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5536924402538089808, guid: 151285aef4bd2e740998ee2111a79809,
-        type: 3}
-      propertyPath: m_PlayOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7393417574364545360, guid: 151285aef4bd2e740998ee2111a79809,
         type: 3}
       propertyPath: _waterEvent
@@ -45691,11 +45686,6 @@ PrefabInstance:
       objectReference: {fileID: 1697757450}
     - target: {fileID: 9011882201552506572, guid: 8c79761acf5d5fb458f13796148dde04,
         type: 3}
-      propertyPath: _ingameStartEvent
-      value: 
-      objectReference: {fileID: 2098138952}
-    - target: {fileID: 9011882201552506572, guid: 8c79761acf5d5fb458f13796148dde04,
-        type: 3}
       propertyPath: _inputSystemManager
       value: 
       objectReference: {fileID: 1488607794}
@@ -45727,11 +45717,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1880974787574634629, guid: 8c79761acf5d5fb458f13796148dde04,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2098138952}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c79761acf5d5fb458f13796148dde04, type: 3}
 --- !u!4 &1187493866 stripped
 Transform:
@@ -72809,19 +72795,13 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2094800529}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2098138949 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1880974787574634629, guid: 8c79761acf5d5fb458f13796148dde04,
+--- !u!114 &2098138952 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4527777502046988735, guid: 8c79761acf5d5fb458f13796148dde04,
     type: 3}
   m_PrefabInstance: {fileID: 1187493865}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2098138952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2098138949}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58565dacfd513d04e8ac51e9fb1e6689, type: 3}
@@ -74727,6 +74707,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sound
       objectReference: {fileID: 0}
+    - target: {fileID: 6037039354746181147, guid: d3de54fb77466594884b3a33e5e54b3a,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -6090780172472166482, guid: ec0d3e38aaa833b49ae8a5638380902e,
+        type: 2}
     - target: {fileID: 8752167814845831740, guid: d3de54fb77466594884b3a33e5e54b3a,
         type: 3}
       propertyPath: m_RootOrder
