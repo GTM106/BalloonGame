@@ -107,10 +107,8 @@ public class DeflatablePlayer : IPlayer
 
     public void Fall()
     {
-        if (_playerParameter.GroundStatus == GroundStatus.OnGround)
-        {
-            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Fall);
-        }
+        //落下アニメーションの再生
+        _playerParameter.ChangeFallAnimation();
 
         //落下時のみ追加で加速させる
         _rigidbody.AddForce(Vector3.down * _playerParameter.DeflatedFallSpeed, ForceMode.Acceleration);
