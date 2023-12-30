@@ -437,23 +437,15 @@ public class PlayerController : MonoBehaviour
         _deflatablePlayer = new DeflatablePlayer(_playerParameter);
         _player = _deflatablePlayer;
 
-        InitializeState();
-
-        _balloonController.OnStateChanged += OnBalloonStateChanged;
-        _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
-        _ringconPushAction.action.performed += OnRingconPush;
-        _waterEvent.OnEnterAction += OnWaterEnter;
-        _waterEvent.OnStayAction += OnWaterStay;
-        _waterEvent.OnExitAction += OnWaterExit;
-        _funEvent.OnEnterAction += OnFunEnter;
-        _funEvent.OnStayAction += OnFunStay;
-        _funEvent.OnExitAction += OnFunExit;
-        _playerGameOverEvent.OnGameOver += OnGameOver;
-        _playerGameOverEvent.OnRevive += OnRevive;
-        _boostDashEvent.OnBoostDash += OnBoostDashEvent;
+        SubscribeToEvents();
 
         _playerPairs.Add(BalloonState.Normal, _deflatablePlayer);
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
+    }
+
+    private void Start()
+    {
+        InitializeState();
     }
 
     private void Update()
@@ -469,6 +461,27 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnDestroy()
+    {
+        UnsubscribeFromEvents();
+    }
+
+    private void SubscribeToEvents()
+    {
+        _balloonController.OnStateChanged += OnBalloonStateChanged;
+        _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
+        _ringconPushAction.action.performed += OnRingconPush;
+        _waterEvent.OnEnterAction += OnWaterEnter;
+        _waterEvent.OnStayAction += OnWaterStay;
+        _waterEvent.OnExitAction += OnWaterExit;
+        _funEvent.OnEnterAction += OnFunEnter;
+        _funEvent.OnStayAction += OnFunStay;
+        _funEvent.OnExitAction += OnFunExit;
+        _playerGameOverEvent.OnGameOver += OnGameOver;
+        _playerGameOverEvent.OnRevive += OnRevive;
+        _boostDashEvent.OnBoostDash += OnBoostDashEvent;
+    }
+
+    private void UnsubscribeFromEvents()
     {
         _balloonController.OnStateChanged -= OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
@@ -567,7 +580,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnWaterEnter()
     {
-        _playerParameter.GroundStatus = GroundStatus.UnderWater;
+        _playerParameter.BitSetEnvironmentStatus(EnvironmentStatus.Underwater);
     }
 
     private void OnWaterStay()
@@ -577,12 +590,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnWaterExit()
     {
-        _playerParameter.GroundStatus = GroundStatus.OnGround;
-    }    
-    
+        _playerParameter.BitClearEnvironmentStatus(EnvironmentStatus.Underwater);
+    }
+
     private void OnFunEnter(Vector3 windVec)
     {
-        _playerParameter.GroundStatus = GroundStatus.Wind;
+        _playerParameter.BitSetEnvironmentStatus(EnvironmentStatus.WindAffected);
         _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AN01_Wind);
     }
 
@@ -593,7 +606,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnFunExit(Vector3 windVec)
     {
-        _playerParameter.GroundStatus = GroundStatus.OnGround;
+        _playerParameter.BitClearEnvironmentStatus(EnvironmentStatus.WindAffected);
         _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AN01_Wind_default);
     }
 
