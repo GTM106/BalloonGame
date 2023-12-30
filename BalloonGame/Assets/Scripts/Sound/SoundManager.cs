@@ -25,9 +25,10 @@ public enum SoundSource
     SE011_Hermit_Chase,
     SE020_Balloonfish_Floating,
     SE030_AirVent_Interact,
+    SE031_FunRunning,
     SE032_WaterIntrusion,
     SE040_EndOfTimeLimit,
-    SE302_HarmitDiscovery,
+    SE050_Select,
 
     [InspectorName("")]
     Max,
@@ -74,6 +75,23 @@ public class SoundManager : MonoBehaviour
 
         ChangeSound(_BGMLoop, sound);
         _BGMLoop.time = time;
+        _BGMLoop.Play();
+    }
+
+    /// <summary>
+    /// BGMÇçƒê∂Ç∑ÇÈÅB
+    /// </summary>
+    /// <param name="sound">çƒê∂ÇµÇΩÇ¢BGM</param>
+    /// <param name="timeSample">çƒê∂à íu</param>
+    public void PlayBGM(SoundSource sound, int timeSample)
+    {
+        if (_BGMLoop.outputAudioMixerGroup == null)
+        {
+            Debug.LogWarning(_BGMLoop.name + " ÇÃ Output Ç null Ç…Ç∑ÇÈÇ±Ç∆ÇÕîÒêÑèßÇ≈Ç∑ÅB");
+        }
+
+        ChangeSound(_BGMLoop, sound);
+        _BGMLoop.timeSamples = timeSample;
         _BGMLoop.Play();
     }
 

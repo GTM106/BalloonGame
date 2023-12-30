@@ -83,7 +83,7 @@ public class InflatablePlayer : IPlayer
 
         if (state is IState.E_State.Control)
         {
-            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Run);
+            _playerParameter.ChangeRunAnimation();
         }
     }
 
@@ -117,7 +117,13 @@ public class InflatablePlayer : IPlayer
 
     public void Fall()
     {
-        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BFall);
+        if (_playerParameter.GroundStatus == GroundStatus.OnGround)
+        {
+            _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.BFall);
+        }
+
+        //落下時のみ追加で加速させる
+        _rigidbody.AddForce(Vector3.down * _playerParameter.InflatedFallSpeed, ForceMode.Acceleration);
     }
 
     private Vector3 GetGroundNormal()
@@ -131,5 +137,10 @@ public class InflatablePlayer : IPlayer
 
         //ヒットしなかった場合、上向きの法線
         return Vector3.up;
+    }
+
+    public void OnWindStay(Vector3 windVec)
+    {
+        _rigidbody.AddForce(windVec);
     }
 }

@@ -45,7 +45,8 @@ public class HermitCrabController : MonoBehaviour, IHittable
     [Header("追跡時間を超えた場合に再度追跡するまでのクールタイム")]
     [SerializeField] float _cooldownForReacquisitionDuration = default!;
     [SerializeField, Required] PlayerGameOverEvent _gameOverEvent = default!;
-    [SerializeField, Required] AudioSource _audioSource = default!;
+    [SerializeField, Required, FormerlySerializedAs("_audioSource")] AudioSource _discoveryAudioSource = default!;
+    [SerializeField, Required] AudioSource _chasingAudioSource = default!;
     [SerializeField, Required] NavMeshAgent _navMeshAgent = default!;
     [SerializeField] AnimationChanger<E_Harmit> _animationChanger = default!;
 
@@ -65,7 +66,7 @@ public class HermitCrabController : MonoBehaviour, IHittable
     //キャッシュしたTransform
     Transform _transform = default!;
 
-    [SerializeField]VisualEffect FindPlayerEff;
+    [SerializeField] VisualEffect FindPlayerEff;
 
     #region State
     // 状態管理
@@ -152,8 +153,7 @@ public class HermitCrabController : MonoBehaviour, IHittable
 
             if (parent.ShouldStopChasing())
             {
-                //再追跡可能までのクールダウンを開始する
-                parent.StartCooldownForReacquisition();
+                parent.StopChasing();
                 return IHermitCrabState.E_State.Partrol;
             }
 
@@ -289,7 +289,7 @@ public class HermitCrabController : MonoBehaviour, IHittable
         float distance = Vector3.Distance(_transform.position, _target.position);
         return distance <= _chaseRadius;
     }
-    
+
     private void StartDiscovery()
     {
         _isPlayingDiscoveryAnimation = true;
@@ -301,7 +301,7 @@ public class HermitCrabController : MonoBehaviour, IHittable
         _transform.rotation = targetRotation;
 
         //発見時SEの再生
-        SoundManager.Instance.PlaySE(_audioSource, SoundSource.SE302_HarmitDiscovery);
+        SoundManager.Instance.PlaySE(_discoveryAudioSource, SoundSource.SE010_Hermit_Detection);
 
         //発見時アニメーションの再生。再生後自動でダッシュモーションになります
         _animationChanger.ChangeAnimation(E_Harmit.AN02_discovery);
@@ -317,6 +317,9 @@ public class HermitCrabController : MonoBehaviour, IHittable
     {
         _isHitPlayer = false;
 
+        //追跡SEのループ再生
+        SoundManager.Instance.PlaySE(_chasingAudioSource, SoundSource.SE011_Hermit_Chase);
+
         //追跡経過時間を初期化
         _elapsedChaseTime = 0f;
 
@@ -331,6 +334,15 @@ public class HermitCrabController : MonoBehaviour, IHittable
 
         //追跡している時間を加算
         _elapsedChaseTime += Time.deltaTime;
+    }
+
+    private void StopChasing()
+    {
+        //追跡SEのループ再生を停止
+        SoundManager.Instance.StopSE(_chasingAudioSource, 0.1f);
+
+        //再追跡可能までのクールダウンを開始する
+        StartCooldownForReacquisition();
     }
 
     private bool ShouldStopChasing()

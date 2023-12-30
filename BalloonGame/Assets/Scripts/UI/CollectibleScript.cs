@@ -9,12 +9,15 @@ public class CollectibleScript : MonoBehaviour
     [SerializeField] Sprite[] uiNumber = default!;
     [Header("ï\é¶èÍèä")]
     [SerializeField] Image[] displayPosition = default!;
+    [SerializeField, Required] ScoreManager scoreManager=default!;
+    [SerializeField, Required] Canvas _canvas = default!;
 
     private int currentNumber = 0;
 
     public void Add(int value)
     {
         currentNumber += value;
+        scoreManager.SetScore(currentNumber);
         NumberDisplay();
     }
     private void Awake()
@@ -23,6 +26,18 @@ public class CollectibleScript : MonoBehaviour
         {
             item.sprite = uiNumber[0];
         }
+
+        Disable();
+    }
+
+    public void Enable()
+    {
+        _canvas.enabled = true;
+    }
+
+    public void Disable()
+    {
+        _canvas.enabled = false;
     }
 
     void NumberDisplay()

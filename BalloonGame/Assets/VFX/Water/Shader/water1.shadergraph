@@ -80,6 +80,9 @@
         },
         {
             "m_Id": "6f3e0fc79a454815ac885896ac6252fb"
+        },
+        {
+            "m_Id": "9d4d262dc361495f83763f139ce2163b"
         }
     ],
     "m_Keywords": [],
@@ -2875,11 +2878,11 @@
     "m_Guid": {
         "m_GuidSerialized": "605dc5e3-ec1d-4ef7-b361-cd6c43c53651"
     },
-    "m_Name": "Color",
+    "m_Name": "DefaultColor",
     "m_DefaultRefNameVersion": 0,
     "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Color_1BFAA54A",
-    "m_OverrideReferenceName": "_Color",
+    "m_OverrideReferenceName": "_DefaultColor",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
@@ -8711,7 +8714,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
     "m_ObjectId": "8f22f3ecfe10428a960f6a767a19e937",
     "m_Id": 0,
-    "m_DisplayName": "Color",
+    "m_DisplayName": "DefaultColor",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -9207,6 +9210,36 @@
         "z": 0.0,
         "w": 0.0
     }
+}
+
+{
+    "m_SGVersion": 3,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
+    "m_ObjectId": "9d4d262dc361495f83763f139ce2163b",
+    "m_Guid": {
+        "m_GuidSerialized": "03193cf6-002c-4a0d-b925-b982a6883893"
+    },
+    "m_Name": "InWaterColor",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "InWaterColor",
+    "m_DefaultReferenceName": "_InWaterColor",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": {
+        "r": 0.0,
+        "g": 0.28301888704299929,
+        "b": 0.2734167277812958,
+        "a": 0.0
+    },
+    "isMainColor": false,
+    "m_ColorMode": 0
 }
 
 {
@@ -10556,6 +10589,9 @@
         },
         {
             "m_Id": "13aa5c908121d4828971749744628e13"
+        },
+        {
+            "m_Id": "9d4d262dc361495f83763f139ce2163b"
         },
         {
             "m_Id": "4212c12268203a8bb0693609b3d003dc"

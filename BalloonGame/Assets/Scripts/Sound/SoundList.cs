@@ -40,6 +40,7 @@ public class SoundList
 
         SoundKVPair newKVP = new(key, new());
         _soundKVPairs.Add(newKVP);
+
         soundSettings = newKVP.Value;
         _soundKVPairs.Sort(kVPairComparer);
         return false;
@@ -70,13 +71,16 @@ public class SoundList
             {
                 result = string.Compare(_soundKVPairs[i].Key, soundSource.ToString());
 
+                //同じ値ならスキップ
+                if (result == 0) continue;
+
                 //次のenum要素が先なら消されたものが存在する
                 if (result < 0)
                 {
                     _soundKVPairs.RemoveAt(i);
                 }
                 //配列要素が先なら追加がある
-                else if (result > 0)
+                else
                 {
                     _soundKVPairs.Insert(i, new(soundSource, new()));
                 }

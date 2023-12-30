@@ -325,6 +325,17 @@
                 },
                 {
                     "name": "",
+                    "id": "9f8a46f8-0f0d-45d7-b2aa-514bbe5e6a21",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RingconPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "322200b9-401d-470e-8396-426aa246fca8",
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
@@ -349,6 +360,17 @@
                     "name": "",
                     "id": "ac0e9c89-aafb-40ca-857a-1f6b18908199",
                     "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RingconPull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee6d6b12-0979-4eb9-9058-4998e595d563",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -391,6 +413,17 @@
                 },
                 {
                     "name": "",
+                    "id": "abac745b-1cba-4398-8a7c-5a723256d351",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AirVentPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "92350269-cef4-46e1-966c-92d426d0777e",
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
@@ -421,6 +454,17 @@
                     "action": "RingconPushHold",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e24c3abf-bb62-461c-8c0a-641d41d94b95",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RingconPushHold",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -433,6 +477,15 @@
                     "type": "PassThrough",
                     "id": "044ecb4f-4386-4fd9-b46d-dac548b01d86",
                     "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RingconPush",
+                    "type": "Button",
+                    "id": "d2696c11-cc93-4552-8874-d93492726030",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -966,6 +1019,39 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "AnyKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cb6074ab-8095-4570-9fc4-ef085b1fa032",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RingconPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a09e69ce-018d-412e-882d-2d3c8811a2b8",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RingconPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e7ee66c5-012e-441d-98c0-a2a1b5c693bd",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RingconPush",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

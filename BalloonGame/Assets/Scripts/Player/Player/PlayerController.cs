@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public interface IState
 {
@@ -35,9 +36,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Required] InputActionReference _ringconPushAction = default!;
     [SerializeField, Required] Collider _playerCollider = default!;
     [SerializeField, Required] WaterEvent _waterEvent = default!;
-    [SerializeField, Required] Canvas _gameOverCanvas = default!;
+    [SerializeField, Required] FunEvent _funEvent = default!;
+    [SerializeField, Required] GameOverUIController _gameOverUIController = default!;
     [SerializeField, Required] PlayerGameOverEvent _playerGameOverEvent = default!;
     [SerializeField, Required] BoostDashEvent _boostDashEvent = default!;
+    [SerializeField, Required] AudioSource _jumpingAudioSource = default!;
+    [SerializeField, Required] AudioSource _landingAudioSource = default!;
+    [SerializeField, Required] AudioSource _gameoverAudioSource = default!;
+    [SerializeField, Required] VisualEffect _piyopiyoeff = default!;
 
     IPlayer _player;
     IPlayer _inflatablePlayer;
@@ -78,7 +84,7 @@ public class PlayerController : MonoBehaviour
             parent._player.Dash(parent._currentState);
             if (parent._playerParameter.Rb.velocity.magnitude <= 0.01f)
             {
-                parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Idle);
+                parent._playerParameter.ChangeIdleAnimation();
             }
 
             if (!parent._groundCheck.IsGround(out _))
@@ -109,6 +115,7 @@ public class PlayerController : MonoBehaviour
     {
         public IState.E_State Initialize(PlayerController parent)
         {
+            SoundManager.Instance.PlaySE(parent._jumpingAudioSource, SoundSource.SE002_PlayerJumping);
             parent._player.Jump(parent._playerParameter.Rb);
             return IState.E_State.Unchanged;
         }
@@ -158,7 +165,11 @@ public class PlayerController : MonoBehaviour
 
         public IState.E_State FixedUpdate(PlayerController parent)
         {
-            if (parent._groundCheck.IsGround(out _)) return IState.E_State.Control;
+            if (parent._groundCheck.IsGround(out _))
+            {
+                SoundManager.Instance.PlaySE(parent._landingAudioSource, SoundSource.SE003_PlayerLanding);
+                return IState.E_State.Control;
+            }
 
             parent._player.Fall();
             parent._player.Dash(parent._currentState);
@@ -233,9 +244,15 @@ public class PlayerController : MonoBehaviour
         public IState.E_State Initialize(PlayerController parent)
         {
             _currentPressCount = 0;
+
+            SoundManager.Instance.PlaySE(parent._gameoverAudioSource, SoundSource.SE006_PlayerDamaged);
+
             parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Down);
 
-            parent._gameOverCanvas.enabled = true;
+            parent._gameOverUIController.Enable();
+
+            parent._piyopiyoeff.enabled = true;
+            parent._piyopiyoeff.SendEvent("OnPlay");
 
             return IState.E_State.Unchanged;
         }
@@ -268,7 +285,7 @@ public class PlayerController : MonoBehaviour
             _currentPressCount++;
 
             //一度でもプッシュされたら表示する
-            parent._gameOverCanvas.enabled = true;
+            parent._gameOverUIController.Enable();
 
             return IState.E_State.Unchanged;
         }
@@ -289,6 +306,10 @@ public class PlayerController : MonoBehaviour
         {
             _reviveFrame = REVIVE_ANIMATION_WAIT_FRAME;
             parent._playerParameter.AnimationChanger.ChangeAnimation(E_Atii.Retry);
+
+            parent._piyopiyoeff.enabled = false;
+            parent._piyopiyoeff.SendEvent("StopPlay");
+
             return IState.E_State.Unchanged;
         }
 
@@ -421,15 +442,18 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged += OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed += JoyconLeft_OnDownButtonPressed;
         _ringconPushAction.action.performed += OnRingconPush;
+        _waterEvent.OnEnterAction += OnWaterEnter;
         _waterEvent.OnStayAction += OnWaterStay;
+        _waterEvent.OnExitAction += OnWaterExit;
+        _funEvent.OnEnterAction += OnFunEnter;
+        _funEvent.OnStayAction += OnFunStay;
+        _funEvent.OnExitAction += OnFunExit;
         _playerGameOverEvent.OnGameOver += OnGameOver;
         _playerGameOverEvent.OnRevive += OnRevive;
         _boostDashEvent.OnBoostDash += OnBoostDashEvent;
 
         _playerPairs.Add(BalloonState.Normal, _deflatablePlayer);
         _playerPairs.Add(BalloonState.Expands, _inflatablePlayer);
-
-        _gameOverCanvas.enabled = false;
     }
 
     private void Update()
@@ -449,7 +473,12 @@ public class PlayerController : MonoBehaviour
         _balloonController.OnStateChanged -= OnBalloonStateChanged;
         _playerParameter.JoyconLeft.OnDownButtonPressed -= JoyconLeft_OnDownButtonPressed;
         _ringconPushAction.action.performed -= OnRingconPush;
+        _waterEvent.OnEnterAction -= OnWaterEnter;
         _waterEvent.OnStayAction -= OnWaterStay;
+        _waterEvent.OnExitAction -= OnWaterExit;
+        _funEvent.OnEnterAction -= OnFunEnter;
+        _funEvent.OnStayAction -= OnFunStay;
+        _funEvent.OnExitAction -= OnFunExit;
         _playerGameOverEvent.OnGameOver -= OnGameOver;
         _playerGameOverEvent.OnRevive -= OnRevive;
     }
@@ -536,14 +565,41 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnWaterEnter()
+    {
+        _playerParameter.GroundStatus = GroundStatus.UnderWater;
+    }
+
     private void OnWaterStay()
     {
         _player.OnWaterStay();
     }
 
+    private void OnWaterExit()
+    {
+        _playerParameter.GroundStatus = GroundStatus.OnGround;
+    }    
+    
+    private void OnFunEnter(Vector3 windVec)
+    {
+        _playerParameter.GroundStatus = GroundStatus.Wind;
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AN01_Wind);
+    }
+
+    private void OnFunStay(Vector3 windVec)
+    {
+        _player.OnWindStay(windVec);
+    }
+
+    private void OnFunExit(Vector3 windVec)
+    {
+        _playerParameter.GroundStatus = GroundStatus.OnGround;
+        _playerParameter.AnimationChanger.ChangeAnimation(E_Atii.AN01_Wind_default);
+    }
+
     private void OnRevive()
     {
-        _gameOverCanvas.enabled = false;
+        _gameOverUIController.Disable();
     }
 
     private void OnGameOver()

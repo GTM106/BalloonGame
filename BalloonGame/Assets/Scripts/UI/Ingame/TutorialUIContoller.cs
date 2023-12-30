@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using TM.Easing;
 using TM.Easing.Management;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.UI;
 
 public class TutorialUIContoller : MonoBehaviour
 {
@@ -18,6 +20,7 @@ public class TutorialUIContoller : MonoBehaviour
     }
 
     [SerializeField, Required] Canvas _tutorialCanvas = default!;
+    [SerializeField, Required] PlayableDirector _timelime = default!;
     [SerializeField, Required] Transform _tutorialUIParent = default!;
     [SerializeField] AnimationData _popupAnimationData = default!;
     [SerializeField] AnimationData _popoutAnimationData = default!;
@@ -32,6 +35,8 @@ public class TutorialUIContoller : MonoBehaviour
         _tutorialCanvas.enabled = true;
 
         await PopupAnimation();
+
+        _timelime.Play();
     }
 
     private async UniTask PopupAnimation()
@@ -61,6 +66,7 @@ public class TutorialUIContoller : MonoBehaviour
     {
         await PopoutAnimation();
         _tutorialCanvas.enabled = false;
+        _timelime.Stop();
     }
 
     private async UniTask PopoutAnimation()

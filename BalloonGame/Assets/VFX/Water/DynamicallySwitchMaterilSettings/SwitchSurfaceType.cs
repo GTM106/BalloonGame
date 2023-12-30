@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks.Triggers;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -9,10 +10,26 @@ using UnityEngine.Rendering.Universal;
 public class SwitchSurfaceType : MonoBehaviour
 {
     private Renderer objectRenderer;
+    private Color inWaterColor;
+    private Color defaultWaterColor;
 
     private void Awake()
     {
         objectRenderer = GetComponent<Renderer>();
+        defaultWaterColor = objectRenderer.material.GetColor("_DefaultColor");
+        inWaterColor = objectRenderer.material.GetColor("_InWaterColor"); ;
+
+        if (inWaterColor == null)
+        {
+            Debug.LogError("_DefaultColorが見つかりませんでした。このオブジェクトのマテリアルに_DefaultColorがあるか確認してください。");
+            return; // 早期リターン
+        }
+
+        if (defaultWaterColor == null)
+        {
+            Debug.LogError("_InWaterColorが見つかりませんでした。このオブジェクトのマテリアルに_InWaterColorがあるか確認してください。");
+            return; // 早期リターン
+        }
 
         if (objectRenderer == null)
         {
@@ -38,10 +55,12 @@ public class SwitchSurfaceType : MonoBehaviour
         if (IsInsideCollider(cameraPosition))
         {
             SetMaterialCullMode(CullMode.Front);
+            SetMaterialColor(inWaterColor);
         }
         else
         {
             SetMaterialCullMode(CullMode.Back);
+            SetMaterialColor(defaultWaterColor);
         }
     }
 
@@ -54,5 +73,11 @@ public class SwitchSurfaceType : MonoBehaviour
     private void SetMaterialCullMode(CullMode cullMode)
     {
         objectRenderer.material.SetFloat("_Cull", (float)cullMode);
+    }
+
+    private void SetMaterialColor(Color color)
+    {
+        if (objectRenderer.material.GetColor("_DefaultColor") == color) return;
+        objectRenderer.material.SetColor("_DefaultColor", color);
     }
 }

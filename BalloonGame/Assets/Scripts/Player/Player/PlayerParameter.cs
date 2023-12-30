@@ -8,6 +8,13 @@ public enum BoostDashDirection
     PlayerForward
 }
 
+public enum GroundStatus
+{
+    OnGround,
+    UnderWater,
+    Wind,
+}
+
 [System.Serializable]
 public class PlayerParameter
 {
@@ -38,6 +45,16 @@ public class PlayerParameter
     [SerializeField] AnimationChanger<E_Atii> _animationChanger = default!;
     [Header("â“¹‚Ì‘¬“x‚ð’²®‚µ‚Ü‚·B-1‚©‚ç1‚ÌŠÔ‚Å")]
     [SerializeField] AnimationCurve _slopeSpeed = default!;
+    [Header("—Ž‰ºŽž‚Ì‰Á‘¬Binflated‚ªPlayer–c‚ç‚ÝŽž")]
+    [SerializeField, Min(0)] float _inflatedFallSpeed = default!;
+    [SerializeField, Min(0)] float _deflatedFallSpeed = default!;
+    GroundStatus _groundStatus;
+
+    public GroundStatus GroundStatus
+    {
+        get { return _groundStatus; }
+        set { _groundStatus = value; }
+    }
 
     public Rigidbody Rb => _rb;
     public PhysicMaterial PhysicMaterial => _physicMaterial;
@@ -55,4 +72,32 @@ public class PlayerParameter
     public int RequiredPushCount => _requiredPushCount;
     public AnimationChanger<E_Atii> AnimationChanger => _animationChanger;
     public float SloopSpeed(float angle) => _slopeSpeed.Evaluate(angle);
+    public float InflatedFallSpeed => _inflatedFallSpeed;
+    public float DeflatedFallSpeed => _deflatedFallSpeed;
+
+    public void ChangeRunAnimation()
+    {
+        E_Atii runAnimation = GroundStatus switch
+        {
+            GroundStatus.OnGround => E_Atii.Run,
+            GroundStatus.UnderWater => E_Atii.Swimming,
+            GroundStatus.Wind => E_Atii.Run,
+            _ => throw new System.NotImplementedException(),
+        };
+
+        _animationChanger.ChangeAnimation(runAnimation);
+    }
+
+    public void ChangeIdleAnimation()
+    {
+        E_Atii idleAnimation = GroundStatus switch
+        {
+            GroundStatus.OnGround => E_Atii.Idle,
+            GroundStatus.UnderWater => E_Atii.Swim,
+            GroundStatus.Wind => E_Atii.IdleWind,
+            _ => throw new System.NotImplementedException(),
+        };
+
+        _animationChanger.ChangeAnimation(idleAnimation);
+    }
 }

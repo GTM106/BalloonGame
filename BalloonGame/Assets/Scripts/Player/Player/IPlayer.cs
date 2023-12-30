@@ -29,4 +29,9 @@ public interface IPlayer : IAdjustGravity
     /// —‰º‚És‚í‚ê‚éˆ—
     /// </summary>
     public void Fall();
+
+    /// <summary>
+    /// •—‚Ì‰e‹¿‰º’†Aí‚És‚í‚ê‚éˆ—
+    /// </summary>
+    public void OnWindStay(Vector3 windVec);
 }

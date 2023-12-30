@@ -13,24 +13,23 @@ public class IngameController : MonoBehaviour
     [SerializeField, Required] TutorialUIContoller _tutorialUIContoller = default!;
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
     [SerializeField, Required] GameFinishController _gameFinishController = default!;
-    [SerializeField, Required] ImageTransitionController _imageTransitionController = default!;
+    [SerializeField, Required] VideoTransitionController _videoTransitionController = default!;
+    [SerializeField, Required] IngameStartEvent _ingameStartEvent = default!;
 
     //Inputån
     [SerializeField, Required] InputActionReference _UIAnykeyAction = default;
     [SerializeField, Required] JoyconHandler _JoyconLeftUI = default!;
     [SerializeField, Required] JoyconHandler _JoyconRightUI = default!;
 
+    [Header("ÉQÅ[ÉÄèIóπèàóùån")]
+    [SerializeField, Required] SuccessSceneController _successSceneController = default!;
     [SerializeField, Min(0)] int waitingFrameForGameFinish = 50;
-    [SerializeField] TrantisionData _trantisionData = default!;
+    [SerializeField] TransitionData _toSuccessSceneTransition = default!;
 
     private void Awake()
     {
         _timeLimitController.OnTimeLimit += OnGameFinish;
-    }
-
-    private void Start()
-    {
-        OnGameStart();
+        _ingameStartEvent.OnStart += OnGameStart;
     }
 
     private void OnDestroy()
@@ -95,6 +94,7 @@ public class IngameController : MonoBehaviour
         }
 
         //ÉNÉäÉAâÊñ Ç…ëJà⁄
-        _imageTransitionController.StartTransition(_trantisionData);
+        await _videoTransitionController.StartTransition(_toSuccessSceneTransition);
+        _successSceneController.Enable();
     }
 }

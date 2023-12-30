@@ -19,53 +19,124 @@ MonoBehaviour:
         _clip: {fileID: 0}
         _volume: 1
         _pitch: 1
+      _source: 0
     - _key: BGM002_Ingame
       _value:
         _clip: {fileID: 0}
         _volume: 1
         _pitch: 1
+      _source: 1
+    - _key: BGM002_Tutorial
+      _value:
+        _clip: {fileID: 8300000, guid: 295b3eb48c9fe224396bbb975adf85cc, type: 3}
+        _volume: 0.613
+        _pitch: 1
+      _source: 2
+    - _key: BGM002_A
+      _value:
+        _clip: {fileID: 8300000, guid: 4106da1241ca4f14080066ff93dc0177, type: 3}
+        _volume: 0.586
+        _pitch: 1
+      _source: 3
     - _key: BGM003_Succeed
       _value:
         _clip: {fileID: 0}
         _volume: 1
         _pitch: 1
+      _source: 4
     - _key: BGS001_Sand
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: a29eba3037039ad4396c48827bd04fee, type: 3}
         _volume: 1
         _pitch: 1
+      _source: 5
     - _key: SE001_PlayerWalking
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: eca67e58e8305e841b6eaf44bfa67db3, type: 3}
         _volume: 1
         _pitch: 1
+      _source: 6
     - _key: SE002_PlayerJumping
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: 0c2aa26cad9d31041bcdf643b232ef61, type: 3}
         _volume: 1
         _pitch: 1
+      _source: 7
     - _key: SE003_PlayerLanding
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: 51d9e426ef40ffe4e9634e27a382d19d, type: 3}
         _volume: 1
         _pitch: 1
+      _source: 8
     - _key: SE004_PlayerBalloonExpands
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: bfb5abb46eba02b47b8c90a5f1ac1d7a, type: 3}
         _volume: 1
         _pitch: 1
+      _source: 9
     - _key: SE005_PlayerBoostDash
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: 5d11ab90f85b1614bad3560bccc7481f, type: 3}
         _volume: 1
         _pitch: 1
+      _source: 10
     - _key: SE006_PlayerDamaged
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: c0a8fcef66b60aa43977314f19f0c599, type: 3}
         _volume: 1
         _pitch: 1
+      _source: 11
     - _key: SE007_PlayerGetsItem
+      _value:
+        _clip: {fileID: 8300000, guid: 48d0fcd67737b2e49aeae39f102aac88, type: 3}
+        _volume: 1
+        _pitch: 1
+      _source: 12
+    - _key: SE010_Hermit_Detection
       _value:
         _clip: {fileID: 0}
         _volume: 1
         _pitch: 1
+      _source: 13
+    - _key: SE011_Hermit_Chase
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+      _source: 14
+    - _key: SE020_Balloonfish_Floating
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+      _source: 15
+    - _key: SE030_AirVent_Interact
+      _value:
+        _clip: {fileID: 8300000, guid: 122b8a5f2c77b7a4b8a8a91061b2dd1f, type: 3}
+        _volume: 1
+        _pitch: 1
+      _source: 16
+    - _key: SE031_FunRunning
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+      _source: 17
+    - _key: SE032_WaterIntrusion
+      _value:
+        _clip: {fileID: 8300000, guid: a10bf225ceb86ee49ba4cb4f132f149d, type: 3}
+        _volume: 1
+        _pitch: 1
+      _source: 17
+    - _key: SE040_EndOfTimeLimit
+      _value:
+        _clip: {fileID: 8300000, guid: 122b8a5f2c77b7a4b8a8a91061b2dd1f, type: 3}
+        _volume: 1
+        _pitch: 1
+      _source: 18
+    - _key: SE050_Select
+      _value:
+        _clip: {fileID: 0}
+        _volume: 1
+        _pitch: 1
+      _source: 20

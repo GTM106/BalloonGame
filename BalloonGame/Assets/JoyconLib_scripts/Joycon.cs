@@ -409,6 +409,7 @@ public class Joycon
             buttons[(int)Button.MINUS] = ((report_buf[4] & 0x01) != 0);
             buttons[(int)Button.PLUS] = ((report_buf[4] & 0x02) != 0);
             buttons[(int)Button.STICK] = ((report_buf[4] & (isLeft ? 0x08 : 0x04)) != 0);
+            buttons[(int)Button.CAPTURE] = ((report_buf[4] & 0x20) != 0);
             buttons[(int)Button.SHOULDER_1] = (report_buf[3 + (isLeft ? 2 : 0)] & 0x40) != 0;
             buttons[(int)Button.SHOULDER_2] = (report_buf[3 + (isLeft ? 2 : 0)] & 0x80) != 0;
             buttons[(int)Button.SR] = (report_buf[3 + (isLeft ? 2 : 0)] & 0x10) != 0;

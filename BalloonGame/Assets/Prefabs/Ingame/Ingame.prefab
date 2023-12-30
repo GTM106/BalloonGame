@@ -50,16 +50,18 @@ MonoBehaviour:
   _tutorialUIContoller: {fileID: 0}
   _timeLimitController: {fileID: 0}
   _gameFinishController: {fileID: 0}
-  _imageTransitionController: {fileID: 0}
+  _videoTransitionController: {fileID: 0}
+  _ingameStartEvent: {fileID: 0}
   _UIAnykeyAction: {fileID: -1073992759468367325, guid: 585a3b88238186a44b1683b16bca7288,
     type: 3}
   _JoyconLeftUI: {fileID: 0}
   _JoyconRightUI: {fileID: 0}
-  waitingFrameForGameFinish: 50
-  _trantisionData:
+  _successSceneController: {fileID: 0}
+  waitingFrameForGameFinish: 150
+  _toSuccessSceneTransition:
     duration: 2
-    backgroundColor: {r: 0.3254717, g: 0.66560423, b: 1, a: 0}
-    type: 0
+    backgroundColor: {r: 0, g: 1, b: 0.9424863, a: 0}
+    type: 1
 --- !u!82 &7453220264301256219
 AudioSource:
   m_ObjectHideFlags: 0

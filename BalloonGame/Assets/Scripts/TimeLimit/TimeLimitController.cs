@@ -22,13 +22,18 @@ public class TimeLimitController : MonoBehaviour
 
     public event Action OnTimeLimit;
 
+    private void Awake()
+    {
+        DisableUI();
+    }
+
     private void Update()
     {
         Reduce();
 
-        if(_timeLimit != null)
+        if (_timeLimit != null)
         {
-            _timeLimitView.UpdateText(_timeLimit.CurrentTimeLimitValue.ToString("F1"));
+            _timeLimitView.UpdateView(_timeLimit.CurrentTimeLimitValue / _initTimeLimit);
         }
     }
 

@@ -1,5 +1,7 @@
-﻿internal interface ITransition
+﻿using Cysharp.Threading.Tasks;
+
+internal interface ITransition
 {
-    void StartTransition();
+    UniTask StartTransition(TransitionData trantisionData);
     bool IsTransitionComplete();
 }

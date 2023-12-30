@@ -6,19 +6,19 @@ public class GameStarter : MonoBehaviour, IHittable
 {
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
     [SerializeField, Required] GameStartUIController _gameStartUIController = default!;
+    [SerializeField, Required] BPMEvent _bpmEvent = default!;
+    [SerializeField, Required] CollectibleScript _collectibleScript = default!;
 
-    bool _canStartGame = false;
+    bool _isStartGame = false;
 
     private void Reset()
     {
         _timeLimitController = FindAnyObjectByType<TimeLimitController>();
     }
 
-    void IHittable.OnEnter(Collider playerCollider, BalloonState balloonState)
+    async void IHittable.OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        _canStartGame = true;
-
-        //TODO:Issue92の項目により変更する
+        await _bpmEvent.WaitForBeat();
         OnStartGame();
     }
 
@@ -32,12 +32,14 @@ public class GameStarter : MonoBehaviour, IHittable
 
     private async void OnStartGame()
     {
-        if (!_canStartGame) return;
-        _canStartGame = false;
+        if (_isStartGame) return;
+        _isStartGame = true;
 
-        //ゲーム開始UIの表示
         await _gameStartUIController.EnableUI();
         _gameStartUIController.DisableUI();
+
+        //ゲーム開始UIの表示
+        _collectibleScript.Enable();
 
         if (_timeLimitController != null)
         {

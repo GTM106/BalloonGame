@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct TrantisionData
+public struct TransitionData
 {
     public enum TransitionType
     {
@@ -20,17 +20,18 @@ public struct TrantisionData
 
 public class ImageTransitionController : MonoBehaviour, ITransition
 {
+    [SerializeField, Required] Canvas _canvas = default!;
     [SerializeField] Material _material = default!;
-    [SerializeField] TrantisionData _defaultTransitionData = default!;
 
     float _duration;
     float _elapsedTime;
     Color _backgroundColor;
-    TrantisionData.TransitionType _type;
+    TransitionData.TransitionType _type;
 
     private void Awake()
     {
         _material.SetFloat("_Alpha", 0f);
+        _canvas.enabled = false;
     }
 
     private void OnApplicationQuit()
@@ -38,19 +39,16 @@ public class ImageTransitionController : MonoBehaviour, ITransition
         _material.SetFloat("_Alpha", 0f);
     }
 
-    public void StartTransition(TrantisionData trantisionData)
+    public async UniTask StartTransition(TransitionData trantisionData)
     {
         InitializeTransition(trantisionData);
-        UpdateTransition();
+        await UpdateTransition();
     }
 
-    public void StartTransition()
+    private void InitializeTransition(TransitionData trantisionData)
     {
-        StartTransition(_defaultTransitionData);
-    }
+        _canvas.enabled = true;
 
-    private void InitializeTransition(TrantisionData trantisionData)
-    {
         _elapsedTime = 0f;
         _backgroundColor = trantisionData.backgroundColor;
         _duration = trantisionData.duration;
@@ -58,7 +56,7 @@ public class ImageTransitionController : MonoBehaviour, ITransition
         _type = trantisionData.type;
     }
 
-    private async void UpdateTransition()
+    private async UniTask UpdateTransition()
     {
         var token = this.GetCancellationTokenOnDestroy();
 
@@ -71,8 +69,8 @@ public class ImageTransitionController : MonoBehaviour, ITransition
 
             float alpha = _type switch
             {
-                TrantisionData.TransitionType.In => progress,
-                TrantisionData.TransitionType.Out => 1f - progress,
+                TransitionData.TransitionType.In => progress,
+                TransitionData.TransitionType.Out => 1f - progress,
                 _ => throw new NotImplementedException()
             };
 
