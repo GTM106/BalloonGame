@@ -16,6 +16,7 @@ public enum EnvironmentStatus
 
     Underwater = 1 << 0,//水中にいる
     WindAffected = 1 << 1,//風の影響を受けている
+    GameOver = 1 << 2,//ゲームオーバーの状態になっている
 }
 
 [System.Serializable]
@@ -121,6 +122,12 @@ public class PlayerParameter
             return;
         }
 
+        //ゲームオーバーなら落下モーションなし
+        if (IsBitSetEnvironmentStatus(EnvironmentStatus.GameOver))
+        {
+            return;
+        }
+
         //風は変更なし
 
         _animationChanger.ChangeAnimation(animation);
@@ -134,6 +141,12 @@ public class PlayerParameter
         //水中なら落下時モーションなし
         //最優先
         if (IsBitSetEnvironmentStatus(EnvironmentStatus.Underwater))
+        {
+            return;
+        }        
+        
+        //ゲームオーバーなら落下モーションなし
+        if (IsBitSetEnvironmentStatus(EnvironmentStatus.GameOver))
         {
             return;
         }
