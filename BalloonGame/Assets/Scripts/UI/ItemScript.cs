@@ -6,19 +6,19 @@ using UnityEngine;
 //ItemScript
 public class ItemScript : MonoBehaviour, IHittable
 {
-    [SerializeField] CollectibleScript collectibleScript = default!;
+    [SerializeField, Required] CollectibleScript collectibleScript = default!;
     [SerializeField, Required] AudioSource _itemCollectionAudioSource = default!;
-    [SerializeField] Animator _animator = default!;
+    [SerializeField, Required] Animator _animator = default!;
     [Header("収集アイテム取得時に上昇する値")]
     [SerializeField, Min(0)] int itemValue = default!;
 
     const double AnimationDuration = 1.06d;
+
     public async void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
         var token = this.GetCancellationTokenOnDestroy();
 
         SoundManager.Instance.PlaySE(_itemCollectionAudioSource, SoundSource.SE007_PlayerGetsItem);
-        collectibleScript.SetItemCount();
         collectibleScript.Add(itemValue);
 
         _animator.SetBool("IsHitPlayer", true);
@@ -27,6 +27,7 @@ public class ItemScript : MonoBehaviour, IHittable
 
         gameObject.SetActive(false);
     }
+
     public void OnExit(Collider playerCollider, BalloonState balloonState)
     {
 
