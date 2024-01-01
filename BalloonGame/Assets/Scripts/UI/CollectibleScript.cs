@@ -9,23 +9,34 @@ public class CollectibleScript : MonoBehaviour
     [SerializeField] Sprite[] uiNumber = default!;
     [Header("表示場所")]
     [SerializeField] Image[] displayPosition = default!;
-    [SerializeField, Required] ScoreManager scoreManager=default!;
+    [Header("収集アイテム取得値がBGM_B遷移する値")]
+    [SerializeField] int bgmTrackB_ChangeCount = default!;
+    [Header("収集アイテム取得時にBGM_C遷移する値")]
+    [SerializeField] int bgmTrackC_ChangeCount = default!;
+    [SerializeField, Required] ScoreManager scoreManager = default!;
     [SerializeField, Required] Canvas _canvas = default!;
+    [SerializeField, Required] BGMTrackChanger _bgmTrackChanger = default!;
+
+    List<int> bgmTrackChange = new List<int>();
 
     private int currentNumber = 0;
-
+    private int itemCount = 0;
     public void Add(int value)
     {
         currentNumber += value;
         scoreManager.SetScore(currentNumber);
         NumberDisplay();
     }
+
     private void Awake()
     {
         foreach (var item in displayPosition)
         {
             item.sprite = uiNumber[0];
         }
+
+        bgmTrackChange.Add(bgmTrackB_ChangeCount);
+        bgmTrackChange.Add(bgmTrackC_ChangeCount);
 
         Disable();
     }
@@ -58,5 +69,24 @@ public class CollectibleScript : MonoBehaviour
         displayPosition[0].sprite = uiNumber[onesDigit];
         displayPosition[1].sprite = uiNumber[tensDigit];
         displayPosition[2].sprite = uiNumber[hundredsDigit];
+    }
+
+    public void SetItemCount()
+    {
+        itemCount++;
+        BgmTrackChange();
+    }
+
+    private void BgmTrackChange()
+    {
+        if(itemCount == bgmTrackC_ChangeCount || itemCount == bgmTrackB_ChangeCount)
+        {
+            PlayNextTrack();
+        }
+    }
+
+    void PlayNextTrack()
+    {
+        _bgmTrackChanger.PlayNextTrack();
     }
 }
