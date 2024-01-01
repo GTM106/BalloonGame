@@ -16,11 +16,6 @@ public class IngameController : MonoBehaviour
     [SerializeField, Required] VideoTransitionController _videoTransitionController = default!;
     [SerializeField, Required] IngameStartEvent _ingameStartEvent = default!;
 
-    //Input系
-    [SerializeField, Required] InputActionReference _UIAnykeyAction = default;
-    [SerializeField, Required] JoyconHandler _JoyconLeftUI = default!;
-    [SerializeField, Required] JoyconHandler _JoyconRightUI = default!;
-
     [Header("ゲーム終了処理系")]
     [SerializeField, Required] SuccessSceneController _successSceneController = default!;
     [SerializeField, Min(0)] int waitingFrameForGameFinish = 50;
@@ -37,35 +32,14 @@ public class IngameController : MonoBehaviour
         _timeLimitController.OnTimeLimit -= OnGameFinish;
     }
 
-    private async void OnGameStart()
+    private void OnGameStart()
     {
-        var token = this.GetCancellationTokenOnDestroy();
-
         //BGMの再生
         SoundManager.Instance.PlayBGM(SoundSource.BGM002_Tutorial);
 
-        //チュートリアルUIの表示
-        _inputSystemManager.ChangeMaps(InputSystemManager.ActionMaps.UI);
-        await _tutorialUIContoller.Popup();
-
-        //数秒は必ず表示する
-        await UniTask.Delay(1000, false, PlayerLoopTiming.Update, token);
-
-        //任意キー入力まで待機
-        await WaitForAnyKeyWasPressed(token);
-
-        //任意の入力でUIがポップアウト
-        await _tutorialUIContoller.Popout();
-
         _inputSystemManager.ChangeMaps(InputSystemManager.ActionMaps.Player);
-    }
 
-    private async UniTask WaitForAnyKeyWasPressed(CancellationToken token)
-    {
-        while (!_UIAnykeyAction.action.WasPressedThisFrame() && !_JoyconLeftUI.WasPressedAnyKeyThisFrame && !_JoyconRightUI.WasPressedAnyKeyThisFrame)
-        {
-            await UniTask.Yield(token);
-        }
+        _tutorialUIContoller.StartTutorial();
     }
 
     private async void OnGameFinish()
