@@ -3,12 +3,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//ItemScript
 public class ItemScript : MonoBehaviour, IHittable
 {
-    [SerializeField] CollectibleScript collectibleScript = default!;
-    [SerializeField] Animator _animator = default!;
-
+    [SerializeField, Required] CollectibleScript collectibleScript = default!;
+    [SerializeField, Required] AudioSource _itemCollectionAudioSource = default!;
+    [SerializeField, Required] Animator _animator = default!;
     [Header("収集アイテム取得時に上昇する値")]
     [SerializeField, Min(0)] int itemValue = default!;
 
@@ -18,15 +18,16 @@ public class ItemScript : MonoBehaviour, IHittable
     {
         var token = this.GetCancellationTokenOnDestroy();
 
-        //SE700再生
+        SoundManager.Instance.PlaySE(_itemCollectionAudioSource, SoundSource.SE007_PlayerGetsItem);
         collectibleScript.Add(itemValue);
 
         _animator.SetBool("IsHitPlayer", true);
 
-        await UniTask.Delay(TimeSpan.FromSeconds(AnimationDuration),false, PlayerLoopTiming.FixedUpdate, token);
+        await UniTask.Delay(TimeSpan.FromSeconds(AnimationDuration), false, PlayerLoopTiming.FixedUpdate, token);
 
         gameObject.SetActive(false);
     }
+
     public void OnExit(Collider playerCollider, BalloonState balloonState)
     {
 
