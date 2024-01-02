@@ -29,6 +29,9 @@ public enum SoundSource
     SE032_WaterIntrusion,
     SE040_EndOfTimeLimit,
     SE050_Select,
+    SE060_SharkAttack,
+    SE061_SharkTargeting,
+    SE062_BreakBlock,
 
     [InspectorName("")]
     Max,
