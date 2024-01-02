@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class SantaEventArea : MonoBehaviour, IHittable
 {
-    private const int HighPriority = 20;
     [SerializeField, Required] SunglassController _playerSunglassController = default!;
     [SerializeField] AnimationChanger<E_Santa> _animationChanger = default!;
     [SerializeField, Required] CinemachineVirtualCamera _virtualCamera = default!;
@@ -18,6 +17,12 @@ public class SantaEventArea : MonoBehaviour, IHittable
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
 
     [SerializeField, Required] Transform _hand;
+
+    static readonly Vector3 handPosition = new(0.014f, -0.079f, -0.006f);
+    static readonly Quaternion handRotation = new(-0.101377673f, 0.67903924f, -0.716659009f, -0.122589655f);
+    
+    const int HighPriority = 20;
+    const int LowPriority = 0;
 
     bool _hasSunglass = true;
 
@@ -46,16 +51,16 @@ public class SantaEventArea : MonoBehaviour, IHittable
 
         _virtualCamera.Priority = HighPriority;
         await UniTask.Delay(TimeSpan.FromSeconds(0.4d));
-        _virtualCamera.Priority = 0;
+        _virtualCamera.Priority = LowPriority;
         _virtualCamera2cam.Priority = HighPriority;
         OnHand();
         await UniTask.Delay(TimeSpan.FromSeconds(1.6d));
-        _virtualCamera2cam.Priority = 0;
+        _virtualCamera2cam.Priority = LowPriority;
         _virtualCamera3cam.Priority = HighPriority;
         _playerSunglassController.Enable();
         _santaSunglassController.Disable();
         await UniTask.Delay(TimeSpan.FromSeconds(1.0d));
-        _virtualCamera3cam.Priority = 0;
+        _virtualCamera3cam.Priority = LowPriority;
 
         _inputSystemManager.ChangeMaps(InputSystemManager.ActionMaps.Player);
 
@@ -74,7 +79,6 @@ public class SantaEventArea : MonoBehaviour, IHittable
     private void OnHand()
     {
         _santaSunglassController.transform.parent = _hand;
-        _santaSunglassController.transform.localPosition = new Vector3(0.014f, -0.079f, -0.006f);
-        _santaSunglassController.transform.localRotation = new Quaternion(-0.101377673f, 0.67903924f, -0.716659009f, -0.122589655f);
+        _santaSunglassController.transform.SetLocalPositionAndRotation(handPosition, handRotation);
     }
 }
