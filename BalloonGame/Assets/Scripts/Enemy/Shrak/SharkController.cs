@@ -21,6 +21,7 @@ public interface ISharkState
         Discovery,
         Targeting,
         Chase,
+        Down,
 
         MAX,
 
@@ -37,7 +38,7 @@ public class SharkController : MonoBehaviour, IHittable
     [SerializeField] GameObject player = default!;
     [Header("移動する範囲")]
     [SerializeField] GameObject partrolRange = default!;
-    [Header("最大移動距離")]
+    [Header("巡回時の最大移動距離")]
     [SerializeField, Min(0f)] float maxDuration = default!;
     [Header("巡回速度")]
     [SerializeField, Min(0f)] float patrolSpeed = default!;
@@ -45,11 +46,13 @@ public class SharkController : MonoBehaviour, IHittable
     [SerializeField, Min(0f)] float rotationSpeed = default!;
     [Header("移動するスパン")]
     [SerializeField, Min(0f)] float movementStartSpan = default!;
-    [Header("追跡を開始する範囲")]
-    [SerializeField, Min(0f)] float chaseRadius = default!;
+    [Header("追跡開始時間")]
+    [SerializeField, Min(0f)] float chaseStartTime = default!;
     [Header("追跡速度")]
     [SerializeField, Min(0f)] float chaseSpeed = default!;
-    [Header("攻撃されて死んだ場合どのくらい待つか")]
+    [Header("追跡時間")]
+    [SerializeField, Min(0f)] float chaseTime = default!;
+    [Header("ダウン時の再追跡までの時間")]
     [SerializeField, Min(0f)] float waitTimeDeah = default!;
     [Header("攻撃のリキャストタイム")]
     [SerializeField, Min(0f)] double attackRecastTime = default!;
@@ -87,6 +90,7 @@ public class SharkController : MonoBehaviour, IHittable
         new DiscoveryState(),
         new Targeting(),
         new ChaseState(),
+        new DownState(),
     };
 
     class PartrolState : ISharkState
@@ -95,14 +99,19 @@ public class SharkController : MonoBehaviour, IHittable
         {
             parent.discoveryCheaker = false;
             parent._animationChanger.ChangeAnimation(E_Shark.AN04_Swim);
-            parent.StartNextAttackDelay();
+
+            if(parent._isHitPlayer)
+            {
+                parent.NextAttackDelay(parent.destroyCancellationToken).Forget();
+            }
+
             return ISharkState.E_State.Unchanged;
         }
 
         public ISharkState.E_State Update(SharkController parent)
         {
             if (parent._isHitPlayer) return ISharkState.E_State.Unchanged;
-            
+
             parent.partrolTimer += Time.deltaTime;
 
             if (parent.chaseCheck)
@@ -174,7 +183,7 @@ public class SharkController : MonoBehaviour, IHittable
                 return ISharkState.E_State.Partrol;
             }
 
-            if (parent.chaseTimer >= parent.chaseSpeed)
+            if (parent.chaseTimer >= parent.chaseStartTime)
             {
                 parent.chaseTimer = 0.0f;
                 SoundManager.Instance.StopSE(parent._targetingAudioSource);
@@ -226,6 +235,24 @@ public class SharkController : MonoBehaviour, IHittable
         public ISharkState.E_State FixedUpdate(SharkController parent)
         {
             return ISharkState.E_State.Unchanged;
+        }
+    }
+
+    class DownState : ISharkState
+    {
+        public ISharkState.E_State FixedUpdate(SharkController parent)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISharkState.E_State Initialize(SharkController parent)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISharkState.E_State Update(SharkController parent)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -311,7 +338,6 @@ public class SharkController : MonoBehaviour, IHittable
     {
         SoundManager.Instance.StopSE(_chasingAudioSource);
         SoundManager.Instance.StopSE(_discoveryAudioSource);
-        NextAttackDelay(destroyCancellationToken).Forget();
     }
 
     public void OnChaseCheckRangeCollsionEnter()
@@ -334,7 +360,7 @@ public class SharkController : MonoBehaviour, IHittable
 
     private void OnCollisionStay(Collision collision)
     {
-        if(collision.gameObject == partrolRange)
+        if (collision.gameObject == partrolRange)
         {
             isBeyondRange = true;
         }
@@ -363,6 +389,7 @@ public class SharkController : MonoBehaviour, IHittable
             else
             {
                 direction = partrolRange.transform.position - transform.position;
+                Debug.Log("戻る");
             }
 
             RaycastHit hit;
@@ -426,7 +453,7 @@ public class SharkController : MonoBehaviour, IHittable
     {
         if (_isHitPlayer)
         {
-            StartPartrol();
+            StartNextAttackDelay();
 
             return true;
         }
@@ -441,11 +468,16 @@ public class SharkController : MonoBehaviour, IHittable
         Vector3 firstPos = transform.position;
         Vector3 offset = player.transform.position - transform.position;
 
-        while (elapsedChaseTime < chaseSpeed)
+        Vector3 direction = (player.transform.position - transform.position).normalized;
+
+        while (elapsedChaseTime < chaseTime)
         {
             await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate, token);
-            float progress = EasingManager.EaseProgress(easeType: chaseEaseType, elapsedChaseTime, chaseSpeed, chaseOvershootOrAmplitude, chasePeriod);
-            transform.position = firstPos + offset * progress;
+
+            float distanceToMove = chaseSpeed * Time.deltaTime;
+
+            transform.Translate(direction * distanceToMove, Space.World);
+
             elapsedChaseTime += Time.deltaTime;
         }
 
@@ -457,7 +489,19 @@ public class SharkController : MonoBehaviour, IHittable
 
     async UniTask NextAttackDelay(CancellationToken token)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(waitTimeDeah), false, PlayerLoopTiming.FixedUpdate, token);
+        float currentWaitTimeDeah = 0f;
+        Vector3 offset = player.transform.position - transform.position;
+
+        Vector3 direction = (player.transform.position - transform.position).normalized;
+
+        while (currentWaitTimeDeah < waitTimeDeah)
+        {
+            float distanceToMove = patrolSpeed * Time.deltaTime;
+
+            transform.Translate(direction * distanceToMove, Space.World);
+
+            currentWaitTimeDeah += Time.deltaTime;
+        }
         Debug.Log("再開");
         _isHitPlayer = false;
     }
