@@ -1,13 +1,12 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1102 &-4369731462849012471
+--- !u!1102 &-5138022265423068485
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AN04_Swim
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -20,26 +19,11 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b069c2feea4625f4e99cebdfc41a7bcb, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1109 &-2326768586928246694
-AnimatorTransition:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_Conditions: []
-  m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: -4369731462849012471}
-  m_Solo: 0
-  m_Mute: 0
-  m_IsExit: 0
-  serializedVersion: 1
 --- !u!1107 &-121219099379515703
 AnimatorStateMachine:
   serializedVersion: 6
@@ -58,6 +42,8 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -118511540974053484}
     m_Position: {x: 380.88748, y: 140.35979, z: 0}
+    m_State: {fileID: -5138022265423068485}
+    m_Position: {x: 397.48322, y: 112.53357, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions:
@@ -95,6 +81,7 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+  m_DefaultState: {fileID: -5138022265423068485}
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
