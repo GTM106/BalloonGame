@@ -161,7 +161,7 @@ public class SharkController : AirVentInteractable, IHittable
         }
         public ISharkState.E_State FixedUpdate(SharkController parent)
         {
-            if (parent.Discovery() && parent.waitTimeDeahFinished)
+            if (parent.Discovery())
             {
                 return ISharkState.E_State.Targeting;
             }
@@ -320,6 +320,7 @@ public class SharkController : AirVentInteractable, IHittable
     {
         public ISharkState.E_State Initialize(SharkController parent)
         {
+            parent.waitTimeDeahStart = true;
             parent._animationChanger.ChangeAnimation(E_Shark.AN04_Dead);
             parent.airRange.radius = 0;
 
@@ -445,11 +446,11 @@ public class SharkController : AirVentInteractable, IHittable
         }
     }
 
-    public void StartBlockBreak(Collider other)
+    public void StartBlockBreak(GameObject gameObject)
     {
         if (_currentState == ISharkState.E_State.Chase)
         {
-            breakBlockContorller.BlockBreak(other);
+            breakBlockContorller.BlockBreak(gameObject);
         }
     }
 
@@ -489,11 +490,9 @@ public class SharkController : AirVentInteractable, IHittable
 
             Vector3 duration = movePos.transform.position - transform.position;
 
-            RaycastHit hit;
-
             isObstacleAhead = false;
 
-            if (Physics.CapsuleCast(transform.position, movePos.transform.position, 1.0f, duration, out hit))
+            if (Physics.CapsuleCast(transform.position, movePos.transform.position, 1.0f, duration, out RaycastHit hit))
             {
                 if (hit.collider.gameObject != player)
                 {
@@ -603,7 +602,7 @@ public class SharkController : AirVentInteractable, IHittable
         Vector3 downPos = transform.position;
         downPos.y -= 1f;
 
-        if (Physics.CapsuleCast(transform.position + new Vector3(0, 0, 0.5f), transform.position + new Vector3(0, 0, -0.5f), 6.0f, Vector3.down, out var hit))
+        if (Physics.CapsuleCast(transform.position + new Vector3(0, 0, 0.5f), transform.position + new Vector3(0, 0, -0.5f), 6.0f, Vector3.down))
         {
             return true;
         }
@@ -618,7 +617,7 @@ public class SharkController : AirVentInteractable, IHittable
 
         while (currentDownTime < downTime)
         {
-            await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate, token);
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
             currentDownTime += Time.deltaTime;
         }
 

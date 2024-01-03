@@ -5,6 +5,7 @@ using UnityEngine;
 public class SharkChaseRange : MonoBehaviour, IHittable
 {
     [SerializeField] SharkController sharkController = default!;
+
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
         sharkController.OnChaseCheckRangeCollsionEnter();

@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SharkPartroRange : MonoBehaviour
+public class SharkPatrolRange : MonoBehaviour
 {
     [SerializeField] SharkController sharkController = default!;
+
     private void OnTriggerEnter(Collider other)
     {
-        if(other.transform.tag == "Shark")
+        if(other.transform.CompareTag("Shark"))
         {
             sharkController.OnRangeCheckRangeCollsionEnter();
         }
@@ -15,7 +16,7 @@ public class SharkPartroRange : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.tag == "Shark")
+        if (other.transform.CompareTag("Shark"))
         {
             sharkController.OnRangeCheckRangeCollsionExit();
         }

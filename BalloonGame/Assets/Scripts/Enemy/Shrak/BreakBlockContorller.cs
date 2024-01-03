@@ -11,10 +11,10 @@ public class BreakBlockContorller : MonoBehaviour
     [Header("”j‰óŽžSE")]
     [SerializeField, Required] AudioSource _breakAudioSource = default!;
 
-    public void BlockBreak(Collider other)
+    public void BlockBreak(GameObject gameObject)
     {
-        breakEffect.transform.position = other.gameObject.transform.position;
-        Destroy(other.gameObject);
+        breakEffect.transform.position = gameObject.transform.position;
+        Destroy(gameObject);
 
         breakEffect.Play();
         SoundManager.Instance.PlaySE(_breakAudioSource, SoundSource.SE066_BreakBlock);

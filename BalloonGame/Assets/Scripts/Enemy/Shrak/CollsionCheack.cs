@@ -8,13 +8,13 @@ public class CollsionCheack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "NotBreakBlock")
+        if (other.gameObject.CompareTag("NotBreakBlock"))
         {
             sharkController.SetHitNotBreakBlock();
         }
-        else if (other.gameObject.tag == "BreakBlock")
+        else if (other.gameObject.CompareTag("BreakBlock"))
         {
-            sharkController.StartBlockBreak(other);
+            sharkController.StartBlockBreak(other.gameObject);
         }
     }
 }
