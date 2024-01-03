@@ -334,7 +334,7 @@ public class SharkController : AirVentInteractable, IHittable
         {
             parent.deathTime += Time.deltaTime;
 
-            if (parent.deathTime > 3.0f)
+            if (parent.deathTime > 1.5f)
             {
                 SoundManager.Instance.PlaySE(parent._deathAudioSource, SoundSource.SE065_SharkDeath);
                 parent.ShrakDestroy();
@@ -404,7 +404,7 @@ public class SharkController : AirVentInteractable, IHittable
         {
             if (waitTimeDeahStart == false && _currentState != ISharkState.E_State.Death)
             {
-                ShouldStopChasing();
+                //ShouldStopChasing();
                 _isHitPlayer = true;
                 _gameOverEvent.GameOver();
             }
