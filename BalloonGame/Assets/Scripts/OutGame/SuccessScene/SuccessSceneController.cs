@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class SuccessSceneController : MonoBehaviour
     [SerializeField, Required] InputSystemManager _inputSystemManager = default!;
     [SerializeField, Required] InputActionReference _ui_RingconPushAction = default!;
     [SerializeField, Required] ScoreManager _scoreManager = default!;
+    [SerializeField, Required] CinemachineVirtualCamera _successSceneVirtualCamera = default!;
 
     [Header("開始時のトランジション")]
     [SerializeField] TransitionData _initTransition = default!;
@@ -54,6 +56,9 @@ public class SuccessSceneController : MonoBehaviour
 
         //UI用に切り替え
         _inputSystemManager.ChangeMaps(InputSystemManager.ActionMaps.UI);
+
+        //カメラ切り替え
+        _successSceneVirtualCamera.Priority = 30;
 
         //現在のスコアを取得
         int score = _scoreManager.GetScore();
