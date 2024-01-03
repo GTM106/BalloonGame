@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SharkRange : MonoBehaviour, IHittable
+public class SharkChaseRange : MonoBehaviour, IHittable
 {
     [SerializeField] SharkController sharkController = default!;
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
