@@ -15,6 +15,8 @@ public class IngameController : MonoBehaviour
     [SerializeField, Required] GameFinishController _gameFinishController = default!;
     [SerializeField, Required] VideoTransitionController _videoTransitionController = default!;
     [SerializeField, Required] IngameStartEvent _ingameStartEvent = default!;
+    [SerializeField, Required] CollectibleScript _collectibleScript = default!;
+    [SerializeField, Required] GameOverUIController _gameOverUIController = default!;
 
     [Header("ゲーム終了処理系")]
     [SerializeField, Required] SuccessSceneController _successSceneController = default!;
@@ -69,6 +71,14 @@ public class IngameController : MonoBehaviour
 
         //クリア画面に遷移
         await _videoTransitionController.StartTransition(_toSuccessSceneTransition);
+
+        //各種UIのアウト
+        _timeLimitController.DisableUI();
+        _tutorialUIContoller.FinishTutorial();
+        _collectibleScript.Disable();
+        _gameFinishController.DisableUI();
+        _gameOverUIController.Disable();
+
         _successSceneController.Enable();
     }
 }
