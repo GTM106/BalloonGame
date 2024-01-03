@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
-using static UnityEngine.ParticleSystem;
 
 public class BreakBlockContorller : MonoBehaviour
 {
@@ -11,10 +9,10 @@ public class BreakBlockContorller : MonoBehaviour
     [Header("”j‰óŽžSE")]
     [SerializeField, Required] AudioSource _breakAudioSource = default!;
 
-    public void BlockBreak(GameObject gameObject)
+    public void BlockBreak(GameObject breakableBlock)
     {
-        breakEffect.transform.position = gameObject.transform.position;
-        Destroy(gameObject);
+        breakEffect.transform.position = breakableBlock.transform.position;
+        Destroy(breakableBlock);
 
         breakEffect.Play();
         SoundManager.Instance.PlaySE(_breakAudioSource, SoundSource.SE066_BreakBlock);

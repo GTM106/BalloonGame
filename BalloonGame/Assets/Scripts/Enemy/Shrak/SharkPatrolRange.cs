@@ -10,7 +10,7 @@ public class SharkPatrolRange : MonoBehaviour
     {
         if(other.transform.CompareTag("Shark"))
         {
-            sharkController.OnRangeCheckRangeCollsionEnter();
+            sharkController.OnRangeCheckRangeCollisionEnter();
         }
     }
 
@@ -18,7 +18,7 @@ public class SharkPatrolRange : MonoBehaviour
     {
         if (other.transform.CompareTag("Shark"))
         {
-            sharkController.OnRangeCheckRangeCollsionExit();
+            sharkController.OnRangeCheckRangeCollisionExit();
         }
     }
 }

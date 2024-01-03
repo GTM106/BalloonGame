@@ -8,12 +8,12 @@ public class SharkChaseRange : MonoBehaviour, IHittable
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        sharkController.OnChaseCheckRangeCollsionEnter();
+        sharkController.OnChaseCheckRangeCollisionEnter();
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
     {
-        sharkController.OnChaseCheckRangeCollsionExit();
+        sharkController.OnChaseCheckRangeCollisionExit();
     }
 
     public void OnStay(Collider playerCollider, BalloonState balloonState)

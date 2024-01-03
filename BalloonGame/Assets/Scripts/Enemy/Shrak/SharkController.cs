@@ -1,21 +1,24 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
-using TM.Easing;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 
 public interface ISharkState
 {
     public enum E_State
     {
-        Partrol,
+        BeforePartrol,
+        Patrol,
         Discovery,
         Targeting,
         Chase,
         Fall,
         Down,
         Death,
+        BeforeWarp,
+        Warp,
 
         MAX,
 
@@ -26,40 +29,37 @@ public interface ISharkState
     E_State Update(SharkController parent);
     E_State FixedUpdate(SharkController parent);
 }
+
 public class SharkController : AirVentInteractable, IHittable
 {
     [Header("追跡対象")]
-    [SerializeField] GameObject player = default!;
+    [SerializeField, Required] GameObject player = default!;
     [Header("移動する範囲")]
-    [SerializeField] GameObject partrolRange = default!;
+    [SerializeField, Required] GameObject partrolRange = default!;
     [Header("巡回時の最大移動距離")]
-    [SerializeField, Min(0f)] float maxDuration = default!;
-    [Header("巡回速度")]
-    [SerializeField, Min(0f)] float patrolSpeed = default!;
-    [Header("方向転換速度")]
-    [SerializeField, Min(0f)] float rotationSpeed = default!;
-    [Header("移動するスパン")]
-    [SerializeField, Min(0f)] float movementStartSpan = default!;
-    [Header("追跡開始時間")]
-    [SerializeField, Min(0f)] float chaseStartTime = default!;
+    [SerializeField, Min(0f)] float _maxPatrolDistance = default!;
+    [Header("巡回時間[sec]")]
+    [SerializeField, Min(0f)] float _patrolDuration = default!;
+    [Header("巡回時方向転換時間[sec]")]
+    [SerializeField, Min(0f)] float _patrolRotationDuration = default!;
+    [Header("追跡時方向転換時間[sec]")]
+    [SerializeField, Min(0f)] float _chaseRotationDuration = default!;
+    [Header("追跡開始時間[sec]")]
+    [SerializeField, Min(0f)] float _chaseStartTime = default!;
     [Header("追跡速度")]
     [SerializeField, Min(0f)] float chaseSpeed = default!;
     [Header("追跡時間")]
     [SerializeField, Min(0f)] float chaseTime = default!;
-    [Header("再追跡までの時間")]
-    [SerializeField, Min(0f)] float waitTimeDeah = default!;
     [Header("ダウン時間")]
     [SerializeField, Min(0f)] float downTime = default!;
     [Header("攻撃のリキャストタイム")]
     [SerializeField, Min(0f)] double attackRecastTime = default!;
-    [Header("巡回時のイージングタイプ選択")]
-    [SerializeField] EaseType partrolEaseType = EaseType.OutCubic;
-    [SerializeField] float partrolOvershootOrAmplitude = default!;
-    [SerializeField] float partrolPeriod = default!;
+    [Header("ターゲットにヒットしたあと、再度追跡できるまでの時間[sec]")]
+    [SerializeField, Min(0f)] double _cooldownForReacquisitionDuration = default!;
 
     [SerializeField] GameObject movePos = default!;
     [SerializeField] SphereCollider airRange = default!;
-    [SerializeField] Rigidbody rigidbody = default!;
+    [SerializeField, Required] Rigidbody _rigidbody = default!;
     [SerializeField, Required] BreakBlockContorller breakBlockContorller = default!;
     [SerializeField, Required] AudioSource _chasingAudioSource = default!;
     [SerializeField, Required] AudioSource _discoveryAudioSource = default!;
@@ -67,86 +67,116 @@ public class SharkController : AirVentInteractable, IHittable
     [SerializeField, Required] AudioSource _clashAudioSource = default!;
     [SerializeField, Required] AudioSource _downAudioSource = default!;
     [SerializeField, Required] AudioSource _deathAudioSource = default!;
-    [SerializeField, Required] ParticleSystem chargeAttackEffect = default!;
+    [SerializeField, Required] ParticleSystem _chargeBlueAttackEffect = default!;
+    [SerializeField, Required] ParticleSystem _chargeStartBlueAttackEffect = default!;
     [SerializeField, Required] PlayableDirector startAttackEffect = default!;
     [SerializeField, Required] PlayableDirector endAttackEffect = default!;
     [SerializeField, Required] PlayerGameOverEvent _gameOverEvent = default!;
     [SerializeField] AnimationChanger<E_Shark> _animationChanger = default!;
 
-
-    private bool _isHitPlayer = false;
+    private bool _wasHitPlayer = false;
     private bool _isHitNotBreakBlock = false;
-    private bool chaseCheck = false;
-    private bool fallStart = false;
-    private bool warpStart = false;
-    private bool waitTimeDeahStart = false;
+    private bool _isInChaseRange = false;
     private bool pushCheck = false;
-    private bool discoveryStart = false;
     private bool chaseFinished = false;
-    private bool downFinished = false;
-    private bool waitTimeDeahFinished = true;
-    private bool _isBeyondRange = false;
-    private float partrolTimer = 0f;
-    private float chaseTimer = 0f;
-    private float elapsedLookTime = 0f;
-    private float deathTime = 0f;
+    private bool _isSharkInPatrolRange = false;
+
+    Transform _transform;
 
     // 状態管理
-    ISharkState.E_State _currentState = ISharkState.E_State.Partrol;
+    ISharkState.E_State _currentState = ISharkState.E_State.BeforePartrol;
     static readonly ISharkState[] states = new ISharkState[(int)ISharkState.E_State.MAX]
     {
+        new BeforePartrolState(),
         new PartrolState(),
         new DiscoveryState(),
-        new Targeting(),
+        new TargetingState(),
         new ChaseState(),
         new FallState(),
         new DownState(),
         new DeathState(),
+        new BeforeWarpState(),
+        new WarpState(),
     };
 
-    class PartrolState : ISharkState
+    class BeforePartrolState : ISharkState
     {
+        float _elapsedTime;
+
         public ISharkState.E_State Initialize(SharkController parent)
         {
-            parent._animationChanger.ChangeAnimation(E_Shark.AN04_Swim);
-            parent._isHitPlayer = false;
+            _elapsedTime = 0f;
+
+            //パトロール続行可能状態でなければワープさせる
+            if (!parent.CanContinuePatrol()) return ISharkState.E_State.BeforeWarp;
+
             return ISharkState.E_State.Unchanged;
         }
 
         public ISharkState.E_State Update(SharkController parent)
         {
-            if (parent.warpStart) return ISharkState.E_State.Unchanged;
-
-            if (parent._isHitPlayer) return ISharkState.E_State.Unchanged;
-
-            parent.partrolTimer += Time.deltaTime;
-
-            if (parent.chaseCheck)
-            {
-                return ISharkState.E_State.Discovery;
-            }
-
-            //一定時間経過したらランダムな方向に移動
-            if (parent.partrolTimer >= parent.rotationSpeed + parent.patrolSpeed)
-            {
-                parent.StartPartrol();
-                parent.partrolTimer = 0.0f;
-            }
-
             return ISharkState.E_State.Unchanged;
         }
 
         public ISharkState.E_State FixedUpdate(SharkController parent)
         {
+            _elapsedTime += Time.fixedDeltaTime;
+            if (_elapsedTime >= parent._patrolRotationDuration) return ISharkState.E_State.Patrol;
+
+            parent.RotateToMovePos(_elapsedTime);
+
+            return ISharkState.E_State.Unchanged;
+        }
+    }
+
+    class PartrolState : ISharkState
+    {
+        float _elapsedTime;
+
+        public ISharkState.E_State Initialize(SharkController parent)
+        {
+            _elapsedTime = 0f;
+
+            parent._animationChanger.ChangeAnimation(E_Shark.AN04_Swim);
+            return ISharkState.E_State.Unchanged;
+        }
+
+        public ISharkState.E_State Update(SharkController parent)
+        {
+            return ISharkState.E_State.Unchanged;
+        }
+
+        public ISharkState.E_State FixedUpdate(SharkController parent)
+        {
+            //プレイヤーにヒットしたあとでなく
+            if (!parent._wasHitPlayer)
+            {
+                //追跡範囲内なら発見する
+                if (parent._isInChaseRange) return ISharkState.E_State.Discovery;
+            }
+
+            _elapsedTime += Time.deltaTime;
+
+            if (_elapsedTime >= parent._patrolDuration)
+            {
+                //時間経過したら再度パトロール
+                return ISharkState.E_State.BeforePartrol;
+            }
+
+            parent.Patrol();
+
             return ISharkState.E_State.Unchanged;
         }
     }
 
     class DiscoveryState : ISharkState
     {
+        float _elapsedTime;
+
         public ISharkState.E_State Initialize(SharkController parent)
         {
-            parent.discoveryStart = true;
+            _elapsedTime = 0f;
+
             SoundManager.Instance.PlaySE(parent._discoveryAudioSource, SoundSource.SE062_SharkDiscovery);
             parent._animationChanger.ChangeAnimation(E_Shark.AN04_discovery);
 
@@ -155,57 +185,71 @@ public class SharkController : AirVentInteractable, IHittable
 
         public ISharkState.E_State Update(SharkController parent)
         {
-            if (parent._isHitPlayer) return ISharkState.E_State.Partrol;
-
             return ISharkState.E_State.Unchanged;
         }
+
         public ISharkState.E_State FixedUpdate(SharkController parent)
         {
-            if (parent.Discovery())
-            {
-                return ISharkState.E_State.Targeting;
-            }
+            //発見時の回転時間分待機したら移行
+            if (_elapsedTime >= parent._chaseRotationDuration) return ISharkState.E_State.Targeting;
+
+            _elapsedTime += Time.fixedDeltaTime;
+            parent.DiscoveryRotation(_elapsedTime);
 
             return ISharkState.E_State.Unchanged;
         }
     }
 
-    class Targeting : ISharkState
+    class TargetingState : ISharkState
     {
+        float _elapsedTime;
+
         public ISharkState.E_State Initialize(SharkController parent)
         {
+            _elapsedTime = 0f;
+
+            //エフェクト時間の設定
+            var main = parent._chargeBlueAttackEffect.main;
+            main.duration = parent._chaseStartTime;
+            main = parent._chargeStartBlueAttackEffect.main;
+            main.duration = parent._chaseStartTime;
+
+            //エフェクトの再生
+            parent._chargeBlueAttackEffect.Play();
+            parent._chargeStartBlueAttackEffect.Play();
+
             //貯めSE
-            var main = parent.chargeAttackEffect.main;
-            main.duration = parent.chaseStartTime;
-
-            parent.chargeAttackEffect.Play();
-            parent.discoveryStart = false;
-
-            parent.chargeAttackEffect.Play();
             SoundManager.Instance.PlaySE(parent._targetingAudioSource, SoundSource.SE061_SharkTargeting);
             return ISharkState.E_State.Unchanged;
         }
 
         public ISharkState.E_State Update(SharkController parent)
         {
-            if (parent._isHitPlayer) return ISharkState.E_State.Partrol;
-
-            parent.chaseTimer += Time.deltaTime;
-
-            if (parent.chaseTimer >= parent.chaseStartTime)
-            {
-                parent.chaseTimer = 0.0f;
-
-                parent.chargeAttackEffect.Stop();
-                SoundManager.Instance.StopSE(parent._targetingAudioSource);
-
-                return ISharkState.E_State.Chase;
-            }
             return ISharkState.E_State.Unchanged;
         }
 
         public ISharkState.E_State FixedUpdate(SharkController parent)
         {
+            if (parent._wasHitPlayer)
+            {
+                parent._chargeBlueAttackEffect.Stop();
+                parent._chargeStartBlueAttackEffect.Stop();
+                SoundManager.Instance.StopSE(parent._targetingAudioSource);
+
+                return ISharkState.E_State.BeforePartrol;
+            }
+
+            _elapsedTime += Time.deltaTime;
+
+            if (_elapsedTime >= parent._chaseStartTime)
+            {
+                parent._chargeBlueAttackEffect.Stop();
+                parent._chargeStartBlueAttackEffect.Stop();
+                SoundManager.Instance.StopSE(parent._targetingAudioSource);
+
+                return ISharkState.E_State.Chase;
+            }
+
             return ISharkState.E_State.Unchanged;
         }
     }
@@ -214,9 +258,6 @@ public class SharkController : AirVentInteractable, IHittable
     {
         public ISharkState.E_State Initialize(SharkController parent)
         {
-            parent._animationChanger.ChangeAnimation(E_Shark.AN04_Attack);
-            SoundManager.Instance.PlaySE(parent._chasingAudioSource, SoundSource.SE060_SharkAttack);
-            parent.startAttackEffect.Play();
             parent.StartChase();
 
             return ISharkState.E_State.Unchanged;
@@ -224,8 +265,11 @@ public class SharkController : AirVentInteractable, IHittable
 
         public ISharkState.E_State Update(SharkController parent)
         {
-            if (parent._isHitPlayer) return ISharkState.E_State.Partrol;
+            return ISharkState.E_State.Unchanged;
+        }
 
+        public ISharkState.E_State FixedUpdate(SharkController parent)
+        {
             if (parent._isHitNotBreakBlock)
             {
                 parent.startAttackEffect.Stop();
@@ -234,24 +278,18 @@ public class SharkController : AirVentInteractable, IHittable
                 return ISharkState.E_State.Fall;
             }
 
-            if (parent.chaseFinished && !parent.chaseCheck)
-            {
-                SoundManager.Instance.StopSE(parent._chasingAudioSource);
-                parent.chaseFinished = false;
-                return ISharkState.E_State.Partrol;
-            }
-
             if (parent.chaseFinished)
             {
                 SoundManager.Instance.StopSE(parent._chasingAudioSource);
                 parent.chaseFinished = false;
-                return ISharkState.E_State.Discovery;
+
+                //チェイス終了時、チェイス範囲内にいるなら発見
+                //そうでないなら巡回する
+                return parent._isInChaseRange ? ISharkState.E_State.Discovery : ISharkState.E_State.BeforePartrol;
             }
 
-            return ISharkState.E_State.Unchanged;
-        }
-        public ISharkState.E_State FixedUpdate(SharkController parent)
-        {
+            if (parent._wasHitPlayer) return ISharkState.E_State.BeforePartrol;
+
             return ISharkState.E_State.Unchanged;
         }
     }
@@ -260,14 +298,18 @@ public class SharkController : AirVentInteractable, IHittable
     {
         public ISharkState.E_State Initialize(SharkController parent)
         {
-            parent.rigidbody.useGravity = true;
-            parent.fallStart = true;
+            parent._rigidbody.useGravity = true;
             parent._animationChanger.ChangeAnimation(E_Shark.AN04_Fall);
 
             return ISharkState.E_State.Unchanged;
         }
 
         public ISharkState.E_State Update(SharkController parent)
+        {
+            return ISharkState.E_State.Unchanged;
+        }
+
+        public ISharkState.E_State FixedUpdate(SharkController parent)
         {
             if (parent.Fall())
             {
@@ -276,31 +318,21 @@ public class SharkController : AirVentInteractable, IHittable
 
             return ISharkState.E_State.Unchanged;
         }
-        public ISharkState.E_State FixedUpdate(SharkController parent)
-        {
-            return ISharkState.E_State.Unchanged;
-        }
     }
 
     class DownState : ISharkState
     {
+        float _elapsedTime;
+
         public ISharkState.E_State Initialize(SharkController parent)
         {
-            parent.fallStart = false;
-            SoundManager.Instance.PlaySE(parent._downAudioSource, SoundSource.SE064_SharkDown);
-            parent.DownStart();
+            _elapsedTime = 0f;
+            parent.StartDown();
             return ISharkState.E_State.Unchanged;
         }
 
         public ISharkState.E_State Update(SharkController parent)
         {
-            if (parent.downFinished)
-            {
-                SoundManager.Instance.StopSE(parent._downAudioSource);
-                parent.downFinished = false;
-                return ISharkState.E_State.Partrol;
-            }
-
             if (parent.pushCheck)
             {
                 SoundManager.Instance.StopSE(parent._downAudioSource);
@@ -312,16 +344,30 @@ public class SharkController : AirVentInteractable, IHittable
 
         public ISharkState.E_State FixedUpdate(SharkController parent)
         {
+            _elapsedTime += Time.fixedDeltaTime;
+
+            if (_elapsedTime >= parent.downTime)
+            {
+                parent.FinishDown();
+                return ISharkState.E_State.BeforePartrol;
+            }
+
             return ISharkState.E_State.Unchanged;
         }
     }
 
     class DeathState : ISharkState
     {
+        const float DeadAnimationTime = 1.5f;
+        float _elapsedTime;
+
         public ISharkState.E_State Initialize(SharkController parent)
         {
-            parent.waitTimeDeahStart = true;
+            _elapsedTime = 0f;
+
             parent._animationChanger.ChangeAnimation(E_Shark.AN04_Dead);
+
+            //オブジェクト破壊前に確実に空気栓の範囲外にする
             parent.airRange.radius = 0;
 
             return ISharkState.E_State.Unchanged;
@@ -329,17 +375,69 @@ public class SharkController : AirVentInteractable, IHittable
 
         public ISharkState.E_State Update(SharkController parent)
         {
-            parent.deathTime += Time.deltaTime;
-
-            if (parent.deathTime > 1.5f)
-            {
-                SoundManager.Instance.PlaySE(parent._deathAudioSource, SoundSource.SE065_SharkDeath);
-                parent.ShrakDestroy();
-            }
             return ISharkState.E_State.Unchanged;
         }
+
         public ISharkState.E_State FixedUpdate(SharkController parent)
         {
+            _elapsedTime += Time.fixedDeltaTime;
+
+            if (_elapsedTime > DeadAnimationTime)
+            {
+                SoundManager.Instance.PlaySE(parent._deathAudioSource, SoundSource.SE065_SharkDeath);
+                parent.SharkDestroy();
+            }
+
+            return ISharkState.E_State.Unchanged;
+        }
+    }
+
+    class BeforeWarpState : ISharkState
+    {
+        public ISharkState.E_State Initialize(SharkController parent)
+        {
+            return ISharkState.E_State.Unchanged;
+        }
+
+        public ISharkState.E_State Update(SharkController parent)
+        {
+            return ISharkState.E_State.Unchanged;
+        }
+
+        public ISharkState.E_State FixedUpdate(SharkController parent)
+        {
+            if (parent.IsCompleteAnimationBeforeWarp()) return ISharkState.E_State.Warp;
+
+            parent.AnimationBeforeWarp();
+            return ISharkState.E_State.Unchanged;
+        }
+    }
+
+    class WarpState : ISharkState
+    {
+        public ISharkState.E_State Initialize(SharkController parent)
+        {
+            //ワープさせる
+            parent.StartWarp();
+
+            return ISharkState.E_State.Unchanged;
+        }
+
+        public ISharkState.E_State Update(SharkController parent)
+        {
+            return ISharkState.E_State.Unchanged;
+        }
+
+        public ISharkState.E_State FixedUpdate(SharkController parent)
+        {
+            if (parent.IsCompleteAnimationAfterWarp())
+            {
+                parent._transform.localScale = Vector3.one;
+                parent._isSharkInPatrolRange = true;
+                return ISharkState.E_State.BeforePartrol;
+            }
+
+            parent.AnimationAfterWarp();
             return ISharkState.E_State.Unchanged;
         }
     }
@@ -379,12 +477,14 @@ public class SharkController : AirVentInteractable, IHittable
         }
     }
 
-    void Awake()
+    private void Awake()
     {
+        _transform = transform;
+
         InitializeState();
     }
 
-    void Update()
+    private void Update()
     {
         UpdateState();
     }
@@ -396,45 +496,43 @@ public class SharkController : AirVentInteractable, IHittable
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        if (_currentState != ISharkState.E_State.Fall && _currentState != ISharkState.E_State.Down)
-        {
-            if (waitTimeDeahStart == false && _currentState != ISharkState.E_State.Death)
-            {
-                //ShouldStopChasing();
-                _isHitPlayer = true;
-                _gameOverEvent.GameOver();
-            }
-        }
+        //一行にまとめられますが、変更が容易なためこうします
+        if (_currentState == ISharkState.E_State.Fall) return;
+        if (_currentState == ISharkState.E_State.Down) return;
+        if (_currentState == ISharkState.E_State.Death) return;
+
+        //ヒット時のクールダウンを開始
+        StartCooldownForReacquisition();
+
+        _gameOverEvent.GameOver();
     }
 
     public void OnStay(Collider playerCollider, BalloonState balloonState)
     {
-        //DoNothing
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
     {
-
     }
 
-    public void OnChaseCheckRangeCollsionEnter()
+    public void OnChaseCheckRangeCollisionEnter()
     {
-        chaseCheck = true;
+        _isInChaseRange = true;
     }
 
-    public void OnChaseCheckRangeCollsionExit()
+    public void OnChaseCheckRangeCollisionExit()
     {
-        chaseCheck = false;
+        _isInChaseRange = false;
     }
 
-    public void OnRangeCheckRangeCollsionEnter()
+    public void OnRangeCheckRangeCollisionEnter()
     {
-        _isBeyondRange = true;
+        _isSharkInPatrolRange = true;
     }
 
-    public void OnRangeCheckRangeCollsionExit()
+    public void OnRangeCheckRangeCollisionExit()
     {
-        _isBeyondRange = false;
+        _isSharkInPatrolRange = false;
     }
 
     public void SetHitNotBreakBlock()
@@ -446,53 +544,75 @@ public class SharkController : AirVentInteractable, IHittable
         }
     }
 
-    public void StartBlockBreak(GameObject gameObject)
+    public void StartBlockBreak(GameObject breakableBlock)
     {
         if (_currentState == ISharkState.E_State.Chase)
         {
-            breakBlockContorller.BlockBreak(gameObject);
+            breakBlockContorller.BlockBreak(breakableBlock);
         }
     }
 
-    private void StartPartrol()
+    private async void StartCooldownForReacquisition()
     {
-        Partrol(destroyCancellationToken).Forget();
+        var token = this.GetCancellationTokenOnDestroy();
+
+        _wasHitPlayer = true;
+
+        await UniTask.Delay(TimeSpan.FromSeconds(_cooldownForReacquisitionDuration), false, PlayerLoopTiming.FixedUpdate, token);
+
+        _wasHitPlayer = false;
     }
 
     private void StartWarp()
     {
-        Warp(destroyCancellationToken).Forget();
+        Warp();
     }
 
     private void StartChase()
     {
+        _animationChanger.ChangeAnimation(E_Shark.AN04_Attack);
+        SoundManager.Instance.PlaySE(_chasingAudioSource, SoundSource.SE060_SharkAttack);
+        startAttackEffect.Play();
+
         Chase(destroyCancellationToken).Forget();
     }
 
-    private void DownStart()
+    private void StartDown()
     {
-        Down(destroyCancellationToken).Forget();
+        SoundManager.Instance.PlaySE(_downAudioSource, SoundSource.SE064_SharkDown);
+
+        _animationChanger.ChangeAnimation(E_Shark.AN04_Down);
     }
 
-    async UniTask Partrol(CancellationToken token)
+    private void FinishDown()
     {
-        token.ThrowIfCancellationRequested();
+        SoundManager.Instance.StopSE(_downAudioSource);
+
+        _rigidbody.useGravity = false;
+        _isHitNotBreakBlock = false;
+
+        _animationChanger.ChangeAnimation(E_Shark.AN04_Swim);
+    }
+
+    private bool CanContinuePatrol()
+    {
+        if (!_isSharkInPatrolRange) return false;
+
         int wrapCount = 0;
-        float elapsedLookTime = 0f;
-        float elapsedMoveTime = 0f;
         bool isObstacleAhead = true;
 
         while (isObstacleAhead)
         {
-            Vector3 randomDirection = transform.position + UnityEngine.Random.onUnitSphere * maxDuration;
-
-            movePos.transform.position = randomDirection;
-
-            Vector3 duration = movePos.transform.position - transform.position;
-
+            //発見するまでfalseにする
             isObstacleAhead = false;
 
-            if (Physics.CapsuleCast(transform.position, movePos.transform.position, 1.0f, duration, out RaycastHit hit))
+            Vector3 randomPosition = _transform.position + UnityEngine.Random.onUnitSphere * _maxPatrolDistance;
+
+            movePos.transform.position = randomPosition;
+
+            Vector3 direction = randomPosition - _transform.position;
+
+            if (Physics.CapsuleCast(_transform.position, randomPosition, 1.0f, direction, out RaycastHit hit))
             {
                 if (hit.collider.gameObject != player)
                 {
@@ -501,134 +621,80 @@ public class SharkController : AirVentInteractable, IHittable
                 }
             }
 
-            if (wrapCount == 50 || !_isBeyondRange)
+            //ミス回数が50回程度が処理回数的に良いです
+            if (wrapCount == 50)
             {
-                warpStart = true;
-                StartWarp();
-                return;
-            }
-
-            if (discoveryStart || warpStart) return;
-        }
-
-        while (elapsedLookTime < rotationSpeed)
-        {
-            await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate, token);
-
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movePos.transform.position - transform.position), elapsedLookTime);
-
-            elapsedLookTime += Time.deltaTime;
-
-            if (discoveryStart || warpStart) return;
-        }
-
-
-        while (elapsedMoveTime < patrolSpeed)
-        {
-            await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate, token);
-
-            transform.position = Vector3.MoveTowards(transform.position, movePos.transform.position, maxDuration * Time.deltaTime);
-
-            elapsedMoveTime += Time.deltaTime;
-
-            if (discoveryStart || warpStart)
-            {
-                rigidbody.velocity = Vector3.zero;
-                return;
+                return false;
             }
         }
-
-        rigidbody.velocity = Vector3.zero;
-    }
-
-    async UniTask Warp(CancellationToken token)
-    {
-        while (true)
-        {
-            await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate, token);
-
-            Vector3 currentScale = transform.localScale;
-
-            currentScale -= new Vector3(0.5f * Time.deltaTime, 0.5f * Time.deltaTime, 0.5f * Time.deltaTime);
-
-            if (currentScale.x <= 0.1f)
-            {
-                transform.position = partrolRange.transform.position;
-                break;
-            }
-
-            transform.localScale = currentScale;
-        }
-
-        transform.localRotation = Quaternion.Euler(0f, 0f, 0f); ;
-
-        while (true)
-        {
-            await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate, token);
-
-            Vector3 currentScale = transform.localScale;
-
-            currentScale += new Vector3(0.3f * Time.deltaTime, 0.3f * Time.deltaTime, 0.3f * Time.deltaTime);
-
-            if (currentScale.x >= 1.0f)
-            {
-                transform.localScale = new Vector3(1f, 1f, 1f);
-                warpStart = false;
-                _isBeyondRange = true;
-                break;
-            }
-
-            transform.localScale = currentScale;
-        }
-    }
-
-    private bool Discovery()
-    {
-        if (elapsedLookTime < rotationSpeed)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(player.transform.position - transform.position), elapsedLookTime);
-            elapsedLookTime += Time.deltaTime;
-
-            return false;
-        }
-
-        elapsedLookTime = 0;
 
         return true;
     }
 
+    private void RotateToMovePos(float elapsedTime)
+    {
+        _transform.rotation = Quaternion.Slerp(_transform.rotation, Quaternion.LookRotation(movePos.transform.position - _transform.position), elapsedTime);
+    }
+
+    private void Patrol()
+    {
+        _transform.position = Vector3.MoveTowards(_transform.position, movePos.transform.position, _maxPatrolDistance * Time.deltaTime);
+    }
+
+    private bool IsCompleteAnimationBeforeWarp()
+    {
+        return _transform.localScale.x < 0.1f;
+    }
+
+    private void AnimationBeforeWarp()
+    {
+        Vector3 currentScale = _transform.localScale;
+
+        float scaleDownSize = 0.5f * Time.fixedDeltaTime;
+
+        currentScale -= Vector3.one * scaleDownSize;
+
+        _transform.localScale = currentScale;
+    }
+
+    private bool IsCompleteAnimationAfterWarp()
+    {
+        return _transform.localScale.x >= 1.0f;
+    }
+
+    private void AnimationAfterWarp()
+    {
+        Vector3 currentScale = _transform.localScale;
+
+        float scaleUpSize = 0.3f * Time.deltaTime;
+
+        currentScale += Vector3.one * scaleUpSize;
+
+        _transform.localScale = currentScale;
+    }
+
+    private void Warp()
+    {
+        _transform.position = partrolRange.transform.position;
+        _transform.localRotation = Quaternion.identity;
+    }
+
+    private void DiscoveryRotation(float elapsedTime)
+    {
+        _transform.rotation = Quaternion.Slerp(_transform.rotation, Quaternion.LookRotation(player.transform.position - _transform.position), elapsedTime);
+    }
+
     private bool Fall()
     {
-        Vector3 downPos = transform.position;
+        Vector3 downPos = _transform.position;
         downPos.y -= 1f;
 
-        if (Physics.CapsuleCast(transform.position + new Vector3(0, 0, 0.5f), transform.position + new Vector3(0, 0, -0.5f), 6.0f, Vector3.down))
-        {
-            return true;
-        }
+        Vector3 forward = Vector3.forward * 0.5f;
 
-        return false;
+        return Physics.CapsuleCast(_transform.position + forward, _transform.position - forward, 6.0f, Vector3.down);
     }
 
-    async UniTask Down(CancellationToken token)
-    {
-        float currentDownTime = 0;
-        _animationChanger.ChangeAnimation(E_Shark.AN04_Down);
-
-        while (currentDownTime < downTime)
-        {
-            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
-            currentDownTime += Time.deltaTime;
-        }
-
-        rigidbody.useGravity = false;
-        _isHitNotBreakBlock = false;
-        downFinished = true;
-
-        _animationChanger.ChangeAnimation(E_Shark.AN04_Swim);
-    }
-
-    async UniTask Chase(CancellationToken token)
+    private async UniTask Chase(CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
 
@@ -638,18 +704,18 @@ public class SharkController : AirVentInteractable, IHittable
         {
             await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate, token);
 
-            rigidbody.AddForce(transform.forward * chaseSpeed, ForceMode.Force);
+            _rigidbody.AddForce(_transform.forward * chaseSpeed, ForceMode.Force);
 
             elapsedChaseTime += Time.deltaTime;
 
-            if (fallStart)
+            if (_isHitNotBreakBlock)
             {
                 startAttackEffect.Stop();
-                rigidbody.velocity = Vector3.zero;
+                _rigidbody.velocity = Vector3.zero;
                 return;
             }
         }
-        rigidbody.velocity = Vector3.zero;
+        _rigidbody.velocity = Vector3.zero;
         startAttackEffect.Stop();
 
         endAttackEffect.Play();
@@ -662,9 +728,9 @@ public class SharkController : AirVentInteractable, IHittable
         chaseFinished = true;
     }
 
-    private void ShrakDestroy()
+    private void SharkDestroy()
     {
-        foreach (Transform child in gameObject.transform)
+        foreach (Transform child in _transform)
         {
             Destroy(child.gameObject);
         }
