@@ -16,8 +16,8 @@ MonoBehaviour:
     _soundKVPairs:
     - _key: BGM001_Title
       _value:
-        _clip: {fileID: 0}
-        _volume: 1
+        _clip: {fileID: 8300000, guid: 9d1a3cfad63524b439107551c29514be, type: 3}
+        _volume: 0.5
         _pitch: 1
       _source: 0
     - _key: BGM002_Ingame
@@ -53,25 +53,25 @@ MonoBehaviour:
     - _key: SE001_PlayerWalking
       _value:
         _clip: {fileID: 8300000, guid: eca67e58e8305e841b6eaf44bfa67db3, type: 3}
-        _volume: 1
+        _volume: 0.3
         _pitch: 1
       _source: 6
     - _key: SE002_PlayerJumping
       _value:
         _clip: {fileID: 8300000, guid: 0c2aa26cad9d31041bcdf643b232ef61, type: 3}
-        _volume: 1
+        _volume: 0.4
         _pitch: 1
       _source: 7
     - _key: SE003_PlayerLanding
       _value:
-        _clip: {fileID: 8300000, guid: 51d9e426ef40ffe4e9634e27a382d19d, type: 3}
-        _volume: 1
+        _clip: {fileID: 8300000, guid: b7f04e8a4d496a546ad918bf30fa0cd4, type: 3}
+        _volume: 0.5
         _pitch: 1
       _source: 8
     - _key: SE004_PlayerBalloonExpands
       _value:
-        _clip: {fileID: 8300000, guid: bfb5abb46eba02b47b8c90a5f1ac1d7a, type: 3}
-        _volume: 1
+        _clip: {fileID: 8300000, guid: be2faa3dcb33d01488e9aed7c59e4512, type: 3}
+        _volume: 0.5
         _pitch: 1
       _source: 9
     - _key: SE005_PlayerBoostDash
@@ -83,42 +83,42 @@ MonoBehaviour:
     - _key: SE006_PlayerDamaged
       _value:
         _clip: {fileID: 8300000, guid: c0a8fcef66b60aa43977314f19f0c599, type: 3}
-        _volume: 1
+        _volume: 0.8
         _pitch: 1
       _source: 11
     - _key: SE007_PlayerGetsItem
       _value:
         _clip: {fileID: 8300000, guid: 48d0fcd67737b2e49aeae39f102aac88, type: 3}
-        _volume: 1
+        _volume: 0.5
         _pitch: 1
       _source: 12
     - _key: SE010_Hermit_Detection
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: c983e3060fb59574db73a601bfdc84c2, type: 3}
         _volume: 1
         _pitch: 1
       _source: 13
     - _key: SE011_Hermit_Chase
       _value:
-        _clip: {fileID: 0}
-        _volume: 1
+        _clip: {fileID: 8300000, guid: 5dcbeeb6e682ef649a9d5135d11a6dfc, type: 3}
+        _volume: 0.3
         _pitch: 1
       _source: 14
     - _key: SE020_Balloonfish_Floating
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: 0899133c15dffe2409e4abf46ef8e13c, type: 3}
         _volume: 1
         _pitch: 1
       _source: 15
     - _key: SE030_AirVent_Interact
       _value:
-        _clip: {fileID: 8300000, guid: 122b8a5f2c77b7a4b8a8a91061b2dd1f, type: 3}
-        _volume: 1
+        _clip: {fileID: 8300000, guid: a652ee3d5ad2fd44cb2b557b3ddef619, type: 3}
+        _volume: 0.5
         _pitch: 1
       _source: 16
     - _key: SE031_FunRunning
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: c27a1046dbb0ac446959e28c91129737, type: 3}
         _volume: 1
         _pitch: 1
       _source: 17
@@ -130,13 +130,13 @@ MonoBehaviour:
       _source: 17
     - _key: SE040_EndOfTimeLimit
       _value:
-        _clip: {fileID: 8300000, guid: 122b8a5f2c77b7a4b8a8a91061b2dd1f, type: 3}
+        _clip: {fileID: 8300000, guid: 7cd15c123295a1b45afab882eee8df44, type: 3}
         _volume: 1
         _pitch: 1
       _source: 18
     - _key: SE050_Select
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: a5692254f7c6e0a4397c4e9b5c11e5cf, type: 3}
         _volume: 1
         _pitch: 1
       _source: 20
