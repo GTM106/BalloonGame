@@ -16,8 +16,8 @@ MonoBehaviour:
     _soundKVPairs:
     - _key: BGM001_Title
       _value:
-        _clip: {fileID: 0}
-        _volume: 1
+        _clip: {fileID: 8300000, guid: 9d1a3cfad63524b439107551c29514be, type: 3}
+        _volume: 0.5
         _pitch: 1
       _source: 0
     - _key: BGM002_Ingame
@@ -70,7 +70,7 @@ MonoBehaviour:
       _source: 8
     - _key: SE004_PlayerBalloonExpands
       _value:
-        _clip: {fileID: 8300000, guid: bfb5abb46eba02b47b8c90a5f1ac1d7a, type: 3}
+        _clip: {fileID: 8300000, guid: be2faa3dcb33d01488e9aed7c59e4512, type: 3}
         _volume: 0.5
         _pitch: 1
       _source: 9
