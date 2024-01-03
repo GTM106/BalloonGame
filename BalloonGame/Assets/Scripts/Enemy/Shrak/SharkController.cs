@@ -2,13 +2,8 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
 using TM.Easing;
-using TM.Easing.Management;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.Serialization;
-using UnityEngine.Timeline;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public interface ISharkState
 {
@@ -95,6 +90,7 @@ public class SharkController : AirVentInteractable, IHittable
     private float chaseTimer = 0f;
     private float elapsedLookTime = 0f;
     private float deathTime = 0f;
+
     // èÛë‘ä«óù
     ISharkState.E_State _currentState = ISharkState.E_State.Partrol;
     static readonly ISharkState[] states = new ISharkState[(int)ISharkState.E_State.MAX]
@@ -390,7 +386,6 @@ public class SharkController : AirVentInteractable, IHittable
     void Update()
     {
         UpdateState();
-        Debug.Log(_currentState);
     }
 
     private void FixedUpdate()
@@ -476,12 +471,6 @@ public class SharkController : AirVentInteractable, IHittable
     private void DownStart()
     {
         Down(destroyCancellationToken).Forget();
-    }
-
-    private void StartNextAttackDelay()
-    {
-        SoundManager.Instance.StopSE(_chasingAudioSource);
-        NextAttackDelay(destroyCancellationToken).Forget();
     }
 
     async UniTask Partrol(CancellationToken token)
@@ -609,11 +598,6 @@ public class SharkController : AirVentInteractable, IHittable
         return true;
     }
 
-    private void ShouldStopChasing()
-    {
-        StartNextAttackDelay();
-    }
-
     private bool Fall()
     {
         Vector3 downPos = transform.position;
@@ -677,27 +661,6 @@ public class SharkController : AirVentInteractable, IHittable
         endAttackEffect.Stop();
 
         chaseFinished = true;
-    }
-
-    async UniTask NextAttackDelay(CancellationToken token)
-    {
-        float currentWaitTimeDeah = 0f;
-        waitTimeDeahStart = true;
-        Vector3 direction = (player.transform.position - transform.position).normalized;
-
-        while (currentWaitTimeDeah < waitTimeDeah)
-        {
-            await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate, token);
-
-            float distanceToMove = patrolSpeed * Time.deltaTime;
-
-            transform.Translate(direction * distanceToMove, Space.World);
-
-            currentWaitTimeDeah += Time.deltaTime;
-        }
-
-        waitTimeDeahStart = false;
-        waitTimeDeahFinished = true;
     }
 
     private void ShrakDestroy()
