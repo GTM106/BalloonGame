@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 8f8bb171a4982c444864b8abd05c1939,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8f8bb171a4982c444864b8abd05c1939,
         type: 3}
@@ -68,7 +68,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: PRO_PlantC_3 Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -2357560637145017184, guid: 8f8bb171a4982c444864b8abd05c1939, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
