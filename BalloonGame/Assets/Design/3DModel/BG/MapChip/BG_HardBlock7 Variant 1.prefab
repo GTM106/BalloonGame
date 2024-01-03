@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5f7148f6709f1cc468f908672045c375,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f7148f6709f1cc468f908672045c375,
         type: 3}
@@ -66,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5f7148f6709f1cc468f908672045c375,
         type: 3}
       propertyPath: m_Name
-      value: BG_SimpleBlock7 Variant 1
+      value: BG_HardBlock7 Variant 1
       objectReference: {fileID: 0}
     - target: {fileID: 2861124397082390836, guid: 5f7148f6709f1cc468f908672045c375,
         type: 3}
@@ -107,6 +107,6 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 9077118752126286566, guid: 5f7148f6709f1cc468f908672045c375, type: 3}
