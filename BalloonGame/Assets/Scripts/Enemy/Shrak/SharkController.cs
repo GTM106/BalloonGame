@@ -86,7 +86,7 @@ public class SharkController : AirVentInteractable, IHittable
     private bool _isSharkInPatrolRange = false;
 
     Transform _transform;
-
+    Vector3  _sharkScale;
     // 状態管理
     ISharkState.E_State _currentState = ISharkState.E_State.BeforePartrol;
     static readonly ISharkState[] states = new ISharkState[(int)ISharkState.E_State.MAX]
@@ -438,7 +438,7 @@ public class SharkController : AirVentInteractable, IHittable
         {
             if (parent.IsCompleteAnimationAfterWarp())
             {
-                parent._transform.localScale = Vector3.one;
+                parent._transform.localScale = parent._sharkScale;
                 parent._isSharkInPatrolRange = true;
                 return ISharkState.E_State.BeforePartrol;
             }
@@ -486,6 +486,7 @@ public class SharkController : AirVentInteractable, IHittable
     private void Awake()
     {
         _transform = transform;
+        _sharkScale = transform.localScale;
 
         InitializeState();
     }
@@ -493,6 +494,7 @@ public class SharkController : AirVentInteractable, IHittable
     private void Update()
     {
         UpdateState();
+        Debug.Log(_currentState);
     }
 
     private void FixedUpdate()
@@ -627,8 +629,8 @@ public class SharkController : AirVentInteractable, IHittable
                 }
             }
 
-            //ミス回数が50回程度が処理回数的に良いです
-            if (wrapCount == 50)
+            //ミス回数が500回程度が処理回数的に良いです
+            if (wrapCount == 500)
             {
                 return false;
             }
@@ -665,14 +667,14 @@ public class SharkController : AirVentInteractable, IHittable
 
     private bool IsCompleteAnimationAfterWarp()
     {
-        return _transform.localScale.x >= 1.0f;
+        return _transform.localScale.x >= _sharkScale.x;
     }
 
     private void AnimationAfterWarp()
     {
         Vector3 currentScale = _transform.localScale;
 
-        float scaleUpSize = 0.3f * Time.deltaTime;
+        float scaleUpSize = 0.7f * Time.deltaTime;
 
         currentScale += Vector3.one * scaleUpSize;
 

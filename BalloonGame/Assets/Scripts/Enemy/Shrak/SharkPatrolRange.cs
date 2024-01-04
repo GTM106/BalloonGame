@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class SharkPatrolRange : MonoBehaviour
 {
+    [SerializeField] GameObject patrolObj = default!;
     [SerializeField] SharkController sharkController = default!;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.transform.CompareTag("Shark"))
+        if (other == patrolObj)
         {
             sharkController.OnRangeCheckRangeCollisionEnter();
         }
@@ -16,7 +17,7 @@ public class SharkPatrolRange : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.CompareTag("Shark"))
+        if (other == patrolObj)
         {
             sharkController.OnRangeCheckRangeCollisionExit();
         }
