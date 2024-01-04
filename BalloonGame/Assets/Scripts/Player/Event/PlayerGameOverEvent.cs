@@ -19,11 +19,13 @@ public class PlayerGameOverEvent : MonoBehaviour
     bool _isInvincible = false;
 
     SkinnedMeshRenderer[] skinnedMeshRenderers = null;
+    MeshRenderer[] meshRenderers = null;
 
     private void Awake()
     {
         _atii = _atii != null ? _atii : GameObject.Find("Atii");
         skinnedMeshRenderers = _atii.GetComponentsInChildren<SkinnedMeshRenderer>();
+        meshRenderers = _atii.GetComponentsInChildren<MeshRenderer>();
         _timeLimitController ??= FindAnyObjectByType<TimeLimitController>();
         _timeLimitController.OnTimeLimit += OnTimeLimit;
     }
@@ -76,9 +78,17 @@ public class PlayerGameOverEvent : MonoBehaviour
             {
                 rend.enabled = !rend.enabled;
             }
+            foreach (var rend in meshRenderers)
+            {
+                rend.enabled = !rend.enabled;
+            }
         }
 
         foreach (var rend in skinnedMeshRenderers)
+        {
+            rend.enabled = true;
+        }        
+        foreach (var rend in meshRenderers)
         {
             rend.enabled = true;
         }
