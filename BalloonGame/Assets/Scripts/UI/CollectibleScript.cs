@@ -94,7 +94,7 @@ public class CollectibleScript : MonoBehaviour
                 trackNumber++;
             }
         }
-        catch(IndexOutOfRangeException ex) {
+        catch(IndexOutOfRangeException) {
             //‘JˆÚæ‚ª‚È‚¢
         }
     }

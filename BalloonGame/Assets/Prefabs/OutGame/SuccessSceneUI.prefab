@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1336.08, y: -491.52}
+  m_AnchoredPosition: {x: 1116.8, y: -341.33334}
   m_SizeDelta: {x: 570.24, y: 983.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7708883078991809287
@@ -258,7 +258,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1598.82, y: -491.52}
+  m_AnchoredPosition: {x: 1346.5, y: -341.33334}
   m_SizeDelta: {x: 570.24, y: 983.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5610686019429599875
@@ -334,7 +334,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 285.12, y: -491.52}
+  m_AnchoredPosition: {x: 198, y: -341.33334}
   m_SizeDelta: {x: 570.24, y: 983.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6524357205863383443
@@ -410,7 +410,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 547.86, y: -491.52}
+  m_AnchoredPosition: {x: 427.7, y: -341.33334}
   m_SizeDelta: {x: 570.24, y: 983.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5237198245665239232
@@ -486,7 +486,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1861.5599, y: -491.52}
+  m_AnchoredPosition: {x: 1576.2, y: -341.33334}
   m_SizeDelta: {x: 570.24, y: 983.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9089211948392832768
@@ -638,7 +638,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 810.6, y: -491.52}
+  m_AnchoredPosition: {x: 657.4, y: -341.33334}
   m_SizeDelta: {x: 570.24, y: 983.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7694861978069053249
@@ -733,6 +733,8 @@ MonoBehaviour:
     type: 3}
   _scoreManager: {fileID: 0}
   _successSceneVirtualCamera: {fileID: 1363697936846361291}
+  _playerAudioListener: {fileID: 0}
+  _successSceneAudioListener: {fileID: 1069773181669398250}
   _initTransition:
     duration: 2
     backgroundColor: {r: 0.21987364, g: 0.48430046, b: 0.5754717, a: 0}
@@ -809,7 +811,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 2124.2998, y: -491.52}
+  m_AnchoredPosition: {x: 1805.8999, y: -341.33334}
   m_SizeDelta: {x: 570.24, y: 983.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2813607032583525721
@@ -885,7 +887,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1073.34, y: -491.52}
+  m_AnchoredPosition: {x: 887.1, y: -341.33334}
   m_SizeDelta: {x: 570.24, y: 983.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1818513183339023181
@@ -1199,7 +1201,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 787b325b82cb63d47bba460309dffd89,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1069773181669398250}
   m_SourcePrefab: {fileID: 100100000, guid: 787b325b82cb63d47bba460309dffd89, type: 3}
 --- !u!4 &3485731005112953246 stripped
 Transform:
@@ -1207,3 +1213,17 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4023250059665591925}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4257059764806284068 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 787b325b82cb63d47bba460309dffd89,
+    type: 3}
+  m_PrefabInstance: {fileID: 4023250059665591925}
+  m_PrefabAsset: {fileID: 0}
+--- !u!81 &1069773181669398250
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4257059764806284068}
+  m_Enabled: 1
