@@ -22,20 +22,20 @@ MonoBehaviour:
       _source: 0
     - _key: BGM002_Ingame
       _value:
-        _clip: {fileID: 0}
+        _clip: {fileID: 8300000, guid: 6399bc1f77fe2b04a931a08075de4e30, type: 3}
         _volume: 1
         _pitch: 1
       _source: 1
     - _key: BGM002_Tutorial
       _value:
-        _clip: {fileID: 8300000, guid: 295b3eb48c9fe224396bbb975adf85cc, type: 3}
-        _volume: 0.613
+        _clip: {fileID: 8300000, guid: 00fb72282e7d11943aeb19fc90ffbacf, type: 3}
+        _volume: 1
         _pitch: 1
       _source: 2
     - _key: BGM002_A
       _value:
-        _clip: {fileID: 8300000, guid: 4106da1241ca4f14080066ff93dc0177, type: 3}
-        _volume: 0.586
+        _clip: {fileID: 8300000, guid: 831bab87c77a2bd468cd1dc4480eed7a, type: 3}
+        _volume: 1
         _pitch: 1
       _source: 3
     - _key: BGM003_Succeed
@@ -76,7 +76,7 @@ MonoBehaviour:
       _source: 9
     - _key: SE005_PlayerBoostDash
       _value:
-        _clip: {fileID: 8300000, guid: 5d11ab90f85b1614bad3560bccc7481f, type: 3}
+        _clip: {fileID: 8300000, guid: 38b7b45a7f10eca47be1b6420963ef6a, type: 3}
         _volume: 1
         _pitch: 1
       _source: 10
@@ -107,7 +107,7 @@ MonoBehaviour:
     - _key: SE020_Balloonfish_Floating
       _value:
         _clip: {fileID: 8300000, guid: 0899133c15dffe2409e4abf46ef8e13c, type: 3}
-        _volume: 1
+        _volume: 0.3
         _pitch: 1
       _source: 15
     - _key: SE030_AirVent_Interact

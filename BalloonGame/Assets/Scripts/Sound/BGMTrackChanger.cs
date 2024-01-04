@@ -17,7 +17,9 @@ public class BGMTrackChanger : MonoBehaviour
     {
         //‰Šú‰»
         //Å‰‚ÍIntro‚Ì‚½‚ß-1‚É‚µ‚Ä‚¨‚­
-        _currentTransitionIndex = -1;
+
+        //ƒCƒ“ƒgƒ‚ª–³‚¢‚ç‚µ‚¢‚Ì‚Å0‚É OTOGIYA
+        _currentTransitionIndex = 0;
     }
 
     public async void PlayNextTrack()

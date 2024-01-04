@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,13 +11,21 @@ public class CollectibleScript : MonoBehaviour
     [SerializeField] Sprite[] uiNumber = default!;
     [Header("表示場所")]
     [SerializeField] Image[] displayPosition = default!;
-    [Header("収集アイテム取得値がBGM_B遷移する値")]
-    [SerializeField] int bgmTrackB_ChangeCount = default!;
-    [Header("収集アイテム取得時にBGM_C遷移する値")]
-    [SerializeField] int bgmTrackC_ChangeCount = default!;
+
+    //[Header("収集アイテム取得値がBGM_B遷移する値")]
+    //[SerializeField] int bgmTrackB_ChangeCount = default!;
+    //[Header("収集アイテム取得時にBGM_C遷移する値")]
+    //[SerializeField] int bgmTrackC_ChangeCount = default!;
+
     [SerializeField, Required] ScoreManager scoreManager = default!;
     [SerializeField, Required] Canvas _canvas = default!;
     [SerializeField, Required] BGMTrackChanger _bgmTrackChanger = default!;
+
+    //段階が増えるかもとのことなので一時的に変更、良い感じに修正お願いします by.OTOGIYA
+    [Header("収集アイテムの遷移する値")]
+    [SerializeField] int[] bgmTrack_ChangeCount = default!;
+
+    private int trackNumber = 0;
 
     //現在のスコア
     private int currentNumber = 0;
@@ -75,9 +85,17 @@ public class CollectibleScript : MonoBehaviour
 
     private void BgmTrackChange()
     {
-        if (itemCount == bgmTrackC_ChangeCount || itemCount == bgmTrackB_ChangeCount)
+        //OTOGIYAが勝手に書き換えた
+        try
         {
-            PlayNextTrack();
+            if (bgmTrack_ChangeCount[trackNumber] <= itemCount)
+            {
+                PlayNextTrack();
+                trackNumber++;
+            }
+        }
+        catch(IndexOutOfRangeException ex) {
+            //遷移先がない
         }
     }
 
