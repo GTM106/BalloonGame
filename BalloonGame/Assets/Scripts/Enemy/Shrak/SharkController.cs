@@ -56,11 +56,15 @@ public class SharkController : AirVentInteractable, IHittable
     [SerializeField, Min(0f)] double attackRecastTime = default!;
     [Header("ターゲットにヒットしたあと、再度追跡できるまでの時間[sec]")]
     [SerializeField, Min(0f)] double _cooldownForReacquisitionDuration = default!;
+    [Header("倒した際の得点")]
+    [SerializeField, Min(0)] int itemValue = default!;
 
     [SerializeField] GameObject movePos = default!;
     [SerializeField] SphereCollider airRange = default!;
     [SerializeField, Required] Rigidbody _rigidbody = default!;
     [SerializeField, Required] BreakBlockContorller breakBlockContorller = default!;
+    [SerializeField, Required] CollectibleScript collectibleScript = default!;
+    [SerializeField, Required] OnSetActive onSetActive = default!;
     [SerializeField, Required] AudioSource _chasingAudioSource = default!;
     [SerializeField, Required] AudioSource _discoveryAudioSource = default!;
     [SerializeField, Required] AudioSource _targetingAudioSource = default!;
@@ -386,6 +390,8 @@ public class SharkController : AirVentInteractable, IHittable
             {
                 SoundManager.Instance.PlaySE(parent._deathAudioSource, SoundSource.SE065_SharkDeath);
                 parent.SharkDestroy();
+                parent.collectibleScript.Add(parent.itemValue);
+                parent.onSetActive.OnObjectTrue();
             }
 
             return ISharkState.E_State.Unchanged;
