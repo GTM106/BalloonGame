@@ -13,16 +13,27 @@ public class PlayerGameOverEvent : MonoBehaviour
     [SerializeField, Min(0f)] float _invincibleDuration = 3f;
     [SerializeField, Min(0f)] float _meshFlashInterval = 0.2f;
     [SerializeField, Required] GameObject _atii = default!;
+    [SerializeField, Required] TimeLimitController _timeLimitController = default!;
 
     //無敵かどうか
     bool _isInvincible = false;
 
     SkinnedMeshRenderer[] skinnedMeshRenderers = null;
+    MeshRenderer[] meshRenderers = null;
 
     private void Awake()
     {
-        _atii ??= GameObject.Find("Atii");
+        _atii = _atii != null ? _atii : GameObject.Find("Atii");
         skinnedMeshRenderers = _atii.GetComponentsInChildren<SkinnedMeshRenderer>();
+        meshRenderers = _atii.GetComponentsInChildren<MeshRenderer>();
+        _timeLimitController ??= FindAnyObjectByType<TimeLimitController>();
+        _timeLimitController.OnTimeLimit += OnTimeLimit;
+    }
+
+    private void OnTimeLimit()
+    {
+        //制限時間になったら無敵に
+        _isInvincible = true;
     }
 
     public void GameOver()
@@ -30,6 +41,9 @@ public class PlayerGameOverEvent : MonoBehaviour
         if (_isInvincible) return;
 
         OnGameOver?.Invoke();
+
+        //ゲームオーバー中のオーバーキル防止
+        _isInvincible = true;
     }
 
     public void Revive()
@@ -64,9 +78,17 @@ public class PlayerGameOverEvent : MonoBehaviour
             {
                 rend.enabled = !rend.enabled;
             }
+            foreach (var rend in meshRenderers)
+            {
+                rend.enabled = !rend.enabled;
+            }
         }
 
         foreach (var rend in skinnedMeshRenderers)
+        {
+            rend.enabled = true;
+        }        
+        foreach (var rend in meshRenderers)
         {
             rend.enabled = true;
         }

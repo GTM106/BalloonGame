@@ -13,9 +13,13 @@ public class ItemScript : MonoBehaviour, IHittable
     [SerializeField, Min(0)] int itemValue = default!;
 
     const double AnimationDuration = 1.06d;
+    bool _alreadyhit = false;
 
     public async void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
+        if (_alreadyhit) return;
+        _alreadyhit = true;
+
         var token = this.GetCancellationTokenOnDestroy();
 
         SoundManager.Instance.PlaySE(_itemCollectionAudioSource, SoundSource.SE007_PlayerGetsItem);
