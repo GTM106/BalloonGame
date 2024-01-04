@@ -26,8 +26,8 @@ public class VideoTransitionController : MonoBehaviour, ITransition
 
         timeline.Play();
 
-        //1フレーム分待機せずに先に進みます。
+        //2フレーム分待機せずに先に進みます。
         //Timelineからアクティブを直すために1フレーム余分なフレームを入れているためこうしています。
-        await UniTask.Delay(TimeSpan.FromSeconds(timeline.duration - 0.02d), false, PlayerLoopTiming.FixedUpdate, token);
+        await UniTask.Delay(TimeSpan.FromSeconds(timeline.duration - 0.04d), false, PlayerLoopTiming.FixedUpdate, token);
     }
 }
