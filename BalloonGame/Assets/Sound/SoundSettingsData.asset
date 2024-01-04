@@ -16,7 +16,7 @@ MonoBehaviour:
     _soundKVPairs:
     - _key: BGM001_Title
       _value:
-        _clip: {fileID: 8300000, guid: 9d1a3cfad63524b439107551c29514be, type: 3}
+        _clip: {fileID: 8300000, guid: 95ccaa26b76d33a4c8d777bbace6519e, type: 3}
         _volume: 0.5
         _pitch: 1
       _source: 0
@@ -182,3 +182,21 @@ MonoBehaviour:
         _volume: 0.35
         _pitch: 1
       _source: 27
+    - _key: SE067_SharkExpansion
+      _value:
+        _clip: {fileID: 8300000, guid: 71698a3aef084b24a832223dc617ce48, type: 3}
+        _volume: 1
+        _pitch: 1
+      _source: 28
+    - _key: SE068_SantaDeath
+      _value:
+        _clip: {fileID: 8300000, guid: 5c0068baf003f844ca9eb959dd7d20de, type: 3}
+        _volume: 1
+        _pitch: 1
+      _source: 29
+    - _key: SE069_GimmickAppearance
+      _value:
+        _clip: {fileID: 8300000, guid: 95ccaa26b76d33a4c8d777bbace6519e, type: 3}
+        _volume: 0.6
+        _pitch: 1
+      _source: 30
