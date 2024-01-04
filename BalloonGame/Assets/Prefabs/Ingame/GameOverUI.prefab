@@ -44,6 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a38739b4947d35648b1614d4096cd4e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _invincibleDuration: 3
+  _meshFlashInterval: 0.2
+  _atii: {fileID: 0}
+  _timeLimitController: {fileID: 0}
 --- !u!1 &822877827271101516
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,7 +195,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3537793800421631971}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -260,6 +264,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6306900410265749749}
+  - component: {fileID: 1226499650151205505}
   m_Layer: 0
   m_Name: GameOverUI
   m_TagString: Untagged
@@ -283,6 +288,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1226499650151205505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7479690105994800752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba102fd88db1da46bab881105d8e269, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvas: {fileID: 2697605462099159064}
+  _timeline: {fileID: 8695470653008029275}
 --- !u!1 &7941059658972844175
 GameObject:
   m_ObjectHideFlags: 0
