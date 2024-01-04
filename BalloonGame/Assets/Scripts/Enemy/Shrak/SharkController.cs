@@ -1,6 +1,9 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Net;
+using System.Security.Cryptography;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Serialization;
@@ -56,6 +59,10 @@ public class SharkController : AirVentInteractable, IHittable
     [SerializeField, Min(0f)] double attackRecastTime = default!;
     [Header("ターゲットにヒットしたあと、再度追跡できるまでの時間[sec]")]
     [SerializeField, Min(0f)] double _cooldownForReacquisitionDuration = default!;
+    [Header("ライフ")]
+    [SerializeField, Min(0)] int hpMAX = default!;
+    [Header("膨張率")]
+    [SerializeField, Min(0)] int expansionValue = default!;
     [Header("倒した際の得点")]
     [SerializeField, Min(0)] int itemValue = default!;
 
@@ -84,9 +91,10 @@ public class SharkController : AirVentInteractable, IHittable
     private bool pushCheck = false;
     private bool chaseFinished = false;
     private bool _isSharkInPatrolRange = false;
+    private int damageCount = 0;
 
     Transform _transform;
-    Vector3  _sharkScale;
+    Vector3 _sharkScale;
     // 状態管理
     ISharkState.E_State _currentState = ISharkState.E_State.BeforePartrol;
     static readonly ISharkState[] states = new ISharkState[(int)ISharkState.E_State.MAX]
@@ -494,7 +502,6 @@ public class SharkController : AirVentInteractable, IHittable
     private void Update()
     {
         UpdateState();
-        Debug.Log(_currentState);
     }
 
     private void FixedUpdate()
@@ -630,7 +637,7 @@ public class SharkController : AirVentInteractable, IHittable
             }
 
             //ミス回数が500回程度が処理回数的に良いです
-            if (wrapCount == 500)
+            if (wrapCount == 100)
             {
                 return false;
             }
@@ -696,10 +703,9 @@ public class SharkController : AirVentInteractable, IHittable
     {
         Vector3 downPos = _transform.position;
         downPos.y -= 1f;
-
-        Vector3 forward = Vector3.forward * 0.5f;
-
-        return Physics.CapsuleCast(_transform.position + forward, _transform.position - forward, 6.0f, Vector3.down);
+        Debug.DrawRay(transform.position, Vector3.down * 6.0f, Color.red, 0.1f);
+        Debug.DrawRay(transform.position, Vector3.forward * 2.0f, Color.red, 0.1f);
+        return Physics.Raycast(transform.position, Vector3.down, 6.0f);
     }
 
     private async UniTask Chase(CancellationToken token)
@@ -745,7 +751,28 @@ public class SharkController : AirVentInteractable, IHittable
 
         gameObject.SetActive(false);
     }
+    private bool DamageHP()
+    {
+        damageCount++;
 
+        if (damageCount == hpMAX)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void SharkExpansion()
+    {
+        Vector3 currentScale = _transform.localScale;
+
+        float scaleDownSize = expansionValue * Time.fixedDeltaTime;
+
+        currentScale -= Vector3.one * scaleDownSize;
+
+        _transform.localScale = currentScale;
+    }
     public override void Interact()
     {
         if (_currentState == ISharkState.E_State.Down)
