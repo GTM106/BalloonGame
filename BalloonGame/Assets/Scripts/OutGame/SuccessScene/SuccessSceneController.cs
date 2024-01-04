@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SuccessSceneController : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class SuccessSceneController : MonoBehaviour
     [SerializeField, Required] InputActionReference _ui_RingconPushAction = default!;
     [SerializeField, Required] ScoreManager _scoreManager = default!;
     [SerializeField, Required] CinemachineVirtualCamera _successSceneVirtualCamera = default!;
+    [SerializeField, Required] Image _blackScreen = default!;
 
     [SerializeField, Required] AudioListener _playerAudioListener = default!;
     [SerializeField, Required] AudioListener _successSceneAudioListener = default!;
@@ -30,6 +32,7 @@ public class SuccessSceneController : MonoBehaviour
     {
         _ui_RingconPushAction.action.performed += BackToTitle;
         _enableBackToTitle = false;
+        _blackScreen.enabled = false;
         _successSceneView.Disable();
 
         _playerAudioListener.enabled = true;
@@ -51,6 +54,7 @@ public class SuccessSceneController : MonoBehaviour
     {
         if (!_enableBackToTitle) return;
         await _videoTransitionController.StartTransition(_toTitleTransition);
+        _blackScreen.enabled = true;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
