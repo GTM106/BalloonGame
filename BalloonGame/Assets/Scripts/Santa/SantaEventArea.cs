@@ -15,6 +15,7 @@ public class SantaEventArea : MonoBehaviour, IHittable
     [SerializeField, Required] InputSystemManager _inputSystemManager = default!;
     [SerializeField, Required] SunglassController _santaSunglassController = default!;
     [SerializeField, Required] TimeLimitController _timeLimitController = default!;
+    [SerializeField, Required] SunglassController _successPlayerSunglassController = default!;
 
     [SerializeField, Required] Transform _hand;
 
@@ -58,6 +59,7 @@ public class SantaEventArea : MonoBehaviour, IHittable
         _virtualCamera2cam.Priority = LowPriority;
         _virtualCamera3cam.Priority = HighPriority;
         _playerSunglassController.Enable();
+        _successPlayerSunglassController.Enable();
         _santaSunglassController.Disable();
         await UniTask.Delay(TimeSpan.FromSeconds(1.0d));
         _virtualCamera3cam.Priority = LowPriority;
