@@ -22,6 +22,14 @@ public class HoneybeeController : MonoBehaviour, IHittable
     private void Awake()
     {
         _transform = transform;
+
+        foreach (Transform point in _wayPoints)
+        {
+            if (point == null)
+            {
+                _wayPoints.Remove(point);
+            }
+        }
     }
 
     private void Start()
