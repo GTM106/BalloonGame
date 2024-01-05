@@ -90,7 +90,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: f9cc3590a2a91b0448405abba85d3cb0,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f9cc3590a2a91b0448405abba85d3cb0,
         type: 3}
@@ -342,5 +342,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
