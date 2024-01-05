@@ -12,6 +12,7 @@ public class HoneybeeController : MonoBehaviour, IHittable
     [SerializeField] List<Transform> _wayPoints = default!;
     [SerializeField, Min(0f)] float _moveSpeed = 0.5f;
     [SerializeField, Min(0f)] float _wayPointDistance = 0.02f;
+    [SerializeField] bool _isLethal = true;
 
     int _currentPoint = 0;
 
@@ -42,7 +43,11 @@ public class HoneybeeController : MonoBehaviour, IHittable
 
     public void OnEnter(Collider playerCollider, BalloonState balloonState)
     {
-        _gameOverEvent.GameOver();
+        //’v€‘®«‚ª‚Â‚¢‚Ä‚¢‚½‚çƒvƒŒƒCƒ„[‚ğE‚·
+        if (_isLethal)
+        {
+            _gameOverEvent.GameOver();
+        }
     }
 
     public void OnExit(Collider playerCollider, BalloonState balloonState)
