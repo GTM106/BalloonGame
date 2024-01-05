@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.Serialization;
 
 public interface ISharkState
 {
@@ -16,6 +16,7 @@ public interface ISharkState
         Chase,
         Fall,
         Down,
+        Damage,
         Death,
         BeforeWarp,
         Warp,
@@ -56,8 +57,16 @@ public class SharkController : AirVentInteractable, IHittable
     [SerializeField, Min(0f)] double attackRecastTime = default!;
     [Header("ターゲットにヒットしたあと、再度追跡できるまでの時間[sec]")]
     [SerializeField, Min(0f)] double _cooldownForReacquisitionDuration = default!;
+    [Header("ライフ")]
+    [SerializeField, Min(0)] int hpMAX = default!;
+    [Header("膨張時間")]
+    [SerializeField, Min(0)] int expansionTime = default!;
+    [Header("膨張率")]
+    [SerializeField, Min(0)] int expansionValue = default!;
     [Header("倒した際の得点")]
     [SerializeField, Min(0)] int itemValue = default!;
+    [Header("サンタボイスを使用するか")]
+    [SerializeField] bool santaVoice = default!;
 
     [SerializeField] GameObject movePos = default!;
     [SerializeField] SphereCollider airRange = default!;
@@ -71,8 +80,11 @@ public class SharkController : AirVentInteractable, IHittable
     [SerializeField, Required] AudioSource _clashAudioSource = default!;
     [SerializeField, Required] AudioSource _downAudioSource = default!;
     [SerializeField, Required] AudioSource _deathAudioSource = default!;
-    [SerializeField, Required] ParticleSystem _chargeBlueAttackEffect = default!;
-    [SerializeField, Required] ParticleSystem _chargeStartBlueAttackEffect = default!;
+    [SerializeField, Required] AudioSource _deathSantaAudioSource = default!;
+    [SerializeField, Required] AudioSource _expansionAudioSource = default!;
+    [SerializeField, Required] ParticleSystem _chargeAttackEffect = default!;
+    [SerializeField, Required] ParticleSystem _chargeStartAttackEffect = default!;
+    [SerializeField, Required] ParticleSystem _confettiBlastShark = default!;
     [SerializeField, Required] PlayableDirector startAttackEffect = default!;
     [SerializeField, Required] PlayableDirector endAttackEffect = default!;
     [SerializeField, Required] PlayerGameOverEvent _gameOverEvent = default!;
@@ -83,10 +95,12 @@ public class SharkController : AirVentInteractable, IHittable
     private bool _isInChaseRange = false;
     private bool pushCheck = false;
     private bool chaseFinished = false;
+    private bool expansionFinished = false;
     private bool _isSharkInPatrolRange = false;
+    private int damageCount = 0;
 
     Transform _transform;
-    Vector3  _sharkScale;
+    Vector3 _sharkScale;
     // 状態管理
     ISharkState.E_State _currentState = ISharkState.E_State.BeforePartrol;
     static readonly ISharkState[] states = new ISharkState[(int)ISharkState.E_State.MAX]
@@ -98,6 +112,7 @@ public class SharkController : AirVentInteractable, IHittable
         new ChaseState(),
         new FallState(),
         new DownState(),
+        new DamageState(),
         new DeathState(),
         new BeforeWarpState(),
         new WarpState(),
@@ -213,14 +228,14 @@ public class SharkController : AirVentInteractable, IHittable
             _elapsedTime = 0f;
 
             //エフェクト時間の設定
-            var main = parent._chargeBlueAttackEffect.main;
+            var main = parent._chargeAttackEffect.main;
             main.duration = parent._chaseStartTime;
-            main = parent._chargeStartBlueAttackEffect.main;
+            main = parent._chargeStartAttackEffect.main;
             main.duration = parent._chaseStartTime;
 
             //エフェクトの再生
-            parent._chargeBlueAttackEffect.Play();
-            parent._chargeStartBlueAttackEffect.Play();
+            parent._chargeAttackEffect.Play();
+            parent._chargeStartAttackEffect.Play();
 
             //貯めSE
             SoundManager.Instance.PlaySE(parent._targetingAudioSource, SoundSource.SE061_SharkTargeting);
@@ -236,8 +251,8 @@ public class SharkController : AirVentInteractable, IHittable
         {
             if (parent._wasHitPlayer)
             {
-                parent._chargeBlueAttackEffect.Stop();
-                parent._chargeStartBlueAttackEffect.Stop();
+                parent._chargeAttackEffect.Stop();
+                parent._chargeStartAttackEffect.Stop();
                 SoundManager.Instance.StopSE(parent._targetingAudioSource);
 
                 return ISharkState.E_State.BeforePartrol;
@@ -247,8 +262,8 @@ public class SharkController : AirVentInteractable, IHittable
 
             if (_elapsedTime >= parent._chaseStartTime)
             {
-                parent._chargeBlueAttackEffect.Stop();
-                parent._chargeStartBlueAttackEffect.Stop();
+                parent._chargeAttackEffect.Stop();
+                parent._chargeStartAttackEffect.Stop();
                 SoundManager.Instance.StopSE(parent._targetingAudioSource);
 
                 return ISharkState.E_State.Chase;
@@ -360,11 +375,38 @@ public class SharkController : AirVentInteractable, IHittable
         }
     }
 
+    class DamageState : ISharkState
+    {
+        public ISharkState.E_State Initialize(SharkController parent)
+        {
+            SoundManager.Instance.PlaySE(parent._expansionAudioSource, SoundSource.SE067_SharkExpansion);
+            parent.StartSharkExpansion();
+
+            return ISharkState.E_State.Unchanged;
+        }
+
+        public ISharkState.E_State Update(SharkController parent)
+        {
+            if(parent.expansionFinished)
+            {
+                parent.expansionFinished = false;
+                return ISharkState.E_State.BeforePartrol;
+            }
+
+            return ISharkState.E_State.Unchanged;
+        }
+        public ISharkState.E_State FixedUpdate(SharkController parent)
+        {
+
+            return ISharkState.E_State.BeforePartrol;
+        }
+    }
+
     class DeathState : ISharkState
     {
         const float DeadAnimationTime = 1.5f;
         float _elapsedTime;
-
+        float airRangeRadius = 0;
         public ISharkState.E_State Initialize(SharkController parent)
         {
             _elapsedTime = 0f;
@@ -372,7 +414,14 @@ public class SharkController : AirVentInteractable, IHittable
             parent._animationChanger.ChangeAnimation(E_Shark.AN04_Dead);
 
             //オブジェクト破壊前に確実に空気栓の範囲外にする
+            airRangeRadius = parent.airRange.radius;
             parent.airRange.radius = 0;
+
+            if (!parent.DamageHP())
+            {
+                parent.airRange.radius = airRangeRadius;
+                return ISharkState.E_State.Damage;
+            }
 
             return ISharkState.E_State.Unchanged;
         }
@@ -389,6 +438,13 @@ public class SharkController : AirVentInteractable, IHittable
             if (_elapsedTime > DeadAnimationTime)
             {
                 SoundManager.Instance.PlaySE(parent._deathAudioSource, SoundSource.SE065_SharkDeath);
+
+                if (parent.santaVoice)
+                {
+                    SoundManager.Instance.PlaySE(parent._deathSantaAudioSource, SoundSource.SE068_SantaDeath);
+                }
+
+                parent._confettiBlastShark.Play();
                 parent.SharkDestroy();
                 parent.collectibleScript.Add(parent.itemValue);
                 parent.onSetActive.OnObjectTrue();
@@ -508,6 +564,7 @@ public class SharkController : AirVentInteractable, IHittable
         if (_currentState == ISharkState.E_State.Fall) return;
         if (_currentState == ISharkState.E_State.Down) return;
         if (_currentState == ISharkState.E_State.Death) return;
+        if (_currentState == ISharkState.E_State.Damage) return;
 
         //ヒット時のクールダウンを開始
         StartCooldownForReacquisition();
@@ -630,7 +687,7 @@ public class SharkController : AirVentInteractable, IHittable
             }
 
             //ミス回数が500回程度が処理回数的に良いです
-            if (wrapCount == 500)
+            if (wrapCount == 100)
             {
                 return false;
             }
@@ -694,12 +751,8 @@ public class SharkController : AirVentInteractable, IHittable
 
     private bool Fall()
     {
-        Vector3 downPos = _transform.position;
-        downPos.y -= 1f;
 
-        Vector3 forward = Vector3.forward * 0.5f;
-
-        return Physics.CapsuleCast(_transform.position + forward, _transform.position - forward, 6.0f, Vector3.down);
+        return Physics.Raycast(transform.position, Vector3.down, 6.0f);
     }
 
     private async UniTask Chase(CancellationToken token)
@@ -745,7 +798,36 @@ public class SharkController : AirVentInteractable, IHittable
 
         gameObject.SetActive(false);
     }
+    private bool DamageHP()
+    {
+        damageCount++;
 
+        if (damageCount == hpMAX)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void StartSharkExpansion()
+    {
+        SharkExpansion(destroyCancellationToken).Forget();
+    }
+
+    private async UniTask SharkExpansion(CancellationToken token)
+    {
+        float currentTime = 0;
+
+        while (currentTime < expansionTime)
+        {
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+            transform.localScale *= expansionValue;
+            currentTime += Time.deltaTime;
+        }
+
+        expansionFinished = true;
+    }
     public override void Interact()
     {
         if (_currentState == ISharkState.E_State.Down)

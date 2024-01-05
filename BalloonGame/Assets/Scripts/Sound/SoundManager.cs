@@ -36,6 +36,9 @@ public enum SoundSource
     SE064_SharkDown,
     SE065_SharkDeath,
     SE066_BreakBlock,
+    SE067_SharkExpansion,
+    SE068_SantaDeath,
+    SE069_GimmickAppearance,
 
     [InspectorName("")]
     Max,

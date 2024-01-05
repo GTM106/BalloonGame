@@ -9,7 +9,7 @@ public class SharkPatrolRange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other == patrolObj)
+        if (other.gameObject.name == patrolObj.name)
         {
             sharkController.OnRangeCheckRangeCollisionEnter();
         }
@@ -17,7 +17,7 @@ public class SharkPatrolRange : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other == patrolObj)
+        if (other.gameObject.name == patrolObj.name)
         {
             sharkController.OnRangeCheckRangeCollisionExit();
         }
