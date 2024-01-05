@@ -60,9 +60,9 @@ public class SharkController : AirVentInteractable, IHittable
     [Header("ライフ")]
     [SerializeField, Min(0)] int hpMAX = default!;
     [Header("膨張時間")]
-    [SerializeField, Min(0)] int expansionTime = default!;
+    [SerializeField, Min(0)] float expansionTime = default!;
     [Header("膨張率")]
-    [SerializeField, Min(0)] int expansionValue = default!;
+    [SerializeField, Min(0)] float expansionValue = default!;
     [Header("倒した際の得点")]
     [SerializeField, Min(0)] int itemValue = default!;
     [Header("サンタボイスを使用するか")]
@@ -354,8 +354,11 @@ public class SharkController : AirVentInteractable, IHittable
         {
             if (parent.pushCheck)
             {
+                parent.pushCheck = false;
                 SoundManager.Instance.StopSE(parent._downAudioSource);
-                return ISharkState.E_State.Death;
+                parent.FinishDown();
+
+                return ISharkState.E_State.Damage;
             }
 
             return ISharkState.E_State.Unchanged;
@@ -379,6 +382,11 @@ public class SharkController : AirVentInteractable, IHittable
     {
         public ISharkState.E_State Initialize(SharkController parent)
         {
+            if (parent.DamageHP())
+            {
+                return ISharkState.E_State.Death;
+            }
+
             SoundManager.Instance.PlaySE(parent._expansionAudioSource, SoundSource.SE067_SharkExpansion);
             parent.StartSharkExpansion();
 
@@ -387,9 +395,10 @@ public class SharkController : AirVentInteractable, IHittable
 
         public ISharkState.E_State Update(SharkController parent)
         {
-            if(parent.expansionFinished)
+            if (parent.expansionFinished)
             {
                 parent.expansionFinished = false;
+
                 return ISharkState.E_State.BeforePartrol;
             }
 
@@ -406,22 +415,14 @@ public class SharkController : AirVentInteractable, IHittable
     {
         const float DeadAnimationTime = 1.5f;
         float _elapsedTime;
-        float airRangeRadius = 0;
         public ISharkState.E_State Initialize(SharkController parent)
         {
             _elapsedTime = 0f;
 
             parent._animationChanger.ChangeAnimation(E_Shark.AN04_Dead);
-
+            parent._confettiBlastShark.Play();
             //オブジェクト破壊前に確実に空気栓の範囲外にする
-            airRangeRadius = parent.airRange.radius;
             parent.airRange.radius = 0;
-
-            if (!parent.DamageHP())
-            {
-                parent.airRange.radius = airRangeRadius;
-                return ISharkState.E_State.Damage;
-            }
 
             return ISharkState.E_State.Unchanged;
         }
@@ -435,7 +436,7 @@ public class SharkController : AirVentInteractable, IHittable
         {
             _elapsedTime += Time.fixedDeltaTime;
 
-            if (_elapsedTime > DeadAnimationTime)
+            if (_elapsedTime > DeadAnimationTime / 2)
             {
                 SoundManager.Instance.PlaySE(parent._deathAudioSource, SoundSource.SE065_SharkDeath);
 
@@ -444,7 +445,6 @@ public class SharkController : AirVentInteractable, IHittable
                     SoundManager.Instance.PlaySE(parent._deathSantaAudioSource, SoundSource.SE068_SantaDeath);
                 }
 
-                parent._confettiBlastShark.Play();
                 parent.SharkDestroy();
                 parent.collectibleScript.Add(parent.itemValue);
                 parent.onSetActive.OnObjectTrue();
@@ -822,12 +822,17 @@ public class SharkController : AirVentInteractable, IHittable
         while (currentTime < expansionTime)
         {
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
-            transform.localScale *= expansionValue;
+           
+            transform.localScale = new Vector3(transform.localScale.x + expansionValue, transform.localScale.y + expansionValue, transform.localScale.z + expansionValue);
+            
             currentTime += Time.deltaTime;
         }
 
+        _sharkScale = transform.localScale;
+
         expansionFinished = true;
     }
+
     public override void Interact()
     {
         if (_currentState == ISharkState.E_State.Down)
